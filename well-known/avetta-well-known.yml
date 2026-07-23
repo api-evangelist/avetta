@@ -1,0 +1,49 @@
+generated: '2026-07-18'
+method: searched
+source: probed /.well-known/ across avetta.com, www.avetta.com, app.avetta.com, help.avetta.com, docs.api.avetta.com, api.avetta.com
+notes: >-
+  The only 200 discovery document found is an OpenID Connect configuration served by the Avetta
+  Help Center (help.avetta.com), which runs on Salesforce Experience Cloud — its issuer and
+  scopes are Salesforce platform scopes (help-center SSO), not the Avetta Developer API. No
+  security.txt, api-catalog, or ai-plugin.json was published on any host. The Avetta Developer
+  API portal (docs.api.avetta.com) is an authenticated React SPA and exposes no public
+  /.well-known documents or OpenAPI at common paths.
+hosts:
+- host: https://help.avetta.com
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: avetta-help-openid-configuration.json
+    note: Salesforce Experience Cloud help-center OIDC (not the Developer API)
+  - path: /.well-known/security.txt
+    status: 401
+  - path: /.well-known/oauth-authorization-server
+    status: 401
+  - path: /.well-known/api-catalog
+    status: 401
+  - path: /.well-known/ai-plugin.json
+    status: 401
+- host: https://avetta.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://app.avetta.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 302
+  - path: /.well-known/openid-configuration
+    status: 302
+- host: https://docs.api.avetta.com
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404

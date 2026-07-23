@@ -1,27 +1,98 @@
 aid: avetta
 name: Avetta
-description: 'Avetta is a company surfaced as a portfolio company of norwest-venture-partners and added
-  to the API Evangelist network as a stub for enrichment. Sector: unknown. This profile is a lead awaiting
-  the enrichment pipeline.'
+description: 'Avetta operates a cloud-based supply chain risk management (SCRM) and contractor
+  compliance platform, Avetta One, used by more than 360,000 businesses across 120+ countries to
+  prequalify, audit, and continuously monitor contractors and suppliers. The platform spans health
+  and safety compliance, prequalification, worker management, sustainability and ESG (GHG reporting,
+  supplier diversity, supplier ESG due diligence), and business risk (financial, cybersecurity, and
+  insurance verification). Avetta exposes an Open API and ERP connectors through a developer portal
+  (docs.api.avetta.com) so client organizations can synchronize contractor and supplier data into
+  Salesforce, Oracle, Workday, ServiceNow, and internal systems. Avetta is a portfolio company of
+  Norwest Venture Partners.'
 url: https://raw.githubusercontent.com/api-evangelist/avetta/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - norwest-venture-partners
-x-tier: stub
-x-tier-reason: portfolio-lead
+x-tier: profile
+x-tier-reason: enriched-from-public-surface
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
+image: https://cdn.prod.website-files.com/696fddc24f2e82c416e23640/697ba15528499b3ced513224_hero-opg.png
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
 tags:
 - Company
-- Unknown
-apis: []
+- Supply Chain
+- Risk Management
+- Compliance
+- Contractor Management
+- Safety
+- ESG
+- Supplier Management
+apis:
+- name: Avetta Developer API
+  description: 'Avetta''s Open API surface, documented through the Avetta Developer Portal, lets
+    client organizations select contractor and supplier endpoints and customize data synchronization
+    between the Avetta One platform and their internal systems and ERPs. Access is provisioned to
+    Avetta clients; the developer portal hosts the reference and integration guides.'
+  humanURL: https://docs.api.avetta.com
+  baseURL: https://api.avetta.com
+  tags:
+  - Supply Chain
+  - Compliance
+  - Contractor Management
+  properties:
+  - type: DeveloperPortal
+    url: https://docs.api.avetta.com
+  - type: Documentation
+    url: https://docs.api.avetta.com
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/avetta-domain-security.yml
 - type: Website
   url: https://avetta.com
+- type: DeveloperPortal
+  url: https://docs.api.avetta.com
+- type: Documentation
+  url: https://docs.api.avetta.com
+- type: HelpCenter
+  url: https://help.avetta.com
+- type: Integrations
+  url: https://www.avetta.com/clients/solutions/platform/integrations
+- type: Blog
+  url: https://www.avetta.com/blog
+- type: TrustCenter
+  url: https://trust.avetta.com
+- type: Login
+  url: https://app.avetta.com/login
+- type: Support
+  url: https://help.avetta.com
+- type: PrivacyPolicy
+  url: https://www.avetta.com/legal/privacy-policy
+- type: TermsOfService
+  url: https://www.avetta.com/legal/master-subscription-agreement
+- type: WellKnown
+  url: well-known/avetta-well-known.yml
+- type: LLMsTxt
+  url: llms/avetta-llms.txt
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

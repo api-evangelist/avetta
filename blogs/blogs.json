@@ -1,0 +1,14 @@
+{
+  "repo": "avetta",
+  "feeds": [
+    {
+      "source": "https://www.avetta.com/clients/solutions/platform/integrations",
+      "feed_url": "https://www.avetta.com/clients/solutions/platform/integrations",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-07-20T13:31:34Z"
+}
