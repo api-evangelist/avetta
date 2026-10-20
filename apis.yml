@@ -150,6 +150,8 @@ common:
 - type: WellKnown
   url: well-known/avetta-well-known.yml
 
+- type: Website
+  url: https://www.avetta.com
 apis:
 - name: Avetta Developer API
   description: >-
