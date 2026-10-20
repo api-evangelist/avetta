@@ -1,0 +1,368 @@
+openapi: 3.2.0
+info:
+  title: Avetta Pegasus Logpoint Logpoint Access Controller API
+  version: APSO-1355
+  x-logo:
+    url: avetta_logo.png
+  description: 'Operations tagged pegasusLogpoint_logpoint-access-controller across 2 of this provider''s published API definitions: avetta-pegasus-dist.json, avetta-pegasus-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- description: EPE (Test Environment)
+  url: https://epe-onsitetrackeasy.com.au/onsite-rest
+- description: Production
+  url: https://secure.onsitetrackeasy.com.au/onsite-rest
+tags:
+- name: pegasusLogpoint_logpoint-access-controller
+  x-displayName: logpoint-access-controller
+paths:
+  /api/v1/logpoint/{logpointId}/access/updated:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-access-controller
+      operationId: getUpdatedSitePeople_1
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: lastSync
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: excludeArchivedCardholdersForUpdatedCompanies
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: excludeArchivedUpdatedCardholders
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+      - name: page.page
+        in: query
+        description: For results more than one page long, the page to load.
+        schema:
+          type: integer
+          default: 0
+      - name: page.size
+        in: query
+        description: The number of results to return per page
+        schema:
+          type: integer
+          default: 20
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/3.29.14_LogpointPersonResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get updated site people 1
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+components:
+  schemas:
+    3.29.14_CardholderAccessKeyCompetencySummary:
+      type: object
+      properties:
+        competency:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerEntity'
+        expiryDate:
+          type: string
+        type:
+          type: string
+          enum:
+          - EXPIRED
+          - NON_ASSIGNED
+          - PENDING
+    3.29.14_StatusType:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        reasonPhrase:
+          type: string
+    3.29.14_LogpointPersonResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        firstName:
+          type: string
+        lastName:
+          type: string
+        companyName:
+          type: string
+        personType:
+          type: string
+          enum:
+          - SITE_CONTACT
+          - PERSONAL_CONTACT
+          - USER
+          - EMPLOYEE
+          - CONTRACTOR
+          - VISITOR
+          - SUPERUSER
+          - UNICORN_USER
+          - INVALID_PERSON
+          - MASTERKEY
+          - CARDHOLDER
+          - PAST_CARDHOLDER
+          - INVISIBLE
+          - IMPOSSIBLE
+        phone:
+          type: string
+        gender:
+          type: string
+          enum:
+          - UNSET
+          - F
+          - M
+          - OTHER
+          - PREFER_NOT_TO_SAY
+        dob:
+          type: string
+        personStatus:
+          type: string
+          enum:
+          - PENDING
+          - APPROVED
+          - ARCHIVED
+        companyId:
+          type: integer
+          format: int32
+        lastViewedInductionId:
+          type: integer
+          format: int32
+        lastViewedInductionTime:
+          type: string
+        canLogin:
+          type: boolean
+        rejectionReason:
+          type: string
+        forceAlcolizerReading:
+          type: boolean
+        canLoginExpiry:
+          type: string
+        lastSiteLogin:
+          type: string
+        lastSiteLogout:
+          type: string
+        loggedIntoOtherSite:
+          type: boolean
+        legacyId:
+          type: string
+        desfireIds:
+          type: array
+          items:
+            type: string
+        proxIds:
+          type: array
+          items:
+            type: string
+        rejectionEventTypeId:
+          type: integer
+          format: int32
+        safeteySelectionId:
+          type: integer
+          format: int32
+        hasExpiringSiteAccess:
+          type: boolean
+        accessKeyValidationSummaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_CardholderAccessKeyValidationSummary'
+        firstLastName:
+          type: string
+        lastFirstName:
+          type: string
+    3.29.14_FullErrorResource:
+      type: object
+      properties:
+        errorType:
+          type: string
+          enum:
+          - GENERAL_ERROR
+          - BAD_REQUEST
+          - FORBIDDEN
+          - UNAUTHORISED
+          - NO_ACCESS_TO_PORTAL
+          - INVALID_PASSWORD
+          - NOT_FOUND
+          - CONSTRAINT_VIOLATION
+          - VALIDATION_ERROR
+          - ALREADY_EXISTS
+          - DATA_MISMATCH
+          - NOT_AN_EMPLOYEE
+          - CANNOT_BE_TERMINATED
+          - TOO_MANY_FAILED_ATTEMPTS
+          - REQUIRED_FIELD_MISSING
+          - VERIFICATION_TOKEN_EXPIRED
+          - PURCHASE_ORDER_EXPIRED
+          - DUPLICATE_PAYMENT
+          - PAYMENT_ERROR
+          - CANNOT_BE_UPDATED
+          - PENDING_CARD_IN_PROGRESS
+          - CANNOT_ASSIGN
+          - INVALID_PERSON_STATE
+        error:
+          type: string
+        field:
+          type: string
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_Problem'
+        errorDetail:
+          type: string
+    3.29.14_CardholderAccessKeyValidationSummary:
+      type: object
+      properties:
+        accessKey:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerEntity'
+        competencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_CardholderAccessKeyCompetencySummary'
+    3.29.14_ErrorResource:
+      type: object
+      properties:
+        errorType:
+          type: string
+          enum:
+          - GENERAL_ERROR
+          - BAD_REQUEST
+          - FORBIDDEN
+          - UNAUTHORISED
+          - NO_ACCESS_TO_PORTAL
+          - INVALID_PASSWORD
+          - NOT_FOUND
+          - CONSTRAINT_VIOLATION
+          - VALIDATION_ERROR
+          - ALREADY_EXISTS
+          - DATA_MISMATCH
+          - NOT_AN_EMPLOYEE
+          - CANNOT_BE_TERMINATED
+          - TOO_MANY_FAILED_ATTEMPTS
+          - REQUIRED_FIELD_MISSING
+          - VERIFICATION_TOKEN_EXPIRED
+          - PURCHASE_ORDER_EXPIRED
+          - DUPLICATE_PAYMENT
+          - PAYMENT_ERROR
+          - CANNOT_BE_UPDATED
+          - PENDING_CARD_IN_PROGRESS
+          - CANNOT_ASSIGN
+          - INVALID_PERSON_STATE
+        error:
+          type: string
+        field:
+          type: string
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_Problem'
+    3.29.14_Problem:
+      type: object
+      properties:
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        detail:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: '#/components/schemas/3.29.14_StatusType'
+    3.29.14_KeyedIntegerEntity:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+  securitySchemes:
+    3.29.14_security_auth:
+      type: oauth2
+      scheme: Bearer
+      flows:
+        authorizationCode:
+          authorizationUrl: https://login.poweredbyonsite.com/cas/oidc/authorize
+          tokenUrl: https://login.poweredbyonsite.com/cas/oidc/accessToken
+          scopes:
+            pegasus: Pegasus Authentication Scope
+    3.29.14_security_apikey:
+      type: apiKey
+      name: api_key
+      in: header
+x-refined-from:
+- avetta-pegasus-dist.json
+- avetta-pegasus-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

@@ -1,0 +1,4670 @@
+openapi: 3.2.0
+info:
+  title: Avetta User API
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  version: '1.0'
+  description: 'Operations tagged User across 4 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v2.json, avetta-worker-v1-openapi.yml, avetta-worker-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+- url: https://{environment}.avetta.com/api/v2
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - worker-au
+security:
+- ApiKeyAuth: []
+tags:
+- name: User
+  description: The User API allows you to retrieve user detail information.
+paths:
+  /user/{id}:
+    get:
+      operationId: getUser
+      tags:
+      - User
+      summary: User Details
+      description: Composite endpoint for user data
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/parameters-idParam'
+      - $ref: '#/components/parameters/showAllConnectionsParam'
+      - $ref: '#/components/parameters/connectionIdParam'
+      - $ref: '#/components/parameters/roleIdParam'
+      - $ref: '#/components/parameters/todoParam'
+      - $ref: '#/components/parameters/allVariancesParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulUser'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    post:
+      operationId: postUser
+      tags:
+      - User
+      summary: User Save
+      description: Save the user information in the profile form
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/jsonProfile'
+      parameters:
+      - $ref: '#/components/parameters/parameters-idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulProfilePost'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /user/profile/{id}:
+    get:
+      operationId: getProfile
+      tags:
+      - User
+      summary: Profile Details
+      description: Profile form information
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/parameters-idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulProfile'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorForbidden'
+    post:
+      operationId: postProfile
+      tags:
+      - User
+      summary: Profile Save
+      description: Save the logged user information in the profile form
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/jsonProfile'
+      parameters:
+      - $ref: '#/components/parameters/parameters-idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulProfilePost'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /user/photo/{id}:
+    get:
+      operationId: getPhoto
+      tags:
+      - User
+      summary: User Photo
+      description: Get the user photo
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/parameters-idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulPhoto'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorForbidden'
+    post:
+      operationId: postPhoto
+      tags:
+      - User
+      summary: User Photo Save
+      description: Save the user photo
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/requestBody-formData'
+      parameters:
+      - $ref: '#/components/parameters/parameters-idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulSavePhoto'
+        '201':
+          $ref: '#/components/responses/errorFile'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorForbidden'
+    delete:
+      operationId: deletePhoto
+      tags:
+      - User
+      summary: User Photo Delete
+      description: Delete the user photo
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/parameters-idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulDeletePhoto'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorForbidden'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /user/list/{id}:
+    get:
+      operationId: getUserListCheckInOut
+      tags:
+      - User
+      summary: User List
+      description: Get List check in/out
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/requiredSiteParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCheckIn'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /user/checkin/{id}:
+    post:
+      operationId: postCheckin
+      tags:
+      - User
+      summary: Check in
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/requiredSiteParam'
+      - $ref: '#/components/parameters/user_components-parameters-flagParam'
+      - $ref: '#/components/parameters/parameters-notesParam'
+      - $ref: '#/components/parameters/timeinParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/PostCheckin'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorMessages'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /user/checkout/{id}:
+    post:
+      operationId: postCheckOut
+      tags:
+      - User
+      summary: Check out
+      description: Check out. Closes the user's currently open time card for the given site (the most recent one with no checkout time). The `id` path parameter is the user being checked out; `site` (required) is the site/location the checkout applies to. Use `card_id` to target a specific time card explicitly instead of relying on the automatic lookup.
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/requiredSiteParam'
+      - $ref: '#/components/parameters/cardIdParam'
+      - $ref: '#/components/parameters/parameters-notesParam'
+      - $ref: '#/components/parameters/timeoutParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/PostCheckOut'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorMessages'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /user/{id}/checkin/status/{grpID}:
+    get:
+      operationId: getCheckInStatus
+      tags:
+      - User
+      summary: Check in status
+      description: Return the status of the check in for a user in a group
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/groupParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/GetCheckInStatus'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorMessages'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /user/{id}/checkin/listsites:
+    get:
+      operationId: getCheckInListSites
+      tags:
+      - User
+      summary: Check in list sites
+      description: Return the list of sites where the user can check in
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/GetCheckInListSites'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorMessages'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /user/{id}/timecard:
+    get:
+      operationId: getTimeCard
+      tags:
+      - User
+      summary: History of check in/out
+      description: Return the history details of the check in and check out for a user
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/components-parameters-siteParam'
+      - $ref: '#/components/parameters/startDateParam'
+      - $ref: '#/components/parameters/endDateParam'
+      - $ref: '#/components/parameters/user_components-parameters-sortParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/startParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/responses-successfulTimeCard'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /user/connections:
+    get:
+      operationId: getUserConnections
+      tags:
+      - User
+      summary: Worker connections
+      description: Return the valid connections of the authenticated worker, so the mobile application can present a site selector. The list covers every approved, non deleted, non invalid connection to an active group, which includes the worker's own primary company as well as their site assignments. The worker is taken from the authorization token, there is no user path parameter and no other user can be requested.
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/GetConnections'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /user/groupselector:
+    get:
+      operationId: getGroupSelector
+      tags:
+      - User
+      summary: Group Selector
+      description: Get the list of groups the user is available to select from
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/groupselector_components-parameters-searchParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulGroupSelector'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    post:
+      operationId: postGroupSelector
+      tags:
+      - User
+      summary: Set Viewing Group
+      description: Set the viewing group for the user session
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/jsonGroupSelector'
+      responses:
+        '204':
+          description: '#/components/responses/groupSelectorResponses'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /user/groupselector/{grp_id}:
+    get:
+      operationId: getGroupSelectorByID
+      tags:
+      - User
+      summary: Group Selector by ID
+      description: Get the list of children groups of a specific group ID
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/grpIDParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulGroupSelector'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /user:
+    get:
+      operationId: getUser
+      tags:
+      - User
+      summary: User Details (v2)
+      description: Composite endpoint for the currently authenticated user's data (profile, account, roles, requirements, history, permissions, security, custom fields, agreements, variances and connections)
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/parameters-allConnectionsParam'
+      - $ref: '#/components/parameters/connectionIdParam'
+      - $ref: '#/components/parameters/roleIdParam'
+      - $ref: '#/components/parameters/todoParam'
+      - $ref: '#/components/parameters/parameters-allVariancesParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulUser_2'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorForbidden'
+    post:
+      operationId: postUser
+      tags:
+      - User
+      summary: User Save (v2)
+      description: Save the user information in the profile form
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/jsonProfile'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulProfilePost'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v2
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - worker-au
+  /user/profile:
+    get:
+      operationId: getUserProfile
+      tags:
+      - User
+      summary: Profile Details (v2)
+      description: Profile form information
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulProfile'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+      x-operation-id-source: normalized
+      x-operation-id-original: getProfile
+    post:
+      operationId: postUserProfile
+      tags:
+      - User
+      summary: Profile Save (v2)
+      description: Save the logged user information in the profile form
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/jsonProfile'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulProfilePost'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+      x-operation-id-source: normalized
+      x-operation-id-original: postProfile
+    servers:
+    - url: https://{environment}.avetta.com/api/v2
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - worker-au
+  /user/photo:
+    post:
+      operationId: postUserPhoto
+      tags:
+      - User
+      summary: User Photo Save (v2)
+      description: Save the user photo. Send the file as multipart form data (`file`), or as a JSON body with the base64-encoded image in `data`. The image is resized to at most 400x400 and stored as the user's profile photo, replacing any existing one.
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/photoUpload'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulSavePhoto'
+        '400':
+          $ref: '#/components/responses/errorFile'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+      x-operation-id-source: normalized
+      x-operation-id-original: postPhoto
+    delete:
+      operationId: deleteUserPhoto
+      tags:
+      - User
+      summary: User Photo Delete (v2)
+      description: Delete the user photo. Returns 404 when there is no photo on file.
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulDeletePhoto'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+      x-operation-id-source: normalized
+      x-operation-id-original: deletePhoto
+    servers:
+    - url: https://{environment}.avetta.com/api/v2
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - worker-au
+  /user/checkin:
+    post:
+      operationId: postUserCheckin
+      tags:
+      - User
+      summary: Self check in (v2)
+      description: 'Checks the currently authenticated user in at the given site. This is self-service only: the user being checked in is always the caller, never another user. The check in is allowed only when the site (or one of its parent groups) has worker check in/out enabled, the site''s company has Time Card enabled, the site is active, and the caller has a Green compliance status at the site. The caller cannot have another open check in at any site; check out first. The new time card is recorded with a Green flag.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/requiredSiteParam'
+      - $ref: '#/components/parameters/notesParam'
+      - $ref: '#/components/parameters/timeinParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulCheckInOut'
+        '400':
+          $ref: '#/components/responses/errorMessages_2'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorMessages_2'
+      x-operation-id-source: normalized
+      x-operation-id-original: postCheckin
+    servers:
+    - url: https://{environment}.avetta.com/api/v2
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - worker-au
+  /user/checkout:
+    post:
+      operationId: postCheckout
+      tags:
+      - User
+      summary: Self check out (v2)
+      description: 'Checks the currently authenticated user out of the given site. This is self-service only: the time card closed always belongs to the caller. Allowed only when worker check in/out and Time Card are enabled for the site. Closes the caller''s most recent open time card at `site`, or the time card given by `card_id`, which must belong to the caller and to `site`.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/requiredSiteParam'
+      - $ref: '#/components/parameters/cardIdParam'
+      - $ref: '#/components/parameters/notesParam'
+      - $ref: '#/components/parameters/timeoutParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulCheckInOut'
+        '400':
+          $ref: '#/components/responses/errorMessages_2'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorMessages_2'
+    servers:
+    - url: https://{environment}.avetta.com/api/v2
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - worker-au
+  /user/timecard:
+    get:
+      operationId: getUserTimecard
+      tags:
+      - User
+      summary: History of check in/out(v2)
+      description: Return the history details of the check in and check out for the currently authenticated user
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/siteParam'
+      - $ref: '#/components/parameters/startDateParam_2'
+      - $ref: '#/components/parameters/endDateParam_2'
+      - $ref: '#/components/parameters/sortParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/startParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulTimeCard'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+      x-operation-id-source: normalized
+      x-operation-id-original: getTimeCard
+    servers:
+    - url: https://{environment}.avetta.com/api/v2
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - worker-au
+  /user/whoami:
+    get:
+      operationId: getWhoami
+      tags:
+      - User
+      summary: Who am I (v2)
+      description: Return the identity, account and token details of the currently authenticated user. Requires an access token in the API key header
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulWhoami'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v2
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - worker-au
+components:
+  examples:
+    missingPermissionsOverSite:
+      summary: 400 - Missing permissions over the site
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Missing permissions over the site
+          status: null
+          success: false
+          code: 400
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+    forbidden:
+      summary: 403 - Invalid security
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Invalid security
+          status: Forbidden
+          success: false
+          code: 403
+    successfulCheckOut:
+      summary: 200 - Successful check out
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          status: Good
+          message: null
+          success: true
+          code: 200
+    extensionCheck:
+      summary: Extension check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.101
+          message: The file extension is not allowed
+          allowedExtensions:
+          - t3
+          - mid
+          - zip
+          - rtf
+          - docx
+          - tar
+          - midi
+          - tif
+          - m4a
+          - png
+          - xps
+          - xml
+          - mp3
+          - htm
+          - gz
+          - mp4
+          - doc
+          - tiff
+          - jpeg
+          - avi
+          - mpeg
+          - qst
+          - txt
+          - wmv
+          - msg
+          - xlsx
+          - webp
+          - gif
+          - html
+          - bmp
+          - csv
+          - pdf
+          - jpg
+          - xls
+          - swf
+          - mov
+          - dng
+          - heic
+    missingPermissions3:
+      summary: 405 - Missing permissions
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Missing permissions
+          status: null
+          success: false
+          code: 405
+    timeCardNotEnabled2:
+      summary: 405 - TimeCard not enabled
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: TimeCard not enabled
+          status: null
+          success: false
+          code: 405
+    missingPermissions5:
+      summary: 405 - Missing permissions
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Missing permissions
+          status: null
+          success: false
+          code: 405
+    missingSite3:
+      summary: 400 - Missing site parameter
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Missing site parameter
+          status: null
+          success: false
+          code: 400
+    missingPermissions4:
+      summary: 403 - Missing permissions
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Missing permissions
+          status: null
+          success: false
+          code: 403
+    missingPermissions1:
+      summary: 405 - Missing permissions
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: User not found
+          status: null
+          success: false
+          code: 405
+    failedToSave2:
+      summary: 500 - Failed to save
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Failed to save data
+          status: null
+          success: false
+          code: 500
+    userAlreadyLoggedIn:
+      summary: 400 - User already logged in
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: User is already logged into this site
+          status: null
+          success: false
+          code: 400
+    errorPost:
+      summary: 500 - Error post
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          status: null
+          success: false
+          code: 500
+    missingUser:
+      summary: 400 - Missing user parameter
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Missing user parameter
+          status: null
+          success: false
+          code: 400
+    sizeCheck:
+      summary: Size check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.100
+          message: The file size is too large
+          maxSize: 10
+          size: 10.5390701293945
+    failedToFInd:
+      summary: 400 - Failed to find check in
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Failed to find check in
+          status: null
+          success: false
+          code: 400
+    timeCardNotEnabled4:
+      summary: 405 - TimeCard not enabled
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: TimeCard not enabled
+          status: null
+          success: false
+          code: 405
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+    missingSite:
+      summary: 400 - Missing site
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Missing site
+          status: null
+          success: false
+          code: 400
+    timeCardNotEnabled:
+      summary: 405 - TimeCard not enabled
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: TimeCard not enabled
+          status: null
+          success: false
+          code: 405
+    timeCardNotMatch:
+      summary: 400 - Timecard id does not match data
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Timecard id does not match data
+          status: null
+          success: false
+          code: 400
+    examples-invalidSecurity:
+      summary: 403 - Invalid security
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Invalid security
+          status: Bad Request
+          success: false
+          code: 403
+    successfulList:
+      summary: 200 - Successful list of check in/out
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          list:
+          - out: '2024-06-03 21:37:00'
+            in: '2024-06-03 21:37:00'
+          - out: '2024-06-03 21:37:00'
+            in: '2024-06-03 21:37:00'
+    successfulCheckin:
+      summary: 200 - Successful check in
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          status: Good
+          success: true
+          code: 200
+    virusCheck:
+      summary: Virus check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.103
+          message: This file might be infected with a virus
+          virusName: sample virus name
+    missingSite2:
+      summary: 400 - Missing site
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Missing site
+          status: null
+          success: false
+          code: 400
+    siteInactive:
+      summary: 400 - Site inactive/user has no permission
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Site is not active or user has no permission over it
+          status: null
+          success: false
+          code: 400
+    missingPermissions2:
+      summary: 403 - Missing permissions
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Missing permissions
+          status: null
+          success: false
+          code: 403
+    errorPost2:
+      summary: 500 - Error post
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          status: null
+          message: null
+          success: false
+          code: 500
+    failedToSave:
+      summary: 500 - Failed to save
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Missing
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Failed to save data
+          status: null
+          success: false
+          code: 500
+    invalidSecurity:
+      summary: 403 - Invalid security
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Invalid security
+          status: Bad Request
+          success: false
+          code: 403
+  responses:
+    successfulDeletePhoto:
+      description: Successful response with the user photo deleted
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/photoDeleteSchema'
+    errorFile:
+      description: Error while checking files
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    virusName:
+                      type: string
+                      description: Name of the virus found in the file
+                      example: sample virus name
+                    maxSize:
+                      type: integer
+                      description: Maximum size allowed for the file
+                      example: 10
+                    size:
+                      type: number
+                      description: Size of the file checked
+                      example: 10.5390701293945
+                    allowedExtensions:
+                      type: array
+                      description: List of allowed extensions for the file
+                      example:
+                      - t3
+                      - mid
+                      - zip
+                      - rtf
+                      - docx
+                      - tar
+                      - midi
+                      - tif
+                      - m4a
+                      - png
+                      - xps
+                      - xml
+                      - mp3
+                      - htm
+                      - gz
+                      - mp4
+                      - doc
+                      - tiff
+                      - jpeg
+                      - avi
+                      - mpeg
+                      - qst
+                      - txt
+                      - wmv
+                      - msg
+                      - xlsx
+                      - webp
+                      - gif
+                      - html
+                      - bmp
+                      - csv
+                      - pdf
+                      - jpg
+                      - xls
+                      - swf
+                      - mov
+                      - dng
+                      - heic
+                      items:
+                        type: string
+                        enum:
+                        - t3
+                        - mid
+                        - zip
+                        - rtf
+                        - docx
+                        - tar
+                        - midi
+                        - tif
+                        - m4a
+                        - png
+                        - xps
+                        - xml
+                        - mp3
+                        - htm
+                        - gz
+                        - mp4
+                        - doc
+                        - tiff
+                        - jpeg
+                        - avi
+                        - mpeg
+                        - qst
+                        - txt
+                        - wmv
+                        - msg
+                        - xlsx
+                        - webp
+                        - gif
+                        - html
+                        - bmp
+                        - csv
+                        - pdf
+                        - jpg
+                        - xls
+                        - swf
+                        - mov
+                        - dng
+                        - heic
+          examples:
+            virusCheck:
+              $ref: '#/components/examples/virusCheck'
+            sizeCheck:
+              $ref: '#/components/examples/sizeCheck'
+            extensionCheck:
+              $ref: '#/components/examples/extensionCheck'
+    GetConnections:
+      description: Successful - Return the valid connections of the authenticated worker, including their primary company
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/connectionsSchema'
+    successfulUser:
+      description: Successful
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/userSchema'
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+    successfulProfilePost:
+      description: A successful response confirms the save and returns any issue found as part of the message
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/profileSaveSchema'
+          example:
+            summary: 200 - Successful profile save example
+            value:
+              stats:
+                command: User
+                version: v1
+                type: token
+                msg: Good
+                start: 1
+                time: 0.71513
+                limit: 3000
+                owner: 1234567890
+                count: 0
+                records: 0
+              user:
+                status: Good
+                message:
+                - SSN is not valid
+                - Changes Saved
+                success: true
+                code: 200
+    PostCheckOut:
+      description: Different responses with code 200
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                type: object
+                properties:
+                  messageSchema:
+                    $ref: '#/components/schemas/messageSchema'
+          examples:
+            successfulCheckOut:
+              $ref: '#/components/examples/successfulCheckOut'
+            missingSite3:
+              $ref: '#/components/examples/missingSite3'
+            missingPermissionsOverSite:
+              $ref: '#/components/examples/missingPermissionsOverSite'
+            missingUser:
+              $ref: '#/components/examples/missingUser'
+            timeCardNotMatch:
+              $ref: '#/components/examples/timeCardNotMatch'
+            failedToFInd:
+              $ref: '#/components/examples/failedToFInd'
+            timeCardNotEnabled4:
+              $ref: '#/components/examples/timeCardNotEnabled4'
+            missingPermissions5:
+              $ref: '#/components/examples/missingPermissions5'
+            failedToSave2:
+              $ref: '#/components/examples/failedToSave2'
+            errorPost2:
+              $ref: '#/components/examples/errorPost2'
+    errorForbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              users:
+                $ref: '#/components/schemas/messageForbiddenSchema'
+    successfulSavePhoto:
+      description: Successful response with the user photo saved
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/photoSaveSchema'
+    GetCheckInStatus:
+      description: Successful - Return the status of the check in for a user in a group
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/checkInStatusSchema'
+    successfulProfile:
+      description: A successful response returns the user profile fields
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/profileSchema'
+          example:
+            summary: 200 - Successful profile example
+            value:
+              stats:
+                command: User
+                version: v1
+                type: token
+                msg: Good
+                start: 1
+                time: 0.71513
+                limit: 3000
+                owner: 1234567890
+                count: 0
+                records: 0
+              user:
+                fields:
+                - group: null
+                  key: UsrLoginID
+                  order: 1
+                  readonly: true
+                  title: Login ID
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 128
+                    maxvalue: null
+                    minlength: null
+                    required: true
+                    special: null
+                  value: Alex.Bennett
+                - group: name
+                  key: UsrFirstName
+                  order: 2
+                  readonly: false
+                  title: First Name
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 35
+                    maxvalue: null
+                    minlength: null
+                    required: true
+                    special: null
+                  value: Alex
+                - group: name
+                  key: UsrMiddleInitial
+                  order: 3
+                  readonly: false
+                  title: MI
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 1
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: name
+                  key: UsrLastName
+                  order: 4
+                  readonly: false
+                  title: Last Name
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 45
+                    maxvalue: null
+                    minlength: null
+                    required: true
+                    special: null
+                  value: Bennett
+                - group: null
+                  key: UsrTitleID
+                  order: 30
+                  readonly: false
+                  title: Title
+                  type: 507
+                  typename: combo
+                  validation:
+                    maxlength: null
+                    maxvalue: null
+                    minlength: null
+                    required: true
+                    special: null
+                  value: 365
+                  values:
+                  - id: 0
+                    value: N/A
+                  - id: 2
+                    value: Technician
+                  - id: 4
+                    value: Supervisor
+                - group: null
+                  key: UsrEmailAddr
+                  order: 26
+                  readonly: false
+                  title: E-mail
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 255
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: email:1
+                  value: null
+                - group: null
+                  key: UsrEmploymentTypID
+                  order: 47
+                  readonly: false
+                  title: Employment Type
+                  type: 508
+                  typename: popup
+                  validation:
+                    maxlength: null
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: 1641
+                  values:
+                  - id: 1641
+                    value: Employee
+                  - id: 1642
+                    value: Subcontractor
+                  - id: 1643
+                    value: Labor Hire
+                - group: address
+                  key: UsrAddrTypID
+                  order: 7
+                  readonly: false
+                  title: Address Type
+                  type: 508
+                  typename: popup
+                  validation:
+                    maxlength: null
+                    maxvalue: null
+                    minlength: null
+                    required: true
+                    special: null
+                  value: 61
+                  values:
+                  - id: 61
+                    value: Business
+                  - id: 62
+                    value: Residence
+                - group: address
+                  key: UsrAddress1
+                  order: 8
+                  readonly: false
+                  title: Address Line 1
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 100
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: address
+                  key: UsrAddress2
+                  order: 9
+                  readonly: false
+                  title: Address Line 2
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 100
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: address
+                  key: UsrCity
+                  order: 10
+                  readonly: false
+                  title: City
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 50
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: address
+                  key: UsrState
+                  order: 11
+                  readonly: false
+                  title: State
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 50
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: address
+                  key: UsrZipCode
+                  order: 13
+                  readonly: false
+                  title: Zip
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 15
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: address
+                  key: UsrCountryID
+                  order: 12
+                  readonly: false
+                  title: Country
+                  type: 524
+                  typename: popup
+                  validation:
+                    maxlength: null
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: 840
+                  values:
+                  - id: 32
+                    value: Argentina
+                  - id: 36
+                    value: Australia
+                  - id: 68
+                    value: Bolivia (Plurinational State of)
+                  - id: 124
+                    value: Canada
+                  - id: 356
+                    value: India
+                  - id: 840
+                    value: United States of America
+                - group: phone
+                  key: UsrMobilePhone
+                  order: 14
+                  readonly: false
+                  title: Mobile Phone
+                  type: 526
+                  typename: textfield
+                  validation:
+                    maxlength: 18
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: phone
+                  key: UsrHomePhone
+                  order: 15
+                  readonly: false
+                  title: Home Phone
+                  type: 526
+                  typename: textfield
+                  validation:
+                    maxlength: 18
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: phone
+                  key: UsrWorkPhone
+                  order: 16
+                  readonly: false
+                  title: Work Phone
+                  type: 526
+                  typename: textfield
+                  validation:
+                    maxlength: 18
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: phone
+                  key: UsrFaxPhone
+                  order: 17
+                  readonly: false
+                  title: Fax Phone
+                  type: 526
+                  typename: textfield
+                  validation:
+                    maxlength: 18
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: emergencycontact
+                  key: UsrEmergencyContactName
+                  order: null
+                  readonly: false
+                  title: Emergency Contact Name
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 100
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: emergencycontact
+                  key: UsrEmergencyContactPhone
+                  order: null
+                  readonly: false
+                  title: Emergency Contact Phone
+                  type: 526
+                  typename: textfield
+                  validation:
+                    maxlength: 18
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: emergencycontact
+                  key: UsrEmergencyContactTypID
+                  order: null
+                  readonly: false
+                  title: Emergency Contact Relationship
+                  type: 508
+                  typename: popup
+                  validation:
+                    maxlength: null
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: 0
+                  values:
+                  - id: 1721
+                    value: Parent
+                  - id: 1722
+                    value: Child
+                  - id: 1723
+                    value: Spouse
+                  - id: 1724
+                    value: Sibling
+                  - id: 1725
+                    value: Friend
+                  - id: 1726
+                    value: Relative
+                  - id: 1727
+                    value: Other
+                - group: personalinfo
+                  key: UsrGenderTypID
+                  order: 18
+                  readonly: false
+                  title: Gender
+                  type: 508
+                  typename: popup
+                  validation:
+                    maxlength: null
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: 0
+                  values:
+                  - id: 161
+                    value: Male
+                  - id: 162
+                    value: Female
+                - group: personalinfo
+                  key: UsrBirthDate
+                  order: 32
+                  readonly: false
+                  title: Birth Date
+                  type: 518
+                  typename: textfield
+                  validation:
+                    maxlength: null
+                    maxvalue: '2024-07-08 23:59:59'
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: personalinfo
+                  key: UsrLegalWorkingAge
+                  order: 45
+                  readonly: false
+                  title: Legal Working Age
+                  type: 509
+                  typename: checkbox
+                  validation:
+                    maxlength: null
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: 0
+                - group: personalinfo
+                  key: UsrSSN
+                  order: 6
+                  readonly: false
+                  title: SSN
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 100
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: ssn
+                  value: ''
+                - group: custom
+                  id: 20
+                  key: Gender
+                  readonly: false
+                  title: EchoSphere Inc
+                  type: 502
+                  typename: textfield
+                  validation:
+                    maxlength: 255
+                    maxvalue: null
+                    minlength: null
+                    required: true
+                  value: null
+                groups:
+                - name: name
+                  title: Name
+                  value: '{UsrFirstName} {UsrMiddleInitial} {UsrLastName}'
+                - name: address
+                  title: Address ({UsrAddrTypID})
+                  value: '{UsrAddress1} {UsrAddress2} {UsrCity}, {UsrState} {UsrZipCode} {UsrCountryID}'
+                - name: phone
+                  title: Phone
+                  value: null
+                - name: emergencycontact
+                  title: Emergency Contact
+                  value: '{UsrEmergencyContactPhone} ( {UsrEmergencyContactName} )'
+                - name: personalinfo
+                  title: Personal Information
+                  value: null
+                - name: custom
+                  title: Custom
+                  value: null
+    ListCheckIn:
+      description: Different responses with code 200
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                type: object
+                properties:
+                  successfulList:
+                    $ref: '#/components/schemas/userListSchema'
+                  badresponse:
+                    $ref: '#/components/schemas/messageSchema'
+          examples:
+            successfulList:
+              $ref: '#/components/examples/successfulList'
+            missingSite:
+              $ref: '#/components/examples/missingSite'
+            missingPermissions2:
+              $ref: '#/components/examples/missingPermissions2'
+            forbidden:
+              $ref: '#/components/examples/forbidden'
+            missingPermissions1:
+              $ref: '#/components/examples/missingPermissions1'
+            timeCardNotEnabled:
+              $ref: '#/components/examples/timeCardNotEnabled'
+    successfulPhoto:
+      description: Successful response with the user photo
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/photoSchema'
+    GetCheckInListSites:
+      description: Successful - Return the list of sites where the user can check in
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/checkInListSitesSchema'
+    errorMessages:
+      description: Different responses when the request is not successful
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    detail:
+                      type: object
+                      properties:
+                        fail:
+                          type: array
+                          description: list of users that failed to insert or update with the user id and the error messages
+                          items:
+                            type: object
+                            properties:
+                              UsrID:
+                                type: integer
+                                description: User ID processed
+                                example: 22822
+                              code:
+                                type: integer
+                                description: Code of the error for this particular user
+                                example: 400
+                              message:
+                                type: array
+                                description: Message related to the failure of the insert or update of the user
+                        success:
+                          type: array
+                          description: list of users that were successfully inserted or updated with the user id and the informative messages
+                          items:
+                            type: object
+                            properties:
+                              UsrID:
+                                type: integer
+                                description: User ID processed
+                                example: 22822
+                              code:
+                                type: integer
+                                description: Code of the success for this particular user
+                                example: 200
+                              message:
+                                type: array
+                                description: Message related to the validation of data during the insert or update of the user
+          examples:
+            invalidSecurity:
+              $ref: '#/components/examples/examples-invalidSecurity'
+    PostCheckin:
+      description: Different responses with code 200
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                type: object
+                properties:
+                  messageSchema:
+                    $ref: '#/components/schemas/messageSchema'
+          examples:
+            successfulCheckin:
+              $ref: '#/components/examples/successfulCheckin'
+            siteInactive:
+              $ref: '#/components/examples/siteInactive'
+            userAlreadyLoggedIn:
+              $ref: '#/components/examples/userAlreadyLoggedIn'
+            missingSite2:
+              $ref: '#/components/examples/missingSite2'
+            missingPermissions4:
+              $ref: '#/components/examples/missingPermissions4'
+            missingPermissions3:
+              $ref: '#/components/examples/missingPermissions3'
+            timeCardNotEnabled2:
+              $ref: '#/components/examples/timeCardNotEnabled2'
+            failedToSave:
+              $ref: '#/components/examples/failedToSave'
+            errorPost:
+              $ref: '#/components/examples/errorPost'
+    successfulGroupSelector:
+      description: Successful group selector
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              sites:
+                $ref: '#/components/schemas/groupSelectorSchema'
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+    responses-successfulTimeCard:
+      description: Successful - Return the history details of the check in and check out for a user
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/schemas-timeCardSchema'
+    successfulWhoami:
+      description: Successful - Return the identity, account and token details of the calling user
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/whoamiSchema'
+    successfulUser_2:
+      description: Successful
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/schemas-userSchema'
+    errorMessages_2:
+      description: Different responses when the request is not successful
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    detail:
+                      type: object
+                      properties:
+                        fail:
+                          type: array
+                          description: list of users that failed to insert or update with the user id and the error messages
+                          items:
+                            type: object
+                            properties:
+                              UsrID:
+                                type: integer
+                                description: User ID processed
+                                example: 22822
+                              code:
+                                type: integer
+                                description: Code of the error for this particular user
+                                example: 400
+                              message:
+                                type: array
+                                description: Message related to the failure of the insert or update of the user
+                        success:
+                          type: array
+                          description: list of users that were successfully inserted or updated with the user id and the informative messages
+                          items:
+                            type: object
+                            properties:
+                              UsrID:
+                                type: integer
+                                description: User ID processed
+                                example: 22822
+                              code:
+                                type: integer
+                                description: Code of the success for this particular user
+                                example: 200
+                              message:
+                                type: array
+                                description: Message related to the validation of data during the insert or update of the user
+          examples:
+            invalidSecurity:
+              $ref: '#/components/examples/invalidSecurity'
+    successfulTimeCard:
+      description: Successful - Return the history details of the check in and check out for a user
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/timeCardSchema'
+    successfulCheckInOut:
+      description: Successful - the time card was saved
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/messageSchema'
+    successfulUser_3:
+      description: Successful
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/schemas-userSchema'
+    errorMessages_3:
+      description: Different responses when the request is not successful
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    detail:
+                      type: object
+                      properties:
+                        fail:
+                          type: array
+                          description: list of users that failed to insert or update with the user id and the error messages
+                          items:
+                            type: object
+                            properties:
+                              UsrID:
+                                type: integer
+                                description: User ID processed
+                                example: 22822
+                              code:
+                                type: integer
+                                description: Code of the error for this particular user
+                                example: 400
+                              message:
+                                type: array
+                                description: Message related to the failure of the insert or update of the user
+                        success:
+                          type: array
+                          description: list of users that were successfully inserted or updated with the user id and the informative messages
+                          items:
+                            type: object
+                            properties:
+                              UsrID:
+                                type: integer
+                                description: User ID processed
+                                example: 22822
+                              code:
+                                type: integer
+                                description: Code of the success for this particular user
+                                example: 200
+                              message:
+                                type: array
+                                description: Message related to the validation of data during the insert or update of the user
+          examples:
+            invalidSecurity:
+              $ref: '#/components/examples/invalidSecurity'
+  parameters:
+    parameters-notesParam:
+      name: notes
+      in: query
+      description: Notes about the check in/out
+      required: false
+      schema:
+        type: string
+      example: Check in
+    groupParam:
+      name: grpID
+      in: path
+      description: Site ID
+      required: true
+      schema:
+        type: integer
+      example: 44
+    requiredSiteParam:
+      name: site
+      in: query
+      description: Site ID
+      required: true
+      schema:
+        type: integer
+      example: 44
+    roleIdParam:
+      name: role_id
+      in: query
+      description: Restrict requirements and connections to a specific role ID
+      required: false
+      schema:
+        type: integer
+      example: 12
+    todoParam:
+      name: todo
+      in: query
+      description: When 1, restrict requirements to those that are due or overdue (to-do) only
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    timeoutParam:
+      name: time_out
+      in: query
+      description: Time out. Defaults to the current date/time when not provided.
+      required: false
+      schema:
+        type: string
+      example: 2021-09-01 17:00
+    groupselector_components-parameters-searchParam:
+      name: search
+      in: query
+      description: Search by the title of the group
+      required: false
+      schema:
+        type: string
+    limitParam:
+      name: limit
+      in: query
+      description: Maximum number of records to return
+      required: false
+      schema:
+        type: integer
+        default: 3000
+    endDateParam:
+      name: endDate
+      in: query
+      description: Filter by check in date where the given date is less or equal to the given date
+      required: false
+      schema:
+        type: string
+      example: 2021-09-01 23:59
+    user_components-parameters-sortParam:
+      name: sort
+      in: query
+      description: 'Sort the results by the given field: name - site name, con_id - site code, checkin - date to check in, checkout - date to check out'
+      required: false
+      schema:
+        type: string
+        enum:
+        - name
+        - con_id
+        - checkin
+        - checkout
+      example: checkin
+    idParam:
+      name: id
+      in: path
+      description: references an id to reduce list down to 1 item
+      required: false
+      schema:
+        type: integer
+    timeinParam:
+      name: time_in
+      in: query
+      description: Time in. Defaults to the current date/time when not provided.
+      required: false
+      schema:
+        type: string
+      example: 2021-09-01 08:00
+    user_components-parameters-flagParam:
+      name: flag
+      in: query
+      description: Flag
+      required: false
+      schema:
+        type: string
+      example: Red
+    grpIDParam:
+      name: grp_id
+      in: path
+      description: Group ID to get its children groups
+      required: true
+      schema:
+        type: integer
+        format: integer
+    startDateParam:
+      name: startDate
+      in: query
+      description: Filter by check in date where the given date is greater or equal to the given date
+      required: false
+      schema:
+        type: string
+      example: 2021-09-01 00:00
+    components-parameters-siteParam:
+      name: site
+      in: query
+      description: Site ID
+      required: false
+      schema:
+        type: integer
+      example: 44
+    cardIdParam:
+      name: card_id
+      in: query
+      description: ID of the time card to check out. If omitted, the most recent time card for the user at the given site that has not yet been checked out is used automatically.
+      required: false
+      schema:
+        type: integer
+      example: 4521
+    allVariancesParam:
+      name: allVariances
+      in: query
+      description: When 1, include expired/inactive variances in the variances list, instead of only currently active ones
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    connectionIdParam:
+      name: connection_id
+      in: query
+      description: Restrict requirements and connections to a specific connection (site) ID
+      required: false
+      schema:
+        type: integer
+      example: 44
+    showAllConnectionsParam:
+      name: showAllConnections
+      in: query
+      description: Show all connections for the user, even if there is no training associated
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    startParam:
+      name: start
+      in: query
+      description: Offset of the first record to return
+      required: false
+      schema:
+        type: integer
+        default: 1
+    parameters-idParam:
+      name: id
+      in: path
+      description: The ID of the user resource, if not provided, the results will corresponde to the current user
+      required: false
+      schema:
+        type: integer
+      example: 123
+    parameters-allConnectionsParam:
+      name: all_connections
+      in: query
+      description: Show all connections for the user, even if there is no training associated
+      required: false
+      schema:
+        type: integer
+        enum:
+        - 0
+        - 1
+    parameters-allVariancesParam:
+      name: all_variances
+      in: query
+      description: When 1, include expired/inactive variances in the variances list, instead of only currently active ones
+      required: false
+      schema:
+        type: integer
+        enum:
+        - 0
+        - 1
+    sortParam:
+      name: sort
+      in: query
+      description: 'Sort the results by the given field: name - site name, con_id - site code, checkin - date to check in, checkout - date to check out'
+      required: false
+      schema:
+        type: string
+        enum:
+        - name
+        - con_id
+        - checkin
+        - checkout
+      example: checkin
+    endDateParam_2:
+      name: end_date
+      in: query
+      description: Filter by check in date where the check in date is less than or equal to the given date
+      required: false
+      schema:
+        type: string
+      example: 2021-09-01 23:59
+    startDateParam_2:
+      name: start_date
+      in: query
+      description: Filter by check in date where the check in date is greater than or equal to the given date
+      required: false
+      schema:
+        type: string
+      example: 2021-09-01 00:00
+    siteParam:
+      name: site
+      in: query
+      description: Site ID
+      required: false
+      schema:
+        type: integer
+      example: 44
+    notesParam:
+      name: notes
+      in: query
+      description: Notes about the check in/out
+      required: false
+      schema:
+        type: string
+      example: Check in
+    endDateParam_3:
+      name: end_date
+      in: query
+      description: Filter by check in date where the check in date is less than or equal to the given date
+      required: false
+      schema:
+        type: string
+      example: 2021-09-01 23:59
+    startDateParam_3:
+      name: start_date
+      in: query
+      description: Filter by check in date where the check in date is greater than or equal to the given date
+      required: false
+      schema:
+        type: string
+      example: 2021-09-01 00:00
+  schemas:
+    connectionsSchema:
+      type: object
+      format: object
+      properties:
+        connections:
+          type: array
+          description: List of the valid connections of the authenticated worker, ordered by title. Includes the worker's own primary company alongside their site assignments.
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: ID of the group
+                example: 1234
+              con_id:
+                type: string
+                description: Code of the group
+                example: '25001234'
+              name:
+                type: string
+                description: Title of the group, as stored on the group
+                example: Amazon UBS2
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    photoSchema:
+      type: object
+      format: object
+      properties:
+        name:
+          type: string
+          description: Name of the user profile picture file requested
+          example: ProfilePhoto.jpg
+        size:
+          type: string
+          description: Size of the profile picture file
+          example: 123456789
+        data:
+          type: string
+          description: Profile picture in base64 format
+          example: data:image/jpeg;base64,/9j/...
+    jsonProfileSchema:
+      type: object
+      format: object
+      properties:
+        UsrFirstName:
+          type: string
+          description: First name
+          example: John
+        UsrMiddleInitial:
+          type: string
+          description: Middle initial
+          example: A
+        UsrLastName:
+          type: string
+          description: Last name
+          example: Doe
+        UsrTitleID:
+          type: integer
+          description: Title ID
+          example: 0
+        UsrEmailAddr:
+          type: string
+          description: Email address
+          example: john.doe@example.com
+        UsrEmploymentTypID:
+          type: integer
+          description: Employment type ID
+          example: 1641
+        UsrAddrTypID:
+          type: integer
+          description: Address type ID
+          example: 61
+        UsrAddress1:
+          type: string
+          description: Address line 1
+          example: 123 Main St
+        UsrAddress2:
+          type: string
+          description: Address line 2
+          example: Apt 4
+        UsrCity:
+          type: string
+          description: City
+          example: Anytown
+        UsrState:
+          type: string
+          description: State
+          example: Anystate
+        UsrZipCode:
+          type: string
+          description: Zip code
+          example: 12345
+        UsrCountryID:
+          type: integer
+          description: Country ID
+          example: 10
+        UsrMobilePhone:
+          type: string
+          description: Mobile phone
+          example: 555-123-4567
+        UsrHomePhone:
+          type: string
+          description: Home phone
+          example: 555-987-6543
+        UsrWorkPhone:
+          type: string
+          description: Work phone
+          example: 555-555-5555
+        UsrFaxPhone:
+          type: string
+          description: Fax phone
+          example: 555-666-7777
+        UsrEmergencyContactName:
+          type: string
+          description: Emergency contact name
+          example: Jane Doe
+        UsrEmergencyContactPhone:
+          type: string
+          description: Emergency contact phone
+          example: 555-111-2222
+        UsrEmergencyContactTypID:
+          type: integer
+          description: Emergency contact type ID
+          example: 1725
+        UsrGenderTypID:
+          type: integer
+          description: Gender type ID
+          example: 161
+        UsrBirthDate:
+          type: string
+          description: Birth date
+          example: '1980-01-01'
+        UsrLegalWorkingAge:
+          type: boolean
+          description: Legal working age
+          example: true
+          enum:
+          - true
+          - false
+        UsrSSN:
+          type: string
+          description: Protected field Social security number
+          example: 123-45-6789
+        IsGeolocationEnabled:
+          type: boolean
+          description: Whether the user has enabled geolocation
+          example: true
+        Passport:
+          type: string
+          description: Custom field sample
+          example: AB1234567
+    messageForbiddenSchema:
+      type: object
+      format: object
+      properties:
+        code:
+          type: integer
+          description: Error code
+          example: 403
+        status:
+          type: string
+          description: Error status
+          example: Forbidden
+        success:
+          type: boolean
+          description: Success status
+          example: false
+    profileSchema:
+      type: object
+      format: object
+      properties:
+        fields:
+          type: array
+          description: List of fields
+          items:
+            type: object
+            properties:
+              group:
+                type: string
+                description: Group name
+                example: name
+              typename:
+                type: string
+                description: Type name
+                example: textfield
+              type:
+                type: string
+                description: Type of the field
+                example: 501
+              readonly:
+                type: boolean
+                description: Read only field
+                example: true
+                enum:
+                - true
+                - false
+              validation:
+                type: object
+                description: Validation of the field
+                properties:
+                  required:
+                    type: boolean
+                    description: Required field
+                    example: true
+                    enum:
+                    - true
+                    - false
+                  maxvalue:
+                    type: string
+                    description: Maximum value
+                    example: 100
+                  maxlength:
+                    type: string
+                    description: Maximum length
+                    example: 128
+                  minlength:
+                    type: string
+                    description: Minimum length
+                    example: 1
+                  special:
+                    type: string
+                    description: Special validation
+                    example: null
+              order:
+                type: integer
+                description: Order of the field
+                example: 1
+              value:
+                type: string
+                description: Value of the field
+                example: Alex.Bennett
+              title:
+                type: string
+                description: Title of the field
+                example: Login ID
+              key:
+                type: string
+                description: Key of the field
+                example: UsrLoginID
+              values:
+                type: array
+                description: List of values
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: ID of the value
+                      example: 0
+                    value:
+                      type: string
+                      description: Value of the value
+                      example: N/A
+        groups:
+          type: array
+          description: List of groups
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                description: Value of the group
+                example: '{UsrFirstName} {UsrMiddleInitial} {UsrLastName}'
+              name:
+                type: string
+                description: Name of the group
+                example: name
+              title:
+                type: string
+                description: Title of the group
+                example: Name
+    profileSaveSchema:
+      type: object
+      format: object
+      properties:
+        status:
+          type: string
+          description: Status of the response
+          example: Good
+        message:
+          type: array
+          description: Message of the response
+          items:
+            type: string
+            example: Changes Saved
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          example: true
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+          example: 200
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+    photoDeleteSchema:
+      type: object
+      format: object
+      properties:
+        code:
+          type: integer
+          description: Code of the response
+          example: 200
+        message:
+          type: string
+          description: Message of the response
+          example: The User Photo has been deleted
+        status:
+          type: string
+          description: Status of the response
+          example: Good
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          example: true
+          enum:
+          - true
+          - false
+    checkInListSitesSchema:
+      type: object
+      format: object
+      properties:
+        sites:
+          type: array
+          description: List of sites the user can check in to
+          items:
+            type: object
+            properties:
+              checked_in:
+                type: string
+                description: Status of the user in the site
+                example: Checked out
+                enum:
+                - Checked in
+                - Checked out
+              grp_id:
+                type: integer
+                description: ID of the site
+                example: 123
+              grp_code:
+                type: string
+                description: Code of the site
+                example: 15651
+              grp_title:
+                type: string
+                description: Title of the site
+                example: Site company
+              flag_status:
+                type: string
+                description: Flag status of the site
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+    schemas-timeCardSchema:
+      type: object
+      format: object
+      properties:
+        entries:
+          type: array
+          description: List of check in/out entries
+          items:
+            type: object
+            properties:
+              account:
+                type: object
+                description: Site of the company the user checked in to
+                properties:
+                  id:
+                    type: integer
+                    description: Site ID
+                    example: 123
+                  con_id:
+                    type: integer
+                    description: Site code
+                    example: 15651
+                  name:
+                    type: string
+                    description: Extended site name
+                    example: client company::Site A
+              checkin_by:
+                type: string
+                description: User who register the check in
+                example: Worker Supplier 2
+              checkin_date:
+                type: string
+                description: Check in date
+                example: '2024-07-09 05:00:00'
+              checkout_by:
+                type: string
+                description: User who register the check out
+                example: Worker Supplier 2
+              checkin_flag:
+                type: string
+                description: Compliance status of the user for the site
+                example: Red
+                enum:
+                - Green
+                - Amber
+                - Red
+              checkout_date:
+                type: string
+                description: Check out date
+                example: '2024-07-09 15:00:00'
+              id:
+                type: integer
+                description: Id of the check in/out entry
+                example: 7033
+              checkin_notes:
+                type: string
+                description: Notes registered at check in
+                example: null
+              checkout_notes:
+                type: string
+                description: Notes registered at check out
+                example: null
+    photoSaveSchema:
+      type: object
+      format: object
+      properties:
+        code:
+          type: integer
+          description: Code of the response
+          example: 200
+        message:
+          type: string
+          description: Message of the response
+          example: The User Photo has been uploaded
+        status:
+          type: string
+          description: Status of the response
+          example: Good
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          example: true
+          enum:
+          - true
+          - false
+    userListSchema:
+      type: object
+      format: object
+      properties:
+        list:
+          type: array
+          description: List of check in/out
+          items:
+            type: object
+            properties:
+              out:
+                type: string
+                description: Check out date
+                example: '2024-06-03 21:37:00'
+              in:
+                type: string
+                description: Check in date
+                example: '2024-06-03 21:37:00'
+    checkInStatusSchema:
+      type: object
+      format: object
+      properties:
+        status:
+          type: string
+          description: Status of the check in action in the given site for the user
+          example: Checked in here
+          enum:
+          - Checked in here
+          - Checked in somewhere else
+          - Checked out
+        usr_id:
+          type: integer
+          description: User ID of the user given
+          example: 123
+        grp_id:
+          type: integer
+          description: Group ID of the site given
+          example: 123
+        grp_code:
+          type: string
+          description: Code of the site given
+          example: 15651
+        grp_title:
+          type: string
+          description: Title of the site given
+          example: Site company
+        top_grp_id:
+          type: integer
+          description: ID of the top parent group of the site given
+          example: 123
+        top_grp_code:
+          type: string
+          description: Code of the top parent group of the site given
+          example: 15651
+        top_grp_title:
+          type: string
+          description: Title of the top parent group of the site given
+          example: client company
+    userSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: User ID
+          example: 1235
+        con_id:
+          type: integer
+          description: User code from Connect
+          example: 1568432
+        first_name:
+          type: string
+          description: First name
+          example: John
+        last_name:
+          type: string
+          description: Last name
+          example: Doe
+        login_id:
+          type: string
+          description: User login id
+          example: jdoe
+        email:
+          type: string
+          description: User email
+          example: test@test.com
+        mfa:
+          type: boolean
+          description: Whether multi-factor authentication is enabled for the user
+          example: false
+        badge_link:
+          type: string
+          description: User badge link
+        last_checkin_date:
+          type: string
+          description: Last date user checked in to a site
+          example: '2020-10-23 15:00:00'
+        last_checkout_date:
+          type: string
+          description: Last date user checked out of a site
+          example: '2020-10-23 19:45:00'
+        photo:
+          type: object
+          description: Show details of the user photo when requested in extras (photo)
+          properties:
+            name:
+              type: string
+              description: Name of the user profile picture file requested
+              example: photo.jpg
+            size:
+              type: string
+              description: Size of the profile picture file
+              example: 123456789
+            data:
+              type: string
+              description: Profile picture data
+              example: data:image/jpeg;base64,/9j/...
+        phone:
+          type: string
+          description: User phone
+          example: 123456789
+        status:
+          type: string
+          description: User status
+          example: active
+          enum:
+          - active
+          - inactive
+        removed:
+          type: integer
+          description: Flag to show if the user was removed (0 - it wasn't, 1 - it was)
+          example: 0
+          enum:
+          - 0
+          - 1
+        created_date:
+          type: string
+          description: Date user was created
+          example: '2018-10-23 18:31:00'
+        updated_date:
+          type: string
+          description: Last date user was updated
+          example: '2017-15-05 16:41:00'
+        geolocation_enabled:
+          type: boolean
+          description: Whether the user has enabled geolocation
+          example: true
+        locale:
+          type: string
+          description: Localization of the user
+          example: en-us
+        title:
+          type: string
+          description: User title
+          example: Director of Software Development
+        emergency_phone:
+          type: string
+          description: Phone number
+          example: 555-555-5555
+        emergency_contact_name:
+          type: string
+          description: Person to contact in case of emergency
+          example: Bob Smith
+        emergency_contact_relationship:
+          type: string
+          description: Relationship to the person to contact in case of emergency
+          example: Parent
+          enum:
+          - Parent
+          - Spouse
+          - Child
+          - Sibling
+          - Friend
+          - Relative
+          - Other
+        address:
+          type: object
+          description: User address
+          properties:
+            street:
+              type: string
+              description: Address line 1
+              example: 123 Main St
+            street2:
+              type: string
+              description: Address line 2
+              example: Apt 1
+            city:
+              type: string
+              description: City
+              example: Salt Lake City
+            state:
+              type: string
+              description: State
+              example: UT
+            zipcode:
+              type: string
+              description: Zip code
+              example: 84101
+            country:
+              type: string
+              description: Country
+              example: United States of America
+        flag:
+          type: string
+          description: User flag
+          example: Green
+          enum:
+          - Green
+          - Amber
+          - Red
+        flag_forced:
+          type: integer
+          description: User flag forced - when a variance is applied to the user
+          example: 0
+          enum:
+          - 1
+          - 0
+        account:
+          type: object
+          description: Company the user belongs to or is connected to
+          properties:
+            id:
+              type: integer
+              description: Account ID
+              example: 1235
+            name:
+              type: string
+              description: Name of the company
+              example: Avetta
+            con_id:
+              type: integer
+              description: Company code
+              example: 235843
+            con_flag:
+              type: string
+              description: Rating of the company connection (Green, Amber, Red)
+              example: Red
+              enum:
+              - Green
+              - Amber
+              - Red
+        roles:
+          type: array
+          description: Roles assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Role ID
+                example: 132
+              code:
+                type: string
+                description: Role code
+                example: 15621
+              title:
+                type: string
+                description: Role title
+                example: Electrician
+              type:
+                type: string
+                description: Role type
+                example: Function
+                enum:
+                - Function
+                - Skill
+              flag:
+                type: string
+                description: Flag of the role (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Roles flag forced - when a variance is applied to the role
+                example: false
+                enum:
+                - true
+                - false
+        requirements:
+          type: array
+          description: Requirements assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Requirement ID
+                example: 15651
+              code:
+                type: string
+                description: Requirement code
+                example: 584135
+              title:
+                type: string
+                description: Requirement title
+                example: Driver's License
+              date:
+                type: string
+                description: Due date of the requirement when it should be retaken
+                example: '2024-05-15'
+              flag:
+                type: string
+                description: Flag of the requirement (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Requirement flag forced - when a variance is applied to the requirement
+                example: false
+                enum:
+                - true
+                - false
+              completed_date:
+                type: string
+                description: Date when the requirement was completed
+                example: '2022-10-08'
+              requires_mfa:
+                type: boolean
+                description: Show if the requirement requires MFA
+                example: false
+                enum:
+                - true
+                - false
+              todo:
+                type: boolean
+                description: Show if the requirement should be in TODO list
+                example: true
+                enum:
+                - true
+                - false
+              status:
+                type: string
+                description: Status of the requirement
+                example: Completed
+                enum:
+                - past due (if worker is past due on the requirement)
+                - current (if worker is current and NOT due for requirement)
+                - in review (if there is a review currently in process for the worker)
+                - completed (if requirement is a take once and the worker has completed the training)
+        connections:
+          type: array
+          description: Connections assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Group IDs
+                example: 325
+              name:
+                type: string
+                description: Group company name as a path
+                example: 'Avetta :: Corporate'
+              flag:
+                type: string
+                description: Flag of the connection (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Connection flag forced - when a variance is applied to the site
+                example: false
+                enum:
+                - true
+                - false
+              con_id:
+                type: integer
+                description: Group code
+                example: 250000000
+              con_flag:
+                type: string
+                description: Rating of the connection (Green, Amber, Red)
+                example: Red
+                enum:
+                - Green
+                - Amber
+                - Red
+              removed:
+                type: integer
+                description: Show if the site - user connection was removed (0 - it wasn't, 1 - it was)
+                example: 0
+                enum:
+                - 0
+                - 1
+              checked_in:
+                type: integer
+                description: Show if the user is checked in to the site currently (0 - it isn't, 1 - it is)
+                example: 0
+                enum:
+                - 0
+                - 1
+        history:
+          type: array
+          description: History of the events the user has been involved
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Requirement ID
+                example: 123
+              code:
+                type: string
+                description: Requirement code
+                example: 1457
+              title:
+                type: string
+                description: Requirement Title
+                example: Driver's License
+              date:
+                type: string
+                description: Date and time of the history event
+                example: '2022-10-08'
+              score:
+                type: string
+                description: Score obtained in the history event
+                example: 100
+              result:
+                type: string
+                description: Result obtained in the history event
+                example: Pass
+                enum:
+                - Pass
+                - Fail
+        custom:
+          type: array
+          description: Custom fields configured for the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Custom ID
+                example: 2116
+              key:
+                type: string
+                description: Custom key
+                example: DOB
+              title:
+                type: string
+                description: Custom title
+                example: Date of birthday
+              value:
+                type: string
+                description: Custom value
+                example: '1998-05-25'
+              created_date:
+                type: string
+                description: Date the custom field was created
+                example: '2020-11-01'
+              updated_date:
+                type: string
+                description: Date the custom field was updated
+                example: '2022-01-21'
+              account:
+                type: object
+                description: Custom account
+                properties:
+                  name:
+                    type: string
+                    description: Account name
+                    example: Avetta
+                  id:
+                    type: integer
+                    description: Account ID
+                    example: 123
+                  con_id:
+                    type: integer
+                    description: Account code
+                    example: 15651
+        security:
+          type: array
+          description: Security groups assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: WM Site ID
+                example: 123
+              con_id:
+                type: integer
+                description: Connect Billing ID of site
+                example: 15651
+              parent_id:
+                type: integer
+                description: Parent ID of the site
+                example: 123
+              top_id:
+                type: integer
+                description: Corp ID of the site
+                example: 123
+              name:
+                type: string
+                description: Security name
+                example: Security Group
+              status:
+                type: string
+                description: Active/Inactive status of the security group
+                example: Active
+                enum:
+                - Active
+                - Inactive
+              created_date:
+                type: string
+                format: date-time
+                description: Date the security group was created
+                example: '2020-11-01 12:00:00'
+              updated_date:
+                type: string
+                format: date-time
+                description: Date the security group was updated
+                example: '2020-11-01 12:00:00'
+        agreements:
+          type: array
+          description: Agreements user agreed told
+          items:
+            type: object
+            properties:
+              file_id:
+                type: integer
+                description: Agreement file ID
+                example: 123
+              agr_id:
+                type: integer
+                description: Agreement code
+                example: 15651
+              title:
+                type: string
+                description: Agreement title
+                example: Agreement 1
+              date:
+                type: string
+                format: date-time
+                description: Date the agreement was accepted
+                example: '2020-11-01 12:00:00'
+              prompt:
+                type: string
+                description: What was presented
+                example: I agree
+              link:
+                type: string
+                description: URL to serve agreement
+                example: https://www.avetta.com/agreement/123
+              url:
+                type: string
+                description: URL to serve agreement
+                example: https://www.avetta.com/agreement/123
+              label:
+                type: string
+                description: Label of the agreement
+                example: Agreement 1
+        variances:
+          type: array
+          description: Variances applied to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Variance ID
+                example: 123
+              account:
+                type: object
+                description: Account the variance was applied to
+                properties:
+                  name:
+                    type: string
+                    description: Account name
+                    example: Avetta
+                  id:
+                    type: integer
+                    description: Account WM ID
+                    example: 123
+                  con_id:
+                    type: integer
+                    description: Account Billing ID
+                    example: 15651
+              flag:
+                type: string
+                description: Flag of the variance (Green, Red)
+                example: Green
+                enum:
+                - Green
+                - Red
+              target:
+                type: object
+                description: Target of the variance
+                properties:
+                  id:
+                    type: integer
+                    description: Target ID
+                    example: 123
+                  type:
+                    type: string
+                    description: What type of variance it is
+                    example: Role
+                    enum:
+                    - Role
+                    - Event
+                    - Site
+                  code:
+                    type: string
+                    description: Target code ( For site variance - this is con_id )
+                    example: ''
+                  title:
+                    type: string
+                    description: Target title ( For site variance - this is name )
+                    example: ''
+              begin_date:
+                type: string
+                format: date-time
+                description: Date the variance begins
+                example: '2020-11-01 12:00:00'
+              end_date:
+                type: string
+                format: date-time
+                description: Date the variance ends
+                example: '2020-11-01 12:00:00'
+              reason:
+                type: string
+                description: Reason for the variance
+                example: Reason for the variance
+    groupSelectorSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: Group ID
+          example: 27
+        title:
+          type: string
+          description: Group title
+          example: Avetta
+        con_id:
+          type: integer
+          description: Group code
+          example: 235843
+        has_child:
+          type: integer
+          description: Indicates if the group has child groups
+          example: 1
+          enum:
+          - 0
+          - 1
+        level:
+          type: integer
+          description: Level of the group in the hierarchy
+          example: 2
+    schemas-userSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: User ID
+          example: 1235
+        con_id:
+          type: integer
+          description: User code from Connect
+          example: 1568432
+        first_name:
+          type: string
+          description: First name
+          example: John
+        last_name:
+          type: string
+          description: Last name
+          example: Doe
+        login_id:
+          type: string
+          description: User login id
+          example: jdoe
+        email:
+          type: string
+          description: User email
+          example: test@test.com
+        mfa:
+          type: boolean
+          description: Whether multi-factor authentication is enabled for the user
+          example: false
+        badge_link:
+          type: string
+          description: User badge link
+        last_checkin_date:
+          type: string
+          description: Last date user checked in to a site
+          example: '2020-10-23 15:00:00'
+        last_checkout_date:
+          type: string
+          description: Last date user checked out of a site
+          example: '2020-10-23 19:45:00'
+        photo:
+          type: object
+          description: Show details of the user photo when requested in extras (photo)
+          properties:
+            name:
+              type: string
+              description: Name of the user profile picture file requested
+              example: photo.jpg
+            size:
+              type: string
+              description: Size of the profile picture file
+              example: 123456789
+            data:
+              type: string
+              description: Profile picture data
+              example: data:image/jpeg;base64,/9j/...
+        phone:
+          type: string
+          description: User phone
+          example: 123456789
+        status:
+          type: string
+          description: User status
+          example: active
+          enum:
+          - active
+          - inactive
+        removed:
+          type: integer
+          description: Flag to show if the user was removed (0 - it wasn't, 1 - it was)
+          example: 0
+          enum:
+          - 0
+          - 1
+        created_date:
+          type: string
+          description: Date user was created
+          example: '2018-10-23 18:31:00'
+        updated_date:
+          type: string
+          description: Last date user was updated
+          example: '2017-15-05 16:41:00'
+        geolocation_enabled:
+          type: boolean
+          description: Whether the user has enabled geolocation
+          example: true
+        locale:
+          type: string
+          description: Localization of the user
+          example: en-us
+        title:
+          type: string
+          description: User title
+          example: Director of Software Development
+        emergency_phone:
+          type: string
+          description: Phone number
+          example: 555-555-5555
+        emergency_contact_name:
+          type: string
+          description: Person to contact in case of emergency
+          example: Bob Smith
+        emergency_contact_relationship:
+          type: string
+          description: Relationship to the person to contact in case of emergency
+          example: Parent
+          enum:
+          - Parent
+          - Spouse
+          - Child
+          - Sibling
+          - Friend
+          - Relative
+          - Other
+        address:
+          type: object
+          description: User address
+          properties:
+            street:
+              type: string
+              description: Address line 1
+              example: 123 Main St
+            street2:
+              type: string
+              description: Address line 2
+              example: Apt 1
+            city:
+              type: string
+              description: City
+              example: Salt Lake City
+            state:
+              type: string
+              description: State
+              example: UT
+            zipcode:
+              type: string
+              description: Zip code
+              example: 84101
+            country:
+              type: string
+              description: Country
+              example: United States of America
+        flag:
+          type: string
+          description: User flag
+          example: Green
+          enum:
+          - Green
+          - Amber
+          - Red
+        flag_forced:
+          type: integer
+          description: User flag forced - when a variance is applied to the user
+          example: 0
+          enum:
+          - 1
+          - 0
+        account:
+          type: object
+          description: Company the user belongs to or is connected to
+          properties:
+            id:
+              type: integer
+              description: Account ID
+              example: 1235
+            name:
+              type: string
+              description: Name of the company
+              example: Avetta
+            con_id:
+              type: integer
+              description: Company code
+              example: 235843
+            con_flag:
+              type: string
+              description: Rating of the company connection (Green, Amber, Red)
+              example: Red
+              enum:
+              - Green
+              - Amber
+              - Red
+        roles:
+          type: array
+          description: Roles assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Role ID
+                example: 132
+              code:
+                type: string
+                description: Role code
+                example: 15621
+              title:
+                type: string
+                description: Role title
+                example: Electrician
+              type:
+                type: string
+                description: Role type
+                example: Function
+                enum:
+                - Function
+                - Skill
+              flag:
+                type: string
+                description: Flag of the role (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Roles flag forced - when a variance is applied to the role
+                example: false
+                enum:
+                - true
+                - false
+        requirements:
+          type: array
+          description: Requirements assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Requirement ID
+                example: 15651
+              code:
+                type: string
+                description: Requirement code
+                example: 584135
+              title:
+                type: string
+                description: Requirement title
+                example: Driver's License
+              date:
+                type: string
+                description: Due date of the requirement when it should be retaken
+                example: '2024-05-15'
+              flag:
+                type: string
+                description: Flag of the requirement (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Requirement flag forced - when a variance is applied to the requirement
+                example: false
+                enum:
+                - true
+                - false
+              completed_date:
+                type: string
+                description: Date when the requirement was completed
+                example: '2022-10-08'
+              requires_mfa:
+                type: boolean
+                description: Show if the requirement requires MFA
+                example: false
+                enum:
+                - true
+                - false
+              todo:
+                type: boolean
+                description: Show if the requirement should be in TODO list
+                example: true
+                enum:
+                - true
+                - false
+              status:
+                type: string
+                description: Status of the requirement
+                example: Completed
+                enum:
+                - past due (if worker is past due on the requirement)
+                - current (if worker is current and NOT due for requirement)
+                - in review (if there is a review currently in process for the worker)
+                - completed (if requirement is a take once and the worker has completed the training)
+        connections:
+          type: array
+          description: Connections assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Group IDs
+                example: 325
+              name:
+                type: string
+                description: Group company name as a path
+                example: 'Avetta :: Corporate'
+              flag:
+                type: string
+                description: Flag of the connection (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Connection flag forced - when a variance is applied to the site
+                example: false
+                enum:
+                - true
+                - false
+              con_id:
+                type: integer
+                description: Group code
+                example: 250000000
+              con_flag:
+                type: string
+                description: Rating of the connection (Green, Amber, Red)
+                example: Red
+                enum:
+                - Green
+                - Amber
+                - Red
+              removed:
+                type: integer
+                description: Show if the site - user connection was removed (0 - it wasn't, 1 - it was)
+                example: 0
+                enum:
+                - 0
+                - 1
+              checked_in:
+                type: integer
+                description: Show if the user is checked in to the site currently (0 - it isn't, 1 - it is)
+                example: 0
+                enum:
+                - 0
+                - 1
+        history:
+          type: array
+          description: History of the events the user has been involved
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Requirement ID
+                example: 123
+              code:
+                type: string
+                description: Requirement code
+                example: 1457
+              title:
+                type: string
+                description: Requirement Title
+                example: Driver's License
+              date:
+                type: string
+                description: Date and time of the history event
+                example: '2022-10-08'
+              score:
+                type: string
+                description: Score obtained in the history event
+                example: 100
+              result:
+                type: string
+                description: Result obtained in the history event
+                example: Pass
+                enum:
+                - Pass
+                - Fail
+        custom:
+          type: array
+          description: Custom fields configured for the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Custom ID
+                example: 2116
+              key:
+                type: string
+                description: Custom key
+                example: DOB
+              title:
+                type: string
+                description: Custom title
+                example: Date of birthday
+              value:
+                type: string
+                description: Custom value
+                example: '1998-05-25'
+              created_date:
+                type: string
+                description: Date the custom field was created
+                example: '2020-11-01'
+              updated_date:
+                type: string
+                description: Date the custom field was updated
+                example: '2022-01-21'
+              account:
+                type: object
+                description: Custom account
+                properties:
+                  name:
+                    type: string
+                    description: Account name
+                    example: Avetta
+                  id:
+                    type: integer
+                    description: Account ID
+                    example: 123
+                  con_id:
+                    type: integer
+                    description: Account code
+                    example: 15651
+        security:
+          type: array
+          description: Security groups assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: WM Site ID
+                example: 123
+              con_id:
+                type: integer
+                description: Connect Billing ID of site
+                example: 15651
+              parent_id:
+                type: integer
+                description: Parent ID of the site
+                example: 123
+              top_id:
+                type: integer
+                description: Corp ID of the site
+                example: 123
+              name:
+                type: string
+                description: Security name
+                example: Security Group
+              status:
+                type: string
+                description: Active/Inactive status of the security group
+                example: Active
+                enum:
+                - Active
+                - Inactive
+              created_date:
+                type: string
+                format: date-time
+                description: Date the security group was created
+                example: '2020-11-01 12:00:00'
+              updated_date:
+                type: string
+                format: date-time
+                description: Date the security group was updated
+                example: '2020-11-01 12:00:00'
+        agreements:
+          type: array
+          description: Agreements user agreed told
+          items:
+            type: object
+            properties:
+              file_id:
+                type: integer
+                description: Agreement file ID
+                example: 123
+              agr_id:
+                type: integer
+                description: Agreement code
+                example: 15651
+              title:
+                type: string
+                description: Agreement title
+                example: Agreement 1
+              date:
+                type: string
+                format: date-time
+                description: Date the agreement was accepted
+                example: '2020-11-01 12:00:00'
+              prompt:
+                type: string
+                description: What was presented
+                example: I agree
+              link:
+                type: string
+                description: URL to serve agreement
+                example: https://www.avetta.com/agreement/123
+              url:
+                type: string
+                description: URL to serve agreement
+                example: https://www.avetta.com/agreement/123
+              label:
+                type: string
+                description: Label of the agreement
+                example: Agreement 1
+        variances:
+          type: array
+          description: Variances applied to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Variance ID
+                example: 123
+              account:
+                type: object
+                description: Account the variance was applied to
+                properties:
+                  name:
+                    type: string
+                    description: Account name
+                    example: Avetta
+                  id:
+                    type: integer
+                    description: Account WM ID
+                    example: 123
+                  con_id:
+                    type: integer
+                    description: Account Billing ID
+                    example: 15651
+              flag:
+                type: string
+                description: Flag of the variance (Green, Red)
+                example: Green
+                enum:
+                - Green
+                - Red
+              target:
+                type: object
+                description: Target of the variance
+                properties:
+                  id:
+                    type: integer
+                    description: Target ID
+                    example: 123
+                  type:
+                    type: string
+                    description: What type of variance it is
+                    example: Role
+                    enum:
+                    - Role
+                    - Event
+                    - Site
+                  code:
+                    type: string
+                    description: Target code ( For site variance - this is con_id )
+                    example: ''
+                  title:
+                    type: string
+                    description: Target title ( For site variance - this is name )
+                    example: ''
+              begin_date:
+                type: string
+                format: date-time
+                description: Date the variance begins
+                example: '2020-11-01 12:00:00'
+              end_date:
+                type: string
+                format: date-time
+                description: Date the variance ends
+                example: '2020-11-01 12:00:00'
+              reason:
+                type: string
+                description: Reason for the variance
+                example: Reason for the variance
+    timeCardSchema:
+      type: object
+      format: object
+      properties:
+        entries:
+          type: array
+          description: List of check in/out entries
+          items:
+            type: object
+            properties:
+              account:
+                type: object
+                description: Site of the company the user checked in to
+                properties:
+                  id:
+                    type: integer
+                    description: Site ID
+                    example: 123
+                  con_id:
+                    type: integer
+                    description: Site code
+                    example: 15651
+                  name:
+                    type: string
+                    description: Extended site name
+                    example: client company::Site A
+              checkin_by:
+                type: string
+                description: User who register the check in
+                example: Worker Supplier 2
+              checkin_date:
+                type: string
+                description: Check in date
+                example: '2024-07-09 05:00:00'
+              checkout_by:
+                type: string
+                description: User who register the check out
+                example: Worker Supplier 2
+              checkin_flag:
+                type: string
+                description: Compliance status of the user for the site
+                example: Red
+                enum:
+                - Green
+                - Amber
+                - Red
+              checkout_date:
+                type: string
+                description: Check out date
+                example: '2024-07-09 15:00:00'
+              id:
+                type: integer
+                description: Id of the check in/out entry
+                example: 7033
+              checkin_notes:
+                type: string
+                description: Notes registered at check in
+                example: null
+              checkout_notes:
+                type: string
+                description: Notes registered at check out
+                example: null
+    whoamiSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: User ID
+          example: 123
+        con_id:
+          type: string
+          description: User code
+          example: '2500000'
+        login_id:
+          type: string
+          description: Login ID of the user
+          example: alice@example.com
+        account:
+          type: object
+          description: Company the user belongs to
+          properties:
+            id:
+              type: integer
+              description: Account ID
+              example: 123
+            con_id:
+              type: string
+              description: Account code
+              example: '2500000'
+            name:
+              type: string
+              description: Account name
+              example: Example Company
+            is_client:
+              type: boolean
+              description: Whether the account is a client
+              example: false
+        region:
+          type: string
+          description: Region of the server. 01 is EU, 02 is AU
+          example: '01'
+        is_admin:
+          type: boolean
+          description: Whether the user is an administrator
+          example: false
+        token_issued_at:
+          type: string
+          description: Date and time the token was issued (GMT)
+          example: '2026-10-01 12:00:00'
+        token_expires_at:
+          type: string
+          description: Date and time the token expires (GMT)
+          example: '2026-10-01 12:30:00'
+  requestBodies:
+    jsonGroupSelector:
+      description: Group Selector payload
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              id:
+                type: integer
+                description: Group ID to set as viewing group. Use 0 to clear viewing group. ( optional if con_id is provided )
+                example: 27
+              con_id:
+                type: integer
+                description: Group code to set as viewing group. Alternative to the id field. ( optional if id is provided )
+                example: 235843
+    requestBody-formData:
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              file:
+                type: string
+                format: binary
+    jsonProfile:
+      description: JSON data with the user information details - it could be a json object for one user or an array of objects for multiple users
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/jsonProfileSchema'
+    photoUpload:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              file:
+                type: string
+                format: binary
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: string
+                contentEncoding: base64
+                description: Base64-encoded image
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v2.json
+- avetta-worker-v1-openapi.yml
+- avetta-worker-v2-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

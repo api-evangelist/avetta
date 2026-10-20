@@ -1,0 +1,17 @@
+generated: '2026-10-20'
+method: searched
+probe: true
+source: https://trust.avetta.com/
+url: https://trust.avetta.com/
+certifications:
+- SOC 2
+- ISO 27001
+- ISO 27017
+- ISO 27018
+evidence:
+- source: https://trust.avetta.com/
+  keywords:
+  - soc 2
+  - soc2
+  - iso/iec 27001
+  - trust center

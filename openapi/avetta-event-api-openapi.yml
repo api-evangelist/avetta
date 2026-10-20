@@ -1,0 +1,2563 @@
+openapi: 3.2.0
+info:
+  title: Avetta Event API
+  version: '2026-05-08'
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  description: 'Operations tagged Event across 2 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+security:
+- ApiKeyAuth: []
+tags:
+- name: Event
+  description: The Event API allows you to retrieve event / requirement information.
+paths:
+  /event/{id}:
+    get:
+      operationId: getEvent
+      tags:
+      - Event
+      summary: List of events
+      description: Returns responses of event
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulEvent'
+        '201':
+          $ref: '#/components/responses/badRequestMissingEventID'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /event/clearbookmark:
+    post:
+      operationId: clearEventBookmark
+      tags:
+      - Event
+      summary: Clear the SCORM bookmarks
+      description: This endpoint is used to clear the SCORM bookmarks.
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/evtIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulClearBookmark'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /event/document/complete:
+    post:
+      operationId: viewDocumentID
+      tags:
+      - Event
+      summary: Complete / Mark as Downloaded
+      description: This endpoint is used to mark the requirement files as Viewed / Downloaded. The list of available files can be found under “links” array returned by the Event endpoint
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/parameters-evtIDParam'
+      - $ref: '#/components/parameters/fileNameParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulComplete'
+        '201':
+          $ref: '#/components/responses/badRequestComplete'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /event/document:
+    post:
+      operationId: uploadDocumentID
+      tags:
+      - Event
+      summary: Upload a document (using form-data)
+      description: This endpoint is used to upload a document for “Documents Review” section. The uploaded documents can be found in the “upload->files” array returned by the Event endpoint
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/parameters-evtIDParam'
+      - $ref: '#/components/parameters/docFileParam'
+      - $ref: '#/components/parameters/fileNameBaseParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulUpDocument'
+        '201':
+          $ref: '#/components/responses/errorFile'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    delete:
+      operationId: deleteDocument
+      tags:
+      - Event
+      summary: Delete a document
+      description: This endpoint is used to delete a document uploaded for “Documents Review”
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/parameters-evtIDParam'
+      - $ref: '#/components/parameters/docIDParam'
+      - $ref: '#/components/parameters/uedIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulDelete'
+        '201':
+          $ref: '#/components/responses/badRequestDelete'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    get:
+      operationId: getDocument
+      tags:
+      - Event
+      summary: Get a document (using base64string)
+      description: This is NOT a preferred method. Mobile team should NOT use this method This endpoint is used to get a document uploaded for “Documents Review” to download
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/parameters-evtIDParam'
+      - $ref: '#/components/parameters/docIDParam'
+      - $ref: '#/components/parameters/uedIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulGetDocument'
+        '201':
+          $ref: '#/components/responses/badRequestGetDocument'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /event/review:
+    post:
+      operationId: reviewEvent
+      tags:
+      - Event
+      summary: Event Review
+      description: Endpoint to save the event for Credit/review
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/components-parameters-evtIDParam'
+      - $ref: '#/components/parameters/postDataParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulReview'
+        '201':
+          $ref: '#/components/responses/badRequest'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+components:
+  examples:
+    successfulGetDocument:
+      summary: 200 - Successful get document
+      value:
+        stats:
+          command: Event::Document
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          msg: Good
+          start: 1
+        event_document:
+          base64string: iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAYAAAB5fY51AAAgAElEQVR4Xu3dCZgV1fXH8e9/3+9
+          filename: EMP_4665_Resolved.png
+          mimetype: image/png
+    docInvInData:
+      summary: 404 - Invalid input data
+      value:
+        stats:
+          command: Event::Document
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          msg: Good
+          start: 1
+        event_document:
+          message: Invalid input data
+          code: 404
+          status: Bad Request
+          success: false
+    eventWithOrder:
+      description: Requirement type (Order)
+      summary: 200 - Requirement with Order Type
+      value:
+        stats:
+          limit: 3000
+          id: 1636
+          command: Event
+          start: 1
+          msg: Good
+          version: v1
+          owner: 1483
+          time: 0.50823
+        event:
+          actions:
+          - disabled: true
+            name: credit
+            url: Event/Review
+            title: Submit
+            type: api
+            canenable: true
+          - title: Dashboard
+            name: menu
+            type: none
+            url: null
+          fields:
+          - cols: 50
+            row: 2
+            type: 502
+            validation:
+              maxvalue: null
+              minvalue: null
+              maxlength: 3968
+              required: false
+            key: NewUEDRevNotes
+            readonly: false
+            value: ''
+            shortvalue: ''
+            title: Notes
+          - type: 502
+            validation:
+              maxvalue: null
+              minvalue: null
+              maxlength: null
+              required: null
+            key: UEDRevNotes
+            shortvalue: ''
+            readonly: true
+            title: ''
+            value: null
+          requires_mfa: false
+          order:
+            items:
+            - validation:
+                maxvalue: null
+                minvalue: null
+                maxlength: 50
+                required: true
+                type: 0
+              key: UsrName
+              readonly: false
+              title: Name
+              value: LOURDES VEIZAGA
+              type: 501
+            - validation:
+                maxvalue: null
+                minvalue: null
+                maxlength: 50
+                required: true
+                type: 0
+              key: UsrAddr1
+              readonly: false
+              title: Address Line 1
+              value: 1234 Main St
+              type: 501
+            - key: UsrAddr2
+              validation:
+                maxvalue: null
+                minvalue: null
+                maxlength: 50
+                required: true
+                type: 0
+              type: 501
+              value: null
+              readonly: false
+              title: Address Line 2
+            - validation:
+                maxvalue: null
+                minvalue: null
+                maxlength: 35
+                required: true
+                type: 0
+              key: UsrCity
+              readonly: false
+              title: City
+              value: null
+              type: 501
+            - type: 501
+              readonly: false
+              value: null
+              title: State
+              key: UsrState
+              validation:
+                type: 0
+                maxvalue: null
+                maxlength: 25
+                required: true
+                minvalue: null
+            - title: Zip
+              readonly: false
+              value: null
+              type: 501
+              validation:
+                maxlength: 15
+                required: true
+                minvalue: null
+                type: 0
+                maxvalue: null
+              key: UsrZipCode
+            - key: UsrPhone
+              validation:
+                maxvalue: null
+                type: 0
+                minvalue: null
+                maxlength: 20
+                required: true
+              type: 501
+              readonly: false
+              value: null
+              title: Home Phone
+            - readonly: false
+              value: lulitaja@hotmail.com
+              title: E-mail
+              type: 501
+              validation:
+                required: true
+                maxlength: 50
+                minvalue: null
+                maxvalue: null
+                type: 1
+              key: UsrEmail
+            title: Verify Address
+          reqtype: 122
+          type: 1
+          shortdescription: ''
+          id: 1636
+          upload:
+            instructions: You need to upload 1 file(s)
+            canview: true
+            candedit: true
+            enabled: true
+            revid: 3785
+            howmany: 1
+            files: []
+          instructions: null
+          title: reqapi5-order
+          acknowledgementtext: ''
+          description: null
+          code: REQAPI5-ORDER
+          acknowledgementrequired: false
+          shortinstructions: ''
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+    docUnsupportedFile:
+      summary: 404 - Unsupported file type
+      value:
+        stats:
+          command: Event::Document
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          msg: Good
+          start: 1
+        event_document:
+          message: Unsupported file type
+          code: 404
+          status: Bad Request
+          success: false
+    successfulUpDocument:
+      summary: 200 - Successful document upload
+      value:
+        stats:
+          command: Event::Document
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          msg: Good
+          start: 1
+        event_document:
+          message: Document uploaded successfully
+          code: 200
+          status: Good
+          success: true
+    successfulComplete:
+      summary: 200 - Document marked as complete
+      value:
+        stats:
+          command: Event::Document
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          msg: Good
+          start: 1
+        event_document:
+          message: Document marked as complete
+          code: 200
+          status: Good
+          success: true
+    revEffOutOfBound:
+      summary: 400 - Effective date is out of bound
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          msg: Good
+          time: 0.71513
+          start: 1
+        event/review:
+          message: The Effective Date is out of bound
+          code: 400
+          status: Bad Request
+          success: false
+    extensionCheck:
+      summary: Extension check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.101
+          message: The file extension is not allowed
+          allowedExtensions:
+          - t3
+          - mid
+          - zip
+          - rtf
+          - docx
+          - tar
+          - midi
+          - tif
+          - m4a
+          - png
+          - xps
+          - xml
+          - mp3
+          - htm
+          - gz
+          - mp4
+          - doc
+          - tiff
+          - jpeg
+          - avi
+          - mpeg
+          - qst
+          - txt
+          - wmv
+          - msg
+          - xlsx
+          - webp
+          - gif
+          - html
+          - bmp
+          - csv
+          - pdf
+          - jpg
+          - xls
+          - swf
+          - mov
+          - dng
+          - heic
+    docIsNotFound:
+      summary: 404 - Document not found
+      value:
+        stats:
+          command: Event::Document
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          msg: Good
+          start: 1
+        event_document:
+          message: Document is not found
+          code: 404
+          status: Bad Request
+          success: false
+    revComDateReq:
+      summary: 400 - Completion date is required
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          msg: Good
+          time: 0.71513
+          start: 1
+        event/review:
+          message: Completion Date is required
+          code: 400
+          status: Bad Request
+          success: false
+    revInsIsTooLong:
+      summary: 400 - Instructions is too long
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          msg: Good
+          time: 0.71513
+          start: 1
+        event/review:
+          message: Instructor is too long. It should be less than or equal to 128 characters
+          code: 400
+          status: Bad Request
+          success: false
+    eventNotFoundClear:
+      summary: 404 - Event not found
+      value:
+        stats:
+          command: Event::Clearbookmark
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          msg: Good
+          start: 1
+        event/clearbookmark:
+          message: Event not found
+          code: 404
+          status: Bad Request
+          detail: ''
+          success: false
+    revExpOutOfBound:
+      summary: 400 - Expiration date is out of bound
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          msg: Good
+          time: 0.71513
+          start: 1
+        event/review:
+          message: The Expiration Date is out of bound
+          code: 400
+          status: Bad Request
+          success: false
+    eventWithSelfCredit:
+      description: Could be Requirement type (Download, External, Order)
+      summary: 200 - Requirement with self credit
+      value:
+        stats:
+          command: Event
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 1635
+          time: 0.37947
+          msg: Good
+          start: 1
+        event:
+          field: []
+          actions:
+          - disabled: false
+            name: credit
+            url: Event/Review
+            title: Submit
+            type: api
+            canenable: true
+          - title: Dashboard
+            name: menu
+            type: none
+            url: null
+          id: 1635
+          acknowledgementrequired: false
+          title: reqapi4-external
+          requires_mfa: false
+          reqtype: 127
+          type: 1
+          acknowledgementtext: ''
+          description: null
+          shortdescription: ''
+          instructions: null
+          code: REQAPI4-EXTERNAL
+          shortinstructions: ''
+    revLess:
+      summary: 400 - Effective date must be less than <MAXDATE>
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          msg: Good
+          time: 0.71513
+          start: 1
+        event/review:
+          message: <Effective Date> be less than or equal to <2023-01-01 00:00:00>
+          code: 400
+          status: Bad Request
+          success: false
+    docMissingFormData:
+      summary: 400 - Missing form data or document file
+      value:
+        stats:
+          command: Event
+          start: 1
+          owner: 1483
+          limit: 3000
+          version: v1
+          time: 0.26975
+          msg: Good
+        event_document:
+          message: Missing form data or document file
+          code: 400
+          status: Bad Request
+          success: false
+    eventNotFound:
+      summary: 404 - Event not found
+      value:
+        stats:
+          command: Event
+          start: 1
+          owner: 1483
+          limit: 3000
+          version: v1
+          time: 0.26975
+          msg: Good
+        event:
+          message: Event not found
+          code: 404
+          status: Bad Request
+          detail: ''
+          success: false
+    successfulReview:
+      summary: 200 - Saved successfully detail
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          start: 1
+          msg: Good
+        event/review:
+          message: Saved successfully
+          code: 200
+          status: Good
+          success: true
+    eventNotFoundOrAsgUser:
+      summary: 404 - Event not found or not assigned to the user
+      value:
+        stats:
+          command: Event
+          start: 1
+          owner: 1483
+          limit: 3000
+          version: v1
+          time: 0.26975
+          msg: Good
+        event_document:
+          message: Event not found or not assigned to the user
+          code: 404
+          status: Bad Request
+          success: false
+    revMissingFormData:
+      summary: 400 - Missing form data
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          msg: Good
+          time: 0.71513
+          start: 1
+        event/review:
+          message: Missing form data
+          code: 400
+          status: Bad Request
+          success: false
+    eventWithCreditOption:
+      description: Could be Requirement type (Download, External, Order) with Prerequisites
+      summary: 200 - Requirement with Pre-Requisites
+      value:
+        stats:
+          start: 1
+          owner: 1483
+          command: Event
+          msg: Good
+          id: 1634
+          limit: 3000
+          time: 0.37947
+          version: v1
+        event:
+          actions:
+          - title: Dashboard
+            name: menu
+            type: none
+            url: null
+          acknowledgementtext: ''
+          shortinstructions: ''
+          fields: []
+          acknowledgementrequired: false
+          title: reqapi3-down-upload
+          instructions: null
+          description: null
+          code: REQAPI3-DOWN-UPDOAL
+          id: 1634
+          reqtype: 121
+          shortdescription: ''
+          links:
+          - items:
+            - url: Event/1544
+              title: 5960REQ1
+              type: api
+              order: 1
+              id: 1544
+              code: 5960REQ1
+            header:
+            - title: '##'
+              field: order
+              order: 1
+            - title: Code
+              field: code
+              order: 2
+            - title: Title
+              field: title
+              order: 3
+            title: The following Items are Pre-Requisites that need to be completed first.
+            type: prereqs
+          requires_mfa: false
+          type: 1
+    sizeCheck:
+      summary: Size check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.100
+          message: The file size is too large
+          maxSize: 10
+          size: 10.5390701293945
+    eventWithDocReview:
+      description: Could be Requirement type (Download, External, Order) with Document Review
+      summary: 200 - Requirement with Worker Upload
+      value:
+        stats:
+          time: 0.40046
+          id: 1633
+          command: Event
+          start: 1
+          version: v1
+          msg: Good
+          limit: 3000
+          owner: 1483
+        event:
+          title: reqapi3-down-upload
+          upload:
+            revid: 3784
+            instructions: You need to upload 2 file(s)
+            howmany: 2
+            candedit: true
+            enabled: true
+            canview: true
+            files: []
+          reqtype: 121
+          type: 1
+          requires_mfa: false
+          description: null
+          actions:
+          - disabled: true
+            name: credit
+            url: Event/Review
+            title: Submit
+            type: api
+            canenable: true
+          - title: Dashboard
+            name: menu
+            type: none
+            url: null
+          fields:
+          - cols: 50
+            validation:
+              maxvalue: null
+              minvalue: null
+              maxlength: 3968
+              required: false
+            readonly: false
+            title: Notes
+            value: ''
+            rows: 2
+            key: NewUEDRevNotes
+            shortvalue: ''
+          - key: UEDRevNotes
+            shortvalue: ''
+            value: null
+            title: ''
+            validation:
+              required: null
+              maxlength: null
+              minvalue: null
+              maxvalue: null
+            type: 502
+            readonly: true
+          acknowledgementtext: ''
+          acknowledgementrequired: false
+          code: REQAPI3-DOWN-UPDOAL
+          id: 1633
+          shortinstructions: ''
+          shortdescription: ''
+          instructions: null
+    missingEventIDClear:
+      summary: 400 - Missing event id
+      value:
+        stats:
+          command: Event::Clearbookmark
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          msg: Good
+          start: 1
+        event/clearbookmark:
+          message: Missing event id
+          code: 400
+          status: Bad Request
+          success: false
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+    revSaveIsNotAllow:
+      summary: 404 - Save is not allowed
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          msg: Good
+          time: 0.71513
+          start: 1
+        event/review:
+          message: Save is not allowed
+          code: 404
+          status: Bad Request
+          success: false
+    docDeleteIsNotAllow:
+      summary: 404 - Document delete is not allowed
+      value:
+        stats:
+          command: Event::Document
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          msg: Good
+          start: 1
+        event_document:
+          message: Document delete is not allowed
+          code: 404
+          status: Bad Request
+          success: false
+    isNotScormCourseToClear:
+      summary: 404 - Is not a SCORM course
+      value:
+        stats:
+          command: Event::Clearbookmark
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          msg: Good
+          start: 1
+        event/clearbookmark:
+          message: Event is not a Scorm course to clear the bookmark
+          code: 400
+          status: Bad Request
+          detail: ''
+          success: false
+    eventEquiOrTrack:
+      description: Event with type 5 (Equivalency), 2 (track), only change the type
+      summary: 200 - Equivelancy/Job with Items
+      value:
+        stats:
+          limit: 3000
+          id: 1640
+          command: Event
+          start: 1
+          msg: Good
+          version: v1
+          owner: 1483
+          time: 0.60895
+        event:
+          requires_mfa: false
+          links:
+          - items:
+            - url: Event/1546
+              title: 5960REQ3
+              type: api
+              order: 1
+              id: 1546
+              code: 5960REQ3
+            - url: Event/1547
+              title: 5960REQ4
+              type: api
+              order: 2
+              id: 1547
+              code: 5960REQ4
+            title: Requirements
+            type: requirements
+          acknowledgementrequired: false
+          fields: []
+          reqtype: 0
+          title: newEqui1-api
+          actions:
+          - title: Dashboard
+            name: menu
+            type: none
+            url: null
+          type: 5
+          acknowledgementtext: ''
+          instructions: null
+          shortdescription: ''
+          id: 1640
+          code: NEWEQUI1-API
+          shortinstructions: ''
+          description: null
+    revAlreadyInReview:
+      summary: 400 - Already in review
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          msg: Good
+          time: 0.71513
+          start: 1
+        event/review:
+          message: Already in review
+          code: 400
+          status: Bad Request
+          success: false
+    revMissingEventID:
+      summary: 400 - Missing event id
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          msg: Good
+          time: 0.71513
+          start: 1
+        event/review:
+          message: Missing event id
+          code: 400
+          status: Bad Request
+          success: false
+    docMissingFileName:
+      summary: 400 - Missing File Name
+      value:
+        stats:
+          command: Event
+          start: 1
+          owner: 1483
+          limit: 3000
+          version: v1
+          time: 0.26975
+          msg: Good
+        event_document:
+          message: Missing File Name
+          code: 400
+          status: Bad Request
+          success: false
+    revUserHasNotUploaded:
+      summary: 400 - User has not uploaded all the files
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          msg: Good
+          time: 0.71513
+          start: 1
+        event/review:
+          message: User has not uploaded all the files
+          code: 400
+          status: Bad Request
+          success: false
+    virusCheck:
+      summary: Virus check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.103
+          message: This file might be infected with a virus
+          virusName: sample virus name
+    revIsInvalid:
+      summary: 400 - Invalid input data
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          msg: Good
+          time: 0.71513
+          start: 1
+        event/review:
+          message: <Effective Date> is invalid
+          code: 400
+          status: Bad Request
+          success: false
+    successfulClearBookmark:
+      summary: 200 - Successful clear bookmark
+      value:
+        stats:
+          command: Event::Clearbookmark
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          msg: Good
+          start: 1
+        event/clearbookmark:
+          message: Bookmark cleared
+          code: 200
+          status: Good
+          success: true
+    revUserHasNotDownloaded:
+      summary: 400 - User has not downloaded all the files
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          msg: Good
+          time: 0.71513
+          start: 1
+        event/review:
+          message: User has not downloaded all the files
+          code: 400
+          status: Bad Request
+          success: false
+    event:
+      description: Could be any Requirement type (AICC, Download, External, Order, Register, Run, SCORM)
+      summary: 200 - Simple Requirement
+      value:
+        stats:
+          command: Event
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.37947
+          msg: Good
+          start: 1
+        event:
+          field: []
+          actions:
+          - title: Dashboard
+            url: null
+            name: menu
+            type: none
+          id: 1631
+          acknowledgementrequired: false
+          title: reqapi1-run
+          requires_mfa: false
+          reqtype: 124
+          type: 1
+          acknowledgementtext: ''
+          description: null
+          shortdescription: ''
+          instructions: null
+          code: REQAPI1-RUN
+          shortinstructions: ''
+    revGreater:
+      summary: 400 - Effective date must be greater than <MINDATE>
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          msg: Good
+          time: 0.71513
+          start: 1
+        event/review:
+          message: <Effective Date> must be greater than <2023-01-01 00:00:00>
+          code: 400
+          status: Bad Request
+          success: false
+    revMissingFormOrJson:
+      summary: 400 - Missing form data or invalid JSON
+      value:
+        stats:
+          command: Event::Review
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          msg: Good
+          time: 0.71513
+          start: 1
+        event/review:
+          message: Missing form data or invalid JSON
+          code: 400
+          status: Bad Request
+          success: false
+    docUpIsNotAllow:
+      summary: 404 - Document upload is not allowed
+      value:
+        stats:
+          command: Event::Document
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          msg: Good
+          start: 1
+        event_document:
+          message: Document upload is not allowed
+          code: 404
+          status: Bad Request
+          success: false
+    eventOptInTrack:
+      description: Event with type 3 (Opt-In Track)
+      summary: 200 - Opt-In Track with Items
+      value:
+        stats:
+          version: v1
+          id: 1643
+          msg: Good
+          owner: 1483
+          command: Event
+          limit: 3000
+          start: 1
+          time: 0.56939
+        event:
+          instructions: null
+          fields: []
+          reqtype: 0
+          code: NEWOPTIN1-API
+          shortdescription: ''
+          acknowledgementrequired: false
+          id: 1643
+          type: 6
+          description: null
+          links:
+          - items: []
+            type: options
+            header:
+            - order: 1
+              title: '##'
+              field: order
+            - order: 2
+              title: Due Date
+              field: duedate
+            - order: 3
+              title: Code
+              field: code
+            - order: 4
+              title: Requirement
+              field: title
+            title: You have currently completed the  Requirements required
+          shortinstructions: ''
+          title: newOptin1-api
+          actions:
+          - title: Dashboard
+            name: menu
+            type: none
+            url: null
+          acknowledgementtext: ''
+          requires_mfa: false
+    successfulDelete:
+      summary: 200 - Document deleted successfully
+      value:
+        stats:
+          command: Event::Document
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          msg: Good
+          start: 1
+        event_document:
+          message: Document deleted successfully
+          code: 200
+          status: Good
+          success: true
+    missingEventID:
+      summary: 400 - Missing event id
+      value:
+        stats:
+          command: Event
+          start: 1
+          owner: 1483
+          limit: 3000
+          version: v1
+          time: 0.26975
+          msg: Good
+        event:
+          message: Missing event id
+          code: 400
+          status: Bad Request
+          detail: ''
+          success: false
+    docMissingDocumentID:
+      summary: 400 - Missing document ID or event document ID
+      value:
+        stats:
+          command: Event
+          start: 1
+          owner: 1483
+          limit: 3000
+          version: v1
+          time: 0.26975
+          msg: Good
+        event_document:
+          message: Missing document ID or event document ID
+          code: 400
+          status: Bad Request
+          success: false
+    docMissingEventID:
+      summary: 400 - Missing event id
+      value:
+        stats:
+          command: Event
+          start: 1
+          owner: 1483
+          limit: 3000
+          version: v1
+          time: 0.26975
+          msg: Good
+        event_document:
+          message: Missing event id
+          code: 400
+          status: Bad Request
+          success: false
+    docInvFilename:
+      summary: 404 - Invalid filename
+      value:
+        stats:
+          command: Event::Document
+          owner: 1483
+          limit: 3000
+          version: v1
+          id: 147
+          time: 0.71513
+          msg: Good
+          start: 1
+        event_document:
+          message: Invalid filename
+          code: 404
+          status: Bad Request
+          success: false
+  parameters:
+    uedIDParam:
+      name: UEDID
+      in: query
+      description: Number of User Event Document, can be found in the “files” array, “id” attribute.
+      required: false
+      schema:
+        type: integer
+        format: int64
+    components-parameters-evtIDParam:
+      name: EvtID
+      in: query
+      description: Event ID
+      required: true
+      schema:
+        type: integer
+        format: int64
+    postDataParam:
+      name: POSTDATA
+      in: query
+      description: POSTDATA
+      required: false
+      schema:
+        type: string
+        format: string
+    parameters-evtIDParam:
+      name: EvtID
+      in: query
+      description: Number of the Event ID, returned by the Get Event Endpoint (“id” attribute)
+      required: true
+      schema:
+        type: integer
+        format: int64
+    evtIDParam:
+      name: evtID
+      in: query
+      description: Number of the Event ID
+      required: true
+      schema:
+        type: integer
+        format: integer
+    idParam:
+      name: id
+      in: path
+      description: references an id to reduce list down to 1 item
+      required: false
+      schema:
+        type: integer
+    docFileParam:
+      name: DocFile
+      in: query
+      description: Actual content of the Document File reference using “form-data”
+      required: false
+      schema:
+        type: string
+        format: string
+    fileNameBaseParam:
+      name: FileName
+      in: query
+      description: A JSON with “base64string”, “filename” is required in the “raw” body.
+      required: false
+      schema:
+        type: object
+        format: object
+    fileNameParam:
+      name: FileName
+      in: query
+      description: Name of the file, can be found in the “links” array, “title” attribute
+      required: false
+      schema:
+        type: string
+        format: string
+    docIDParam:
+      name: DocID
+      in: query
+      description: Number ID of the document
+      required: false
+      schema:
+        type: integer
+        format: int64
+  responses:
+    successfulReview:
+      description: Successful Event Review
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_review:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            revSuccess:
+              $ref: '#/components/examples/successfulReview'
+    errorFile:
+      description: Error while checking files
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    virusName:
+                      type: string
+                      description: Name of the virus found in the file
+                      example: sample virus name
+                    maxSize:
+                      type: integer
+                      description: Maximum size allowed for the file
+                      example: 10
+                    size:
+                      type: number
+                      description: Size of the file checked
+                      example: 10.5390701293945
+                    allowedExtensions:
+                      type: array
+                      description: List of allowed extensions for the file
+                      example:
+                      - t3
+                      - mid
+                      - zip
+                      - rtf
+                      - docx
+                      - tar
+                      - midi
+                      - tif
+                      - m4a
+                      - png
+                      - xps
+                      - xml
+                      - mp3
+                      - htm
+                      - gz
+                      - mp4
+                      - doc
+                      - tiff
+                      - jpeg
+                      - avi
+                      - mpeg
+                      - qst
+                      - txt
+                      - wmv
+                      - msg
+                      - xlsx
+                      - webp
+                      - gif
+                      - html
+                      - bmp
+                      - csv
+                      - pdf
+                      - jpg
+                      - xls
+                      - swf
+                      - mov
+                      - dng
+                      - heic
+                      items:
+                        type: string
+                        enum:
+                        - t3
+                        - mid
+                        - zip
+                        - rtf
+                        - docx
+                        - tar
+                        - midi
+                        - tif
+                        - m4a
+                        - png
+                        - xps
+                        - xml
+                        - mp3
+                        - htm
+                        - gz
+                        - mp4
+                        - doc
+                        - tiff
+                        - jpeg
+                        - avi
+                        - mpeg
+                        - qst
+                        - txt
+                        - wmv
+                        - msg
+                        - xlsx
+                        - webp
+                        - gif
+                        - html
+                        - bmp
+                        - csv
+                        - pdf
+                        - jpg
+                        - xls
+                        - swf
+                        - mov
+                        - dng
+                        - heic
+          examples:
+            virusCheck:
+              $ref: '#/components/examples/virusCheck'
+            sizeCheck:
+              $ref: '#/components/examples/sizeCheck'
+            extensionCheck:
+              $ref: '#/components/examples/extensionCheck'
+    badRequestDelete:
+      description: Bad request for deleted Event Document
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_document:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            docIsNotFound:
+              $ref: '#/components/examples/docIsNotFound'
+            missingEvent:
+              $ref: '#/components/examples/docMissingEventID'
+            eventNotFoundOrAssigUser:
+              $ref: '#/components/examples/eventNotFoundOrAsgUser'
+            docDeleteIsNotAllow:
+              $ref: '#/components/examples/docDeleteIsNotAllow'
+            docInvInData:
+              $ref: '#/components/examples/docInvInData'
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+    successfulUpDocument:
+      description: Document uploaded successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_document:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            docSuccess:
+              $ref: '#/components/examples/successfulUpDocument'
+            missingFormData:
+              $ref: '#/components/examples/docMissingFormData'
+            missingEvent:
+              $ref: '#/components/examples/docMissingEventID'
+            eventNotFoundOrAssigUser:
+              $ref: '#/components/examples/eventNotFoundOrAsgUser'
+            docUpIsNotAllow:
+              $ref: '#/components/examples/docUpIsNotAllow'
+            docUnsupportedFile:
+              $ref: '#/components/examples/docUnsupportedFile'
+            docInvInData:
+              $ref: '#/components/examples/docInvInData'
+    successfulClearBookmark:
+      description: Successful clear bookmark
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event/clearookmark:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            example1:
+              $ref: '#/components/examples/successfulClearBookmark'
+            example2:
+              $ref: '#/components/examples/missingEventIDClear'
+            example3:
+              $ref: '#/components/examples/eventNotFoundClear'
+            example4:
+              $ref: '#/components/examples/isNotScormCourseToClear'
+    badRequestGetDocument:
+      description: Bad request for get Event Document
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_document:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            missingDocument:
+              $ref: '#/components/examples/docMissingDocumentID'
+            missingEvent:
+              $ref: '#/components/examples/docMissingEventID'
+            docInvInData:
+              $ref: '#/components/examples/docInvInData'
+    badRequestComplete:
+      description: Bad request for completed Event Document
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_document:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            docInvFilename:
+              $ref: '#/components/examples/docInvFilename'
+            missingFileName:
+              $ref: '#/components/examples/docMissingFileName'
+            missingEvent:
+              $ref: '#/components/examples/docMissingEventID'
+            eventNotFoundOrAssigUser:
+              $ref: '#/components/examples/eventNotFoundOrAsgUser'
+            docInvInData:
+              $ref: '#/components/examples/docInvInData'
+    badRequestMissingEventID:
+      description: Bad Request Missing Event ID
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event:
+                $ref: '#/components/schemas/missingEventIDSchema'
+          examples:
+            missingEventID:
+              $ref: '#/components/examples/missingEventID'
+            eventNotFound:
+              $ref: '#/components/examples/eventNotFound'
+    badRequest:
+      description: Bad request for Event Review
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_review:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            revMissingEvent:
+              $ref: '#/components/examples/revMissingEventID'
+            revMissingFormData:
+              $ref: '#/components/examples/revMissingFormData'
+            revMissingFormOrJson:
+              $ref: '#/components/examples/revMissingFormOrJson'
+            revAlreadyInReview:
+              $ref: '#/components/examples/revAlreadyInReview'
+            revUserHasNotDownloaded:
+              $ref: '#/components/examples/revUserHasNotDownloaded'
+            revSaveIsNotAllow:
+              $ref: '#/components/examples/revSaveIsNotAllow'
+            revUserHasNotUploaded:
+              $ref: '#/components/examples/revUserHasNotUploaded'
+            revComDateReq:
+              $ref: '#/components/examples/revComDateReq'
+            revInsIsTooLong:
+              $ref: '#/components/examples/revInsIsTooLong'
+            revIsInvalid:
+              $ref: '#/components/examples/revIsInvalid'
+            revGreater:
+              $ref: '#/components/examples/revGreater'
+            revLess:
+              $ref: '#/components/examples/revLess'
+            revExpOutOfBound:
+              $ref: '#/components/examples/revExpOutOfBound'
+            revEffOutOfBound:
+              $ref: '#/components/examples/revEffOutOfBound'
+    successfulComplete:
+      description: Document marked as complete
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_document:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            docSuccess:
+              $ref: '#/components/examples/successfulComplete'
+    successfulEvent:
+      description: Successful Events
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event:
+                $ref: '#/components/schemas/schemas-propertiesSchema'
+          examples:
+            event:
+              $ref: '#/components/examples/event'
+            eventWithSelfCredit:
+              $ref: '#/components/examples/eventWithSelfCredit'
+            eventWithDocReview:
+              $ref: '#/components/examples/eventWithDocReview'
+            eventWithCreditOption:
+              $ref: '#/components/examples/eventWithCreditOption'
+            eventWithOrder:
+              $ref: '#/components/examples/eventWithOrder'
+            eventWithEquiOrTrack:
+              $ref: '#/components/examples/eventEquiOrTrack'
+            eventWithOptInTrack:
+              $ref: '#/components/examples/eventOptInTrack'
+    successfulDelete:
+      description: Document deleted successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_document:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            successfulDelete:
+              $ref: '#/components/examples/successfulDelete'
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+    successfulGetDocument:
+      description: Get a document (using base64string)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_document:
+                $ref: '#/components/schemas/getDocumentBase64'
+          examples:
+            docSuccess:
+              $ref: '#/components/examples/successfulGetDocument'
+  schemas:
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    schemas-propertiesSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Number of ID of the Event
+          example: 1593
+        type:
+          type: integer
+          description: Number of type of the EvtTypID of the Event, Requirement, Equivelancy, Track, etc
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          example: 1
+        reqtype:
+          type: integer
+          description: Number of the EvtCrsTypID of the Event <scorm,aicc,download,external,run>
+          enum:
+          - 121
+          - 122
+          - 123
+          - 124
+          - 125
+          - 126
+          - 127
+          - 128
+          example: 121
+        code:
+          type: string
+          description: Code of the Event
+          example: 8407NEWREQ
+        title:
+          type: string
+          description: Title of the Event
+          example: 8407NEWREQ
+        description:
+          type: string
+          description: Description of the Event
+          example: null
+        instructions:
+          type: string
+          description: Instructions of the Event
+          example: null
+        shortdescription:
+          type: string
+          description: Short description of the Event
+          example: ''
+        shortinstructions:
+          type: string
+          description: Short instructions of the Event
+          example: ''
+        requires_mfa:
+          type: boolean
+          description: Requires MFA (true or false)
+          example: false
+        acknowledgementrequired:
+          type: boolean
+          description: Acknowledgement required (true or false), do not send acknowledgement information for items in review
+          example: false
+        acknowledgementtext:
+          type: string
+          description: Acknowledgement text of the Event, do not send acknowledgement information for items in review
+          example: ''
+        upload:
+          description: This field appears if the event has Documents Review
+          type: object
+          properties:
+            revid:
+              type: integer
+              description: Revid of the upload
+              example: 12332
+            enabled:
+              type: boolean
+              description: Enabled of the upload
+              example: true
+            howmany:
+              type: integer
+              description: How many of the upload
+              example: 0
+            canview:
+              type: boolean
+              description: Can view of the upload
+              example: true
+            candedit:
+              type: boolean
+              description: Can delete of the upload
+              example: false
+            instructions:
+              type: string
+              description: Instructions of the upload
+              example: ''
+            files:
+              description: Array of files of the upload
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Id of the file
+                    example: 2345
+                  docid:
+                    type: integer
+                    description: Docid of the file
+                    example: 3540
+                  title:
+                    type: string
+                    description: Title of the file
+                    example: Something.jpg
+                  type:
+                    type: string
+                    description: Type of the file
+                    example: web
+                  url:
+                    type: string
+                    description: Url of the file
+                    example: ''
+                  viewed:
+                    type: boolean
+                    description: Viewed of the file
+                    example: false
+        fields:
+          description: Array of fields of the Event
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+                description: Key of the field
+                example: UEDRevExpDate
+                enum:
+                - UEDRevEffectiveDate
+                - UEDRevExpDate
+                - UEHInstructor
+                - CustomData001
+                - NewUEDRevNotes
+                - UEDRevNotes
+              title:
+                type: string
+                description: Title of the field
+                example: Review Expiration Date
+                enum:
+                - Review Effective Date
+                - Review Expiration Date
+                - Instructor
+                - CustomData001
+                - Notes
+                - ''
+              type:
+                type: integer
+                description: Number of the type of the field
+                example: 506
+                enum:
+                - 506
+                - 518
+                - 501
+                - 505
+                - 502
+              value:
+                type: string
+                description: Value of the field
+                example: '2023-10-20'
+              help:
+                type: string
+                description: information about the date, this fields appear when key is UEDRevEffectiveDate or UEDRevExpDate
+                example: Date must not be after today
+              readonly:
+                type: boolean
+                description: Readonly of the field
+                example: false
+              validation:
+                type: object
+                description: Validation of the field
+                properties:
+                  required:
+                    type: boolean
+                    description: Required of the field
+                    example: true
+                  minvalue:
+                    type: string
+                    description: Minvalue of the field
+                    example: '2021-10-20'
+                  maxvalue:
+                    type: string
+                    description: Maxvalue of the field
+                    example: '2023-10-20'
+                  maxlength:
+                    type: string
+                    description: Maxlength of the field
+                    example: null
+                  raw:
+                    type: string
+                    description: This field represents the raw associated with the 'CustomData001' key, It is applicable only when the key is 'CustomData001' and specifies a restriction on the permissible values for this field
+                    example: null
+                  limit:
+                    type: integer
+                    description: This field represents the limit associated with the 'UEDRevEffectiveDate' key. It is applicable only when the key is 'UEDRevEffectiveDate' and specifies a restriction on the permissible values for this field
+                    example: 0
+              cols:
+                type: string
+                description: Cols of the field, this fields appear when key is NewUEDRevNotes
+                example: 50
+              rows:
+                type: integer
+                description: Rows of the field, this fields appear when key is NewUEDRevNotes
+                example: 2
+              shortvalue:
+                type: string
+                description: Short value of the field, this fields appear when key is NewUEDRevNotes or UEDRevNotes
+                example: '2021-09-30 14:57 ERD EMPLOYEE 25
+
+                  Hello, World!Meow.
+
+
+                  '
+        links:
+          description: Array of links of the Event
+          type: array
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/linksPreReqSchema'
+            - $ref: '#/components/schemas/linksDocSchema'
+            - $ref: '#/components/schemas/linksOptionsSchema'
+            - $ref: '#/components/schemas/linksLessonsSchema'
+        order:
+          description: Array of order of the Event, this fields appear when the reqtype is 122 (Order)
+          type: object
+          properties:
+            title:
+              type: string
+              description: Title of the order
+              example: Verify Address
+            items:
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    description: Key of the order
+                    enum:
+                    - UsrName
+                    - UsrAddr1
+                    - UsrAddr2
+                    - UsrCity
+                    - UsrState
+                    - UsrZipCode
+                    - UsrPhone
+                    - UsrEmail
+                    example: UsrName
+                  title:
+                    type: string
+                    description: Title of the order
+                    enum:
+                    - Name
+                    - Address 1
+                    - Address 2
+                    - City
+                    - State
+                    - Zip Code
+                    - Phone
+                    - E-mail
+                    example: Name
+                  type:
+                    type: integer
+                    description: Number of the type of the order
+                    example: 501
+                  value:
+                    type: string
+                    description: Value of the order
+                    example: ABM1 ABM1
+                  readonly:
+                    type: boolean
+                    description: Readonly of the order
+                    example: false
+                  validation:
+                    type: object
+                    description: Validation of the order
+                    properties:
+                      required:
+                        type: boolean
+                        description: Required of the order
+                        example: true
+                      type:
+                        type: integer
+                        description: Number of the type of the order
+                        example: 1
+                      minvalue:
+                        type: string
+                        description: Minvalue of the order
+                        example: null
+                      maxvalue:
+                        type: string
+                        description: Maxvalue of the order
+                        example: null
+                      maxlength:
+                        type: integer
+                        description: Maxlength of the order
+                        example: 50
+        actions:
+          description: Array of actions of the Event
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the action
+                example: credit
+              type:
+                type: string
+                description: Type of the action
+                example: api
+              url:
+                type: string
+                description: Url of the action
+                example: Event/Review
+              canenable:
+                type: boolean
+                description: Can enable of the action
+                example: true
+              title:
+                type: string
+                description: Title of the action
+                example: Submit
+              disabled:
+                type: boolean
+                description: Disabled of the action
+                example: true
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+    getDocumentBase64:
+      description: Object of getDocumentBase64
+      type: object
+      properties:
+        filename:
+          type: string
+          description: Filename of the document
+          example: EMP_4665_Resolved.png
+        mimetype:
+          type: string
+          description: Mimetype of the document
+          example: image/png
+        base64string:
+          type: string
+          description: Base64string of the document
+          example: iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAYAAAB5fY51AAAgAElEQVR4Xu3dCZgV1fXH8e9/3+9
+    linksLessonsSchema:
+      description: Object of links of the Lessons
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the link
+          example: Lessons
+        title:
+          type: string
+          description: Title of the link
+          example: Lessons
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Id of the item
+                example: 633
+              code:
+                type: string
+                description: Code of the item
+                example: 611MOTOR
+              title:
+                type: string
+                description: Title of the item
+                example: AC Motors
+              type:
+                type: integer
+                description: Type of the item
+                example: 1
+              url:
+                type: string
+                description: Url of the item
+                example: Event/633
+              order:
+                type: integer
+                description: Order of the item
+                example: 1
+    linksOptionsSchema:
+      description: Object of links of the Options
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the link
+          example: Options
+        title:
+          type: string
+          description: Title of the link
+          enum:
+          - You have currently completed the %0 Requirement required
+          - You must complete %0 of these Requirements
+          example: You have currently completed the 1 Requirement required
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Id of the item
+                example: 4175
+              code:
+                type: string
+                description: Code of the item
+                example: 5678REQ1
+              title:
+                type: string
+                description: Title of the item
+                example: 5678REQ1
+              duedate:
+                type: string
+                description: Duedate of the item
+                example: '2021-10-20'
+              url:
+                type: string
+                description: Url of the item
+                example: Event/4175
+              type:
+                type: integer
+                description: Type of the item
+                example: 1
+              order:
+                type: integer
+                description: Order of the item
+                example: 1
+        header:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+                description: Title of the header
+                enum:
+                - '##'
+                - duedate
+                - code
+                - requirement
+                example: '##'
+              field:
+                type: string
+                description: Field of the header
+                enum:
+                - order
+                - duedate
+                - code
+                - requirement
+                example: order
+              order:
+                type: integer
+                description: Order of the header
+                enum:
+                - 1
+                - 2
+                - 3
+                - 4
+                example: 1
+        info:
+          type: string
+          description: Showing that no items are assigned to this Event (Course/Track/Job/Equiv)
+          example: Showing that no items are assigned to this Event (Course/Track/Job/Equiv)
+    linksPreReqSchema:
+      description: Object of links of the Prerequisite
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the link
+          enum:
+          - prereqs
+          - requirements
+          - options
+          - lessons
+          - files
+          example: files
+        title:
+          type: string
+          description: Title of the link
+          enum:
+          - The following Items are Pre-Requisites that need to be completed first.
+          - Requirements
+          - You must complete 1 of these requirements
+          - Lessons
+          example: Files
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Id of the item
+                example: 633
+              code:
+                type: string
+                description: Code of the item
+                example: 611MOTOR
+              title:
+                type: string
+                description: Title of the item
+                example: AC Motors
+              type:
+                type: integer
+                description: Type of the item
+                example: 1
+              url:
+                type: string
+                description: Url of the item
+                example: Event/633
+              order:
+                type: integer
+                description: Order of the item
+                example: 1
+        header:
+          type: array
+          items:
+            type: object
+            properties:
+              order:
+                type: integer
+                description: Order of the header
+                enum:
+                - 1
+                - 2
+                - 3
+                example: 1
+              title:
+                type: string
+                description: Title of the header
+                enum:
+                - '##'
+                - Code
+                - Title
+                example: '##'
+              field:
+                type: string
+                description: Field of the header
+                enum:
+                - order
+                - code
+                - title
+                example: order
+    missingEventIDSchema:
+      type: object
+      format: object
+      properties:
+        event:
+          $ref: '#/components/schemas/messageSchema'
+    linksDocSchema:
+      description: Object of links of the Event, this fields appear when the reqtype is 121 (Download)
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the link
+          example: files
+        title:
+          type: string
+          description: Title of the link
+          example: Files
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Type of the item
+                example: web
+              url:
+                type: string
+                description: Url of the item
+                example: https://www.avetta.com/ext/evt/...
+              title:
+                type: string
+                description: Title of the item
+                example: EMP_4665_Resolved.png
+              completed:
+                type: boolean
+                description: Completed of the item
+                example: false
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v1-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

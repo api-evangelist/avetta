@@ -1,0 +1,1655 @@
+openapi: 3.2.0
+info:
+  title: Avetta Credit API
+  version: '2026-05-08'
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  description: 'Operations tagged Credit across 2 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+security:
+- ApiKeyAuth: []
+tags:
+- name: Credit
+  description: The endpoints to credit events.
+paths:
+  /events/credit/{EvtID}:
+    get:
+      operationId: getCreditForm
+      tags:
+      - Credit
+      summary: Return the credit form for the event
+      description: This endpoint will return a list of fields, prereqs or items to be filled in order to credit the event
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/credit_components-parameters-evtIDParam'
+      - $ref: '#/components/parameters/userIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/eventsCredit'
+        '201':
+          $ref: '#/components/responses/eventsCreditEquiv'
+        '202':
+          $ref: '#/components/responses/eventsCreditOptin'
+        '203':
+          $ref: '#/components/responses/badEventResults'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    post:
+      operationId: creditEvent
+      tags:
+      - Credit
+      summary: Credit requirements
+      description: Credits the user for the requirement
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/credit_components-parameters-evtIDParam'
+      - $ref: '#/components/parameters/userIDParam'
+      - $ref: '#/components/parameters/srchIDParam'
+      - $ref: '#/components/parameters/expireDateParam'
+      - $ref: '#/components/parameters/datetimeParam'
+      - $ref: '#/components/parameters/NewUEDRevNotesParam'
+      - $ref: '#/components/parameters/UEDRevInstructorParam'
+      - $ref: '#/components/parameters/resultParam'
+      - $ref: '#/components/parameters/scoreParam'
+      - $ref: '#/components/parameters/costParam'
+      - $ref: '#/components/parameters/hoursParam'
+      - $ref: '#/components/parameters/notesParam'
+      - $ref: '#/components/parameters/customFieldParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulCredit'
+        '201':
+          $ref: '#/components/responses/badEventResults'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /events/credit/{EvtID}/files:
+    post:
+      operationId: uploadCreditFiles
+      tags:
+      - Credit
+      summary: Upload a temporal file for credit
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/credit_components-parameters-evtIDParam'
+      - $ref: '#/components/parameters/userIDParam'
+      - $ref: '#/components/parameters/srchIDParam'
+      requestBody:
+        $ref: '#/components/requestBodies/formData'
+      responses:
+        '200':
+          $ref: '#/components/responses/temporalDocumentSubmitted'
+        '201':
+          $ref: '#/components/responses/errorFile'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    get:
+      operationId: getCreditFiles
+      tags:
+      - Credit
+      summary: Return the temporal files for credit
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/credit_components-parameters-evtIDParam'
+      - $ref: '#/components/parameters/userIDParam'
+      - $ref: '#/components/parameters/srchIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/getTemporalFiles'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    delete:
+      operationId: deleteCreditFiles
+      tags:
+      - Credit
+      summary: Delete a temporal file for credit
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/credit_components-parameters-evtIDParam'
+      - $ref: '#/components/parameters/parameters-docIDParam'
+      - $ref: '#/components/parameters/filenameParam'
+      - $ref: '#/components/parameters/srchIDParam'
+      - $ref: '#/components/parameters/userIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/deleteDocument'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+components:
+  parameters:
+    srchIDParam:
+      name: srch_id
+      in: query
+      description: Search ID
+      required: true
+      schema:
+        type: integer
+        format: int64
+    NewUEDRevNotesParam:
+      name: NewUEDRevNotes
+      in: query
+      description: Review notes
+      required: false
+      schema:
+        type: string
+    credit_components-parameters-evtIDParam:
+      name: EvtID
+      in: path
+      description: Event ID
+      required: true
+      schema:
+        type: integer
+        format: int64
+    expireDateParam:
+      name: expiredate
+      in: query
+      description: Expire date could be required or not
+      required: false
+      schema:
+        type: string
+        format: date
+    costParam:
+      name: cost
+      in: query
+      description: Cost of the requirement
+      required: false
+      schema:
+        type: number
+        format: number
+    customFieldParam:
+      name: customField
+      in: query
+      description: Additional fields configured for the requirement
+      required: false
+      schema:
+        type: string
+    filenameParam:
+      name: filename
+      in: query
+      description: The file name of the file to be deleted
+      required: false
+      schema:
+        type: string
+    userIDParam:
+      name: user_id
+      in: query
+      description: User ID
+      required: true
+      schema:
+        type: integer
+        format: int64
+    notesParam:
+      name: notes
+      in: query
+      description: Aditional notes of the requirement
+      required: false
+      schema:
+        type: string
+    UEDRevInstructorParam:
+      name: UEDRevInstructor
+      in: query
+      description: Instructor, it could be required or not depending on the requirement configuration
+      required: false
+      schema:
+        type: string
+    parameters-docIDParam:
+      name: doc_id
+      in: query
+      description: The DocUID of the file to be deleted
+      required: false
+      schema:
+        type: integer
+        format: int64
+    resultParam:
+      name: result
+      in: query
+      description: Result of the requirement (201 - Passed, 202 - Failed)
+      required: false
+      schema:
+        type: integer
+        format: int64
+        enum:
+        - 201
+        - 202
+    datetimeParam:
+      name: datetime
+      in: query
+      description: Date and time of the event, it could be required or not
+      required: false
+      schema:
+        type: string
+        format: date-time
+    hoursParam:
+      name: hours
+      in: query
+      description: Duration of the requirement
+      required: false
+      schema:
+        type: number
+        format: number
+    scoreParam:
+      name: score
+      in: query
+      description: Score of the requirement (0 - 100)
+      required: false
+      schema:
+        type: number
+        format: number
+  examples:
+    deleteFile:
+      summary: Delete file
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: Delete file
+          success: true
+          code: 200
+          detail: Found file and removed
+    expirationDateBefore:
+      summary: The date must be before the expiration date
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: The date must be before 2023-03-01
+          status: Bad Request
+          success: false
+          code: 400
+    invalidCall:
+      summary: Invalid call
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: Invalid call, Failed to remove file
+          status: Bad Request
+          success: false
+          code: 400
+          detail: VAR.108
+    cannotCreditEvent:
+      summary: Can not credit this event
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: You can not credit this event
+          status: Bad Request
+          success: false
+          code: 400
+    temporalDocumentUploaded:
+      summary: File uploaded
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: File uploaded
+          success: true
+          code: 200
+          detail: file.pdf
+    requiredUploadFiles:
+      summary: Files required to upload
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: It is required to upload at least 3 files
+          status: Bad Request
+          success: false
+          code: 400
+    couldNotSaveCredit:
+      summary: Could not save credit
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: Could not save credit
+          status: Bad Request
+          success: false
+          code: 400
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+    missingEventToCredit:
+      summary: Missing event to credit
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: Missing event to credit
+          status: Bad Request
+          success: false
+          code: 400
+    couldNotShowEvent:
+      summary: Event not found
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: 'Could not show event: 12805'
+          status: Bad Request
+          success: false
+          code: 400
+    virusCheck:
+      summary: Virus check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.103
+          message: This file might be infected with a virus
+          virusName: sample virus name
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+    prerequisitesNotMet:
+      summary: Prerequisites not met
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: Prerequisites not met
+          success: false
+          code: 400
+          detail:
+          - id: 2807
+            code: IND-101
+            title: Induction Training
+            type: api
+            url: event/2807
+    cannotUploadFilesForEvent:
+      summary: You can not upload files for this event
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: You can not upload files for this event
+          success: false
+          code: 400
+    extensionCheck:
+      summary: Extension check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.101
+          message: The file extension is not allowed
+          allowedExtensions:
+          - t3
+          - mid
+          - zip
+          - rtf
+          - docx
+          - tar
+          - midi
+          - tif
+          - m4a
+          - png
+          - xps
+          - xml
+          - mp3
+          - htm
+          - gz
+          - mp4
+          - doc
+          - tiff
+          - jpeg
+          - avi
+          - mpeg
+          - qst
+          - txt
+          - wmv
+          - msg
+          - xlsx
+          - webp
+          - gif
+          - html
+          - bmp
+          - csv
+          - pdf
+          - jpg
+          - xls
+          - swf
+          - mov
+          - dng
+          - heic
+    failedToUploadFile:
+      summary: Failed to upload file
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: Failed to upload file
+          success: false
+          code: 400
+    completionDateAfter:
+      summary: The date must be after the completion date
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: The date must be after 2023-03-01
+          status: Bad Request
+          success: false
+          code: 400
+    requirementSentToReview:
+      summary: Requirement sent to review
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: Sent to review
+          status: OK
+          success: true
+          code: 200
+    missingSearchId:
+      summary: Missing search id
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: Missing search id
+          status: Bad Request
+          success: false
+          code: 400
+    failedToUploadFileAtLimit:
+      summary: Failed to upload file, at limit
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: Failed to upload file, at limit
+          success: false
+          code: 400
+    missingParameters:
+      summary: Missing parameters
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: Missing parameters
+          status: Bad Request
+          success: false
+          code: 400
+    sizeCheck:
+      summary: Size check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.100
+          message: The file size is too large
+          maxSize: 10
+          size: 10.5390701293945
+    requirementCredited:
+      summary: Requirement credited
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: Approved for 2021-01-01 as Approved with a score of 100
+          status: OK
+          success: true
+          code: 200
+          detail:
+            date: '2021-01-01'
+            status: Approved
+            score: 100
+    missingRequiredFields:
+      summary: Missing required fields
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: Missing required fields
+          status: Bad Request
+          success: false
+          code: 400
+          detail:
+          - Required field
+    failedLoadingEvent:
+      summary: Failed loading event
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        events_credit:
+          message: 'Failed loading event: 12805'
+          status: Bad Request
+          success: false
+          code: 400
+          detail: CREDIT.101
+  responses:
+    getTemporalFiles:
+      description: Successful response for a temporal document
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_credit:
+                $ref: '#/components/schemas/documentSchema'
+    temporalDocumentSubmitted:
+      description: Successful response for a temporal document
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_credit:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            temporalDocumentUploaded:
+              $ref: '#/components/examples/temporalDocumentUploaded'
+            failedToUploadFile:
+              $ref: '#/components/examples/failedToUploadFile'
+            failedToUploadFileAtLimit:
+              $ref: '#/components/examples/failedToUploadFileAtLimit'
+            cannotUploadFilesForEvent:
+              $ref: '#/components/examples/cannotUploadFilesForEvent'
+    eventsCreditOptin:
+      description: Successful responser for an OptIn track
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_credit:
+                $ref: '#/components/schemas/eventsCreditSchemaOptin'
+    successfulCredit:
+      description: Successful response for a requirement
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_credit:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            requirementCredited:
+              $ref: '#/components/examples/requirementCredited'
+            requirementSentToReview:
+              $ref: '#/components/examples/requirementSentToReview'
+            missingEventToCredit:
+              $ref: '#/components/examples/missingEventToCredit'
+            couldNotShowEvent:
+              $ref: '#/components/examples/couldNotShowEvent'
+            failedLoadingEvent:
+              $ref: '#/components/examples/failedLoadingEvent'
+            cannotCreditEvent:
+              $ref: '#/components/examples/cannotCreditEvent'
+            missingRequiredFields:
+              $ref: '#/components/examples/missingRequiredFields'
+            expirationDateBefore:
+              $ref: '#/components/examples/expirationDateBefore'
+            expirationDateAfter:
+              $ref: '#/components/examples/completionDateAfter'
+            requiredUploadFiles:
+              $ref: '#/components/examples/requiredUploadFiles'
+            couldNotSaveCredit:
+              $ref: '#/components/examples/couldNotSaveCredit'
+            prerequisitesNotMet:
+              $ref: '#/components/examples/prerequisitesNotMet'
+    eventsCredit:
+      description: Successful response for a requirement
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_credit:
+                $ref: '#/components/schemas/eventsCreditSchema'
+    errorFile:
+      description: Error while checking files
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    virusName:
+                      type: string
+                      description: Name of the virus found in the file
+                      example: sample virus name
+                    maxSize:
+                      type: integer
+                      description: Maximum size allowed for the file
+                      example: 10
+                    size:
+                      type: number
+                      description: Size of the file checked
+                      example: 10.5390701293945
+                    allowedExtensions:
+                      type: array
+                      description: List of allowed extensions for the file
+                      example:
+                      - t3
+                      - mid
+                      - zip
+                      - rtf
+                      - docx
+                      - tar
+                      - midi
+                      - tif
+                      - m4a
+                      - png
+                      - xps
+                      - xml
+                      - mp3
+                      - htm
+                      - gz
+                      - mp4
+                      - doc
+                      - tiff
+                      - jpeg
+                      - avi
+                      - mpeg
+                      - qst
+                      - txt
+                      - wmv
+                      - msg
+                      - xlsx
+                      - webp
+                      - gif
+                      - html
+                      - bmp
+                      - csv
+                      - pdf
+                      - jpg
+                      - xls
+                      - swf
+                      - mov
+                      - dng
+                      - heic
+                      items:
+                        type: string
+                        enum:
+                        - t3
+                        - mid
+                        - zip
+                        - rtf
+                        - docx
+                        - tar
+                        - midi
+                        - tif
+                        - m4a
+                        - png
+                        - xps
+                        - xml
+                        - mp3
+                        - htm
+                        - gz
+                        - mp4
+                        - doc
+                        - tiff
+                        - jpeg
+                        - avi
+                        - mpeg
+                        - qst
+                        - txt
+                        - wmv
+                        - msg
+                        - xlsx
+                        - webp
+                        - gif
+                        - html
+                        - bmp
+                        - csv
+                        - pdf
+                        - jpg
+                        - xls
+                        - swf
+                        - mov
+                        - dng
+                        - heic
+          examples:
+            virusCheck:
+              $ref: '#/components/examples/virusCheck'
+            sizeCheck:
+              $ref: '#/components/examples/sizeCheck'
+            extensionCheck:
+              $ref: '#/components/examples/extensionCheck'
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+    deleteDocument:
+      description: Succesful response for deleting a document
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_credit:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            deleteFile:
+              $ref: '#/components/examples/deleteFile'
+            missingSearchId:
+              $ref: '#/components/examples/missingSearchId'
+            missingParameters:
+              $ref: '#/components/examples/missingParameters'
+            invalidCall:
+              $ref: '#/components/examples/invalidCall'
+    eventsCreditEquiv:
+      description: Successful responser for an equivalency
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              event_credit:
+                $ref: '#/components/schemas/eventsCreditSchemaEquiv'
+    badEventResults:
+      description: All the bad events
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              roles:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            couldNotShowEvent:
+              $ref: '#/components/examples/couldNotShowEvent'
+            failedLoadingEvent:
+              $ref: '#/components/examples/failedLoadingEvent'
+            cannotCreditEvent:
+              $ref: '#/components/examples/cannotCreditEvent'
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+  schemas:
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    eventsCreditSchema:
+      description: Information about the event credit
+      type: object
+      format: object
+      properties:
+        event:
+          description: Event information
+          type: object
+          properties:
+            id:
+              description: Event ID
+              type: integer
+              format: int64
+            type:
+              description: Event type
+              type: integer
+              format: int64
+            reqtype:
+              description: Event requirement type
+              type: integer
+              format: int64
+            code:
+              description: Event code
+              type: string
+              format: string
+            title:
+              description: Event title
+              type: string
+              format: string
+            description:
+              description: Event description
+              type: string
+              format: string
+            instructions:
+              description: Event instructions
+              type: string
+              format: string
+            shortdescription:
+              description: Event short description
+              type: string
+              format: string
+            shortinstructions:
+              description: Event short instructions
+              type: string
+              format: string
+            requires_mfa:
+              description: Event requires Multi-Factor Authentication (MFA)
+              type: boolean
+              enum:
+              - true
+              - false
+            links:
+              description: Documents to be viewed by the worker in order to complete the event
+              type: array
+              items:
+                type: object
+                format: object
+                properties:
+                  title:
+                    description: Document title
+                    type: string
+                    format: string
+                  type:
+                    description: Document type
+                    type: string
+                    format: string
+                  url:
+                    description: Document URL
+                    type: string
+                    format: string
+                  completed:
+                    description: True if the document has been viewed by the worker
+                    type: boolean
+                    enum:
+                    - true
+                    - false
+            prereqs:
+              description: Event prerequisites
+              type: array
+              items:
+                type: object
+                format: object
+                properties:
+                  id:
+                    description: Prerequisite event ID
+                    type: integer
+                    format: int64
+                  code:
+                    description: Prerequisite event code
+                    type: string
+                    format: string
+                  title:
+                    description: Prerequisite event title
+                    type: string
+                    format: string
+                  type:
+                    description: Prerequisite event type
+                    type: string
+                    format: string
+                  url:
+                    description: Prerequisite event URL
+                    type: string
+                    format: string
+        documents:
+          description: List of documents uploaded by the worker, for example, if worker has upload a document and has sent the requirement to In Review
+          type: array
+          items:
+            type: object
+            format: object
+            properties:
+              docid:
+                description: Document ID
+                type: integer
+                format: int64
+              title:
+                description: Document title
+                type: string
+                format: string
+              type:
+                description: Document type
+                type: string
+                format: string
+              url:
+                description: Document URL
+                type: string
+                format: string
+              viewed:
+                description: True if the document has been viewed by an approver
+                type: boolean
+                enum:
+                - true
+                - false
+        required:
+          description: List of required fields for the event
+          type: array
+          items:
+            type: object
+            format: object
+            properties:
+              key:
+                description: Field key, some of these fields might not be required depending on the event type, additioanlly, some fields might be custom fields
+                type: string
+                format: string
+                enum:
+                - datetime
+                - expiredate
+                - UEDRevInstructor
+                - score
+                - result
+                - instructor
+                - customfield*
+              title:
+                description: Field label
+                type: string
+                format: string
+              type:
+                description: Field type, for example, text, date, number
+                type: string
+                format: string
+              help:
+                description: Field help text
+                type: string
+                format: string
+              value:
+                description: Field value
+                type: string
+                format: string
+              readonly:
+                description: True if the field is read-only
+                type: boolean
+                enum:
+                - true
+                - false
+              validation:
+                description: Field validation
+                type: object
+                format: object
+                properties:
+                  minvalue:
+                    description: Minimum value
+                    type: string
+                    format: string
+                  maxvalue:
+                    description: Maximum value
+                    type: string
+                    format: string
+                  maxlength:
+                    description: Maximum length
+                    type: string
+                    format: string
+        actions:
+          description: List of actions that can be performed on the event
+          type: object
+          format: object
+          properties:
+            credit:
+              description: list of actions for the credit process
+              type: object
+              format: object
+              properties:
+                title:
+                  description: Title of the action, it could Approve or Send to Review
+                  type: string
+                  format: string
+                  example: Send to Review
+                enabled:
+                  description: True if the action is enabled
+                  type: boolean
+                  enum:
+                  - true
+                  - false
+                  example: true
+        optional:
+          description: List of optional fields for the event
+          type: array
+          items:
+            type: object
+            format: object
+            properties:
+              key:
+                description: Field key
+                type: string
+                format: string
+                enum:
+                - srch_id
+                - cost
+                - hours
+                - notes
+                - instructor
+                - customfield*
+              title:
+                description: Field label
+                type: string
+                format: string
+              type:
+                description: Field type, for example, text, date, number
+                type: string
+                format: string
+              value:
+                description: Field value
+                type: string
+                format: string
+              readonly:
+                description: True if the field is read-only
+                type: boolean
+                enum:
+                - true
+                - false
+              validation:
+                description: Field validation
+                type: object
+                format: object
+                properties:
+                  minvalue:
+                    description: Minimum value
+                    type: string
+                    format: string
+                  maxvalue:
+                    description: Maximum value
+                    type: string
+                    format: string
+                  maxlength:
+                    description: Maximum length
+                    type: string
+                    format: string
+    eventsCreditSchemaEquiv:
+      description: Information about the equivalency event credit
+      type: object
+      format: object
+      properties:
+        event:
+          description: Equivalency information
+          type: object
+          format: object
+          properties:
+            DueDateUnix:
+              description: Due date in Unix format
+              type: integer
+              format: int64
+            DueDate:
+              description: Due date in string format
+              type: string
+              format: string
+            EvtTypID:
+              description: Event type ID
+              type: integer
+              format: int64
+            EvtInitialMonths:
+              description: Initial months
+              type: integer
+              format: int64
+            EvtRetakeMonths:
+              description: Retake months
+              type: integer
+              format: int64
+            EvtID:
+              description: Event ID
+              type: integer
+              format: int64
+            EvtCode:
+              description: Event code
+              type: string
+              format: string
+            EvtTitle:
+              description: Event title
+              type: string
+              format: string
+        items:
+          description: List of events inside the equivalency
+          type: array
+          items:
+            type: object
+            format: object
+            properties:
+              DueDateUnix:
+                description: Due date in Unix format
+                type: integer
+                format: int64
+              DueDate:
+                description: Due date in string format
+                type: string
+                format: string
+              EvtTypID:
+                description: Event type ID
+                type: integer
+                format: int64
+              EvtInitialMonths:
+                description: Initial months
+                type: integer
+                format: int64
+              EvtRetakeMonths:
+                description: Retake months
+                type: integer
+                format: int64
+              EvtID:
+                description: Event ID
+                type: integer
+                format: int64
+              EvtCode:
+                description: Event code
+                type: string
+                format: string
+              EvtTitle:
+                description: Event title
+                type: string
+                format: string
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+    documentSchema:
+      description: Return the document uploaded information
+      type: object
+      format: object
+      properties:
+        DocUID:
+          description: 'Unique ID of the temporal document - Example: 1234, it should match with DocID or DocTempID properties'
+          type: object
+          format: object
+          properties:
+            DocFileName:
+              description: File name
+              type: string
+              format: string
+              example: document.txt
+            DocIsSecure:
+              description: True if the file is secure
+              type: integer
+              format: int64
+              example: 0
+            DocFileSize:
+              description: File size
+              type: integer
+              format: int64
+              example: 26445
+            DocID:
+              description: The document ID for a file that was uploaded as part of a previous interaction, for example, a worker that uploaded a document for a requirement that was sent to review
+              type: integer
+              format: int64
+              example: 512
+            DocTempID:
+              description: A temporary ID for a file that was uploaded as part of the current flow
+              type: integer
+              format: int64
+              example: 9893
+    eventsCreditSchemaOptin:
+      description: Information about the opt-in event credit
+      type: object
+      format: object
+      properties:
+        event:
+          description: Opt-in information
+          type: object
+          format: object
+          properties:
+            id:
+              type: integer
+              format: int64
+            number_required:
+              type: integer
+              format: int64
+            title:
+              type: string
+              format: string
+            description:
+              type: string
+              format: string
+            shortdescription:
+              type: string
+              format: string
+            shortinstructions:
+              type: string
+              format: string
+            code:
+              type: string
+              format: string
+            instructions:
+              type: string
+              format: string
+            requires_mfa:
+              type: boolean
+              enum:
+              - true
+              - false
+            type:
+              type: integer
+              format: int64
+        items:
+          description: List of events inside the opt-in
+          type: array
+          items:
+            type: object
+            format: object
+            properties:
+              DueDateUnix:
+                description: Due date in Unix format
+                type: integer
+                format: int64
+              DueDate:
+                description: Due date in string format
+                type: string
+                format: string
+              EvtTypID:
+                description: Event type ID
+                type: integer
+                format: int64
+              EvtInitialMonths:
+                description: Initial months
+                type: integer
+                format: int64
+              EvtRetakeMonths:
+                description: Retake months
+                type: integer
+                format: int64
+              EvtID:
+                description: Event ID
+                type: integer
+                format: int64
+              EvtCode:
+                description: Event code
+                type: string
+                format: string
+              EvtTitle:
+                description: Event title
+                type: string
+                format: string
+  requestBodies:
+    formData:
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              doc_file:
+                type: string
+                format: binary
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v1-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

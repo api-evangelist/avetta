@@ -1,0 +1,1050 @@
+openapi: 3.2.0
+info:
+  title: Avetta Roles API
+  version: '2026-05-08'
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  description: 'Operations tagged Roles across 2 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+security:
+- ApiKeyAuth: []
+tags:
+- name: Roles
+  description: The Roles API allows you to retrieve role information.
+paths:
+  /roles:
+    get:
+      operationId: getRoles
+      tags:
+      - Roles
+      summary: List of roles
+      description: Returns a list of roles
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/sortParam'
+      - $ref: '#/components/parameters/searchParam'
+      - $ref: '#/components/parameters/parameters-showAllParam'
+      - $ref: '#/components/parameters/parameters-userParam'
+      - $ref: '#/components/parameters/siteIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulRoles'
+        '201':
+          $ref: '#/components/responses/invalidSecurity'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /roles/{rolID}:
+    get:
+      operationId: getRole
+      tags:
+      - Roles
+      summary: Get role by id
+      description: Returns the information of the role with the given id
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/rolIDParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/sortParam'
+      - $ref: '#/components/parameters/searchParam'
+      - $ref: '#/components/parameters/components-parameters-showAllParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulRole'
+        '201':
+          $ref: '#/components/responses/invalidSecurity'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /roles/{rolID}/users/{usrID}:
+    post:
+      operationId: insertRole
+      tags:
+      - Roles
+      summary: Insert new role to user
+      description: Adds the given role to the given user
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/rolIDParam'
+      - $ref: '#/components/parameters/usrIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulInsert'
+        '204':
+          $ref: '#/components/responses/alreadyInsert'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    delete:
+      operationId: deleteRole
+      tags:
+      - Roles
+      summary: Delete the asignation of the role to the user
+      description: Delete the asignation of the role to the user id given
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/rolIDParam'
+      - $ref: '#/components/parameters/usrIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/responses-successfulDelete'
+        '204':
+          $ref: '#/components/responses/alreadyDelete'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /roles/users:
+    post:
+      operationId: bulkRolesUsers
+      tags:
+      - Roles
+      summary: Bulk role assignment or unassignment to users
+      description: Assign or unassign multiple roles to multiple users
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/jsonRolesUsers'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulAssigned'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+components:
+  examples:
+    invalidRequestBulk:
+      summary: Invalid request
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+          forbidden: 0
+          fail: 2
+          success: 0
+          total: 2
+        roles:
+          message: Invalid request
+          status: Bad Request
+          success: false
+          code: 400
+          detail:
+            success: []
+            forbidden: []
+            fail:
+            - UsrID: 22822
+              RolID: 189
+            - RolID: 189
+              UsrID: 22784
+    invalidSecurity:
+      summary: Invalid request - security error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        roles:
+          message: Invalid security
+          status: Unauthorized
+          success: false
+          code: 401
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+    allRolesRemoved:
+      summary: All roles removed
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+          forbidden: 0
+          fail: 0
+          success: 2
+          total: 2
+        roles:
+          message: All roles were removed successfully from all users
+          status: Successful
+          success: true
+          code: 200
+          detail:
+            success:
+            - UsrID: 22822
+              RolID: 189
+              previous: 0
+            - RolID: 189
+              UsrID: 22784
+              previous: 1
+            forbidden: []
+            fail: []
+    bulkUnassignment:
+      summary: Bulk role unassignment to users
+      value:
+        Unassign: 1
+        UsrID:
+        - 22822
+        - 22784
+        RolID:
+        - 189
+        - 188
+        - 187
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+    deleteSuccessful:
+      summary: Delete successful Message
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        roles:
+          message: Role removed successfully
+          status: Good
+          success: true
+          code: 200
+    insertSuccessful:
+      summary: Delete successful Message
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        roles:
+          message: Role added successfully
+          status: Good
+          success: true
+          code: 200
+    someRolesRemoved:
+      summary: Some roles removed
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+          forbidden: 0
+          fail: 1
+          success: 1
+          total: 2
+        roles:
+          message: Some roles were removed successfully from some users
+          status: Multi-Status
+          success: false
+          code: 207
+          detail:
+            success:
+            - UsrID: 22822
+              RolID: 189
+              previous: 0
+            forbidden: []
+            fail:
+            - RolID: 189
+              UsrID: 22784
+    someRolesAssigned:
+      summary: Some roles assigned
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+          forbidden: 0
+          fail: 1
+          success: 1
+          total: 2
+        roles:
+          message: Some roles were assigned successfully to some users
+          status: Multi-Status
+          success: false
+          code: 207
+          detail:
+            success:
+            - RolID: 189
+              UsrID: 22784
+              previous: 0
+            forbidden: []
+            fail:
+            - UsrID: 22822
+              RolID: 189
+    noneRolesAssigned:
+      summary: None roles assigned
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+          forbidden: 0
+          fail: 2
+          success: 0
+          total: 2
+        roles:
+          message: None of the roles were assigned to the users
+          status: Multi-Status
+          success: false
+          code: 207
+          detail:
+            success: []
+            forbidden: []
+            fail:
+            - UsrID: 22822
+              RolID: 189
+            - RolID: 189
+              UsrID: 22784
+    allRolesAssigned:
+      summary: All roles assigned
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 2
+          records: 2
+          forbidden: 0
+          fail: 0
+          success: 2
+          total: 2
+        roles:
+          message: All roles were assigned successfully to all users
+          status: Successful
+          success: true
+          code: 200
+          detail:
+            success:
+            - UsrID: 22822
+              RolID: 189
+              previous: 0
+            - RolID: 189
+              UsrID: 22784
+              previous: 1
+            forbidden: []
+            fail: []
+    bulkAssignment:
+      summary: Bulk role assignment to users
+      value:
+        UsrID:
+        - 22822
+        - 22784
+        RolID:
+        - 189
+        - 188
+        - 187
+    noneRolesRemoved:
+      summary: None roles removed
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+          forbidden: 2
+          fail: 0
+          success: 0
+          total: 2
+        roles:
+          message: None of the roles were removed from the users
+          status: Multi-Status
+          success: true
+          code: 207
+          detail:
+            success: []
+            forbidden:
+            - UsrID: 22822
+              RolID: 189
+            - RolID: 189
+              UsrID: 22784
+            fail: []
+    examples-badRequest:
+      summary: Bad Request - Roles was not removed
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        roles:
+          message: The role wasn't removed
+          status: Bad Request
+          success: false
+          code: 400
+    invalidSecurityBulk:
+      summary: Invalid security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+          forbidden: 0
+          fail: 2
+          success: 0
+          total: 2
+        roles:
+          message: Invalid security
+          status: Unauthorized
+          success: false
+          code: 403
+          detail:
+            success: []
+            forbidden: []
+            fail:
+            - UsrID: 22822
+              RolID: 189
+            - RolID: 189
+              UsrID: 22784
+  parameters:
+    usrIDParam:
+      name: usrID
+      in: path
+      description: Filter for the given user id
+      required: true
+      schema:
+        type: integer
+        format: int64
+    components-parameters-showAllParam:
+      name: showAll
+      in: query
+      description: Return all results available, not only the ones configured
+      required: false
+      schema:
+        type: boolean
+    sortParam:
+      name: sort
+      in: query
+      description: Name of field to sort by
+      required: false
+      schema:
+        type: string
+        enum:
+        - id
+        - code
+        - title
+        - group
+    parameters-userParam:
+      name: user
+      in: query
+      description: Filter the results for a specify user id
+      required: false
+      schema:
+        type: integer
+        format: int64
+    limitParam:
+      name: limit
+      in: query
+      description: Maximum number of records to return
+      required: false
+      schema:
+        type: integer
+        default: 3000
+    parameters-showAllParam:
+      name: showAll
+      in: query
+      description: Return all roles available, not only the ones configured
+      required: false
+      schema:
+        type: boolean
+        default: false
+    siteIDParam:
+      name: site_id
+      in: query
+      description: Filter for in-use assignments at a given site
+      required: false
+      schema:
+        type: integer
+        format: int64
+    searchParam:
+      name: search
+      in: query
+      description: Search term - check for the code and title
+      required: false
+      schema:
+        type: string
+    startParam:
+      name: start
+      in: query
+      description: Offset of the first record to return
+      required: false
+      schema:
+        type: integer
+        default: 1
+    rolIDParam:
+      name: rolID
+      in: path
+      description: Filter for the given role id
+      required: true
+      schema:
+        type: integer
+        format: int64
+  responses:
+    alreadyInsert:
+      description: Successful return when role was already added to a worker
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              roles:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            insertSuccessful:
+              $ref: '#/components/examples/insertSuccessful'
+    successfulAssigned:
+      description: Successful assignment or unassignment
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                allOf:
+                - $ref: '#/components/schemas/statsSchema'
+                - type: object
+                  properties:
+                    forbidden:
+                      type: integer
+                      description: number of forbidden assignment or unassignment
+                      example: 1
+                    fail:
+                      type: integer
+                      description: number of failed assignment or unassignment
+                      example: 2
+                    success:
+                      type: integer
+                      description: number of successful assignment or unassignment
+                      example: 3
+                    total:
+                      type: integer
+                      description: total number of registers processed
+                      example: 6
+              roles_users:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    detail:
+                      type: object
+                      properties:
+                        forbidden:
+                          type: array
+                          description: list of pairs of forbidden assignment or unassignment roles and users
+                          items:
+                            type: object
+                            properties:
+                              UsrID:
+                                type: integer
+                                description: User ID
+                                example: 22822
+                              RolID:
+                                type: integer
+                                description: Role ID
+                                example: 189
+                        fail:
+                          type: array
+                          description: list of pairs of failed assignment or unassignment roles and users
+                          items:
+                            type: object
+                            properties:
+                              UsrID:
+                                type: integer
+                                description: User ID
+                                example: 22822
+                              RolID:
+                                type: integer
+                                description: Role ID
+                                example: 189
+                        success:
+                          type: array
+                          description: list of pairs of successful assignment or unassignment roles and users
+                          items:
+                            type: object
+                            properties:
+                              UsrID:
+                                type: integer
+                                description: User ID
+                                example: 22822
+                              RolID:
+                                type: integer
+                                description: Role ID
+                                example: 189
+                              previous:
+                                type: integer
+                                description: 1 if the user/role pair was already in the requested state (no change made); 0 if this request caused the assignment or unassignment
+                                example: 0
+          examples:
+            allRolesAssigned:
+              $ref: '#/components/examples/allRolesAssigned'
+            someRolesAssigned:
+              $ref: '#/components/examples/someRolesAssigned'
+            nonRolesAssigned:
+              $ref: '#/components/examples/noneRolesAssigned'
+            allRolesRemoved:
+              $ref: '#/components/examples/allRolesRemoved'
+            somRolesRemoved:
+              $ref: '#/components/examples/someRolesRemoved'
+            nonRolesRemoved:
+              $ref: '#/components/examples/noneRolesRemoved'
+            invalidSecurityBulk:
+              $ref: '#/components/examples/invalidSecurityBulk'
+            invalidRequestBulk:
+              $ref: '#/components/examples/invalidRequestBulk'
+    successfulRoles:
+      description: Successful
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              roles:
+                type: array
+                items:
+                  $ref: '#/components/schemas/roleSchema'
+    invalidSecurity:
+      description: Invalid security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              role:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            invalidSecurity:
+              $ref: '#/components/examples/invalidSecurity'
+    responses-successfulDelete:
+      description: Messages returned as a response of delete operation
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              roles:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            deleteSuccessful:
+              $ref: '#/components/examples/deleteSuccessful'
+            invalidSecurity:
+              $ref: '#/components/examples/invalidSecurity'
+            badRequest:
+              $ref: '#/components/examples/examples-badRequest'
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+    successfulInsert:
+      description: Successful return adding a role to a worker
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              roles:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            insertSuccessful:
+              $ref: '#/components/examples/insertSuccessful'
+    successfulRole:
+      description: Successful
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              role:
+                $ref: '#/components/schemas/roleSchema'
+    alreadyDelete:
+      description: Messages returned as a response of delete operation when role was already removed
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              roles:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            deleteSuccessful:
+              $ref: '#/components/examples/deleteSuccessful'
+            invalidSecurity:
+              $ref: '#/components/examples/invalidSecurity'
+            badRequest:
+              $ref: '#/components/examples/examples-badRequest'
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+  schemas:
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    roleSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: Role ID other
+          example: 1235
+        type:
+          type: string
+          description: Type of role
+          example: role
+          enum:
+          - role
+          - skill
+        code:
+          type: string
+          description: Role code
+          example: rolecode
+        title:
+          type: string
+          description: Role title
+          example: Role Title Example
+        category:
+          type: string
+          description: Role category
+          example: N/A
+        account:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Account ID
+              example: 123
+            con_id:
+              type: integer
+              description: Account con_id
+              example: 250000000
+            name:
+              type: string
+              description: Account name
+              example: Example Company
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+    bulkAssignmentSchema:
+      type: object
+      properties:
+        Unassign:
+          type: integer
+          description: Unassign or assign the roles
+          example: 1
+        UsrID:
+          type: array
+          description: List of user ids
+          items:
+            type: integer
+            example:
+            - 22822
+            - 22784
+        RolID:
+          type: array
+          description: List of role ids
+          items:
+            type: integer
+            example:
+            - 189
+            - 188
+            - 187
+      required:
+      - UsrID
+      - RolID
+  requestBodies:
+    jsonRolesUsers:
+      description: JSON data with the list of roles to assign or unassign to users
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/bulkAssignmentSchema'
+          examples:
+            bulkUnassignment:
+              $ref: '#/components/examples/bulkUnassignment'
+            bulkAssignment:
+              $ref: '#/components/examples/bulkAssignment'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v1-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

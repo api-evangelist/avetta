@@ -1,0 +1,474 @@
+openapi: 3.2.0
+info:
+  title: Avetta Pegasus Scope2 Scope Employee Controller V 2 API
+  version: APSO-1355
+  x-logo:
+    url: avetta_logo.png
+  description: 'Operations tagged pegasusScope2_scope-employee-controller-v-2 across 2 of this provider''s published API definitions: avetta-pegasus-dist.json, avetta-pegasus-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- description: EPE (Test Environment)
+  url: https://epe-onsitetrackeasy.com.au/onsite-rest
+- description: Production
+  url: https://secure.onsitetrackeasy.com.au/onsite-rest
+tags:
+- name: pegasusScope2_scope-employee-controller-v-2
+  x-displayName: scope-employee-controller-v-2
+paths:
+  /api/v2/scope/{scopeId}/employee/company/{companyId}:
+    put:
+      tags:
+      - pegasusScope2_scope-employee-controller-v-2
+      operationId: integrateEmployee_1v2
+      parameters:
+      - name: scopeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/3.29.14_IntegrateEmployeeResourceV2'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_IntegrateEmployeeResourceV2Result'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Integrate employee 1v2
+      x-summary-source: derived
+    post:
+      tags:
+      - pegasusScope2_scope-employee-controller-v-2
+      operationId: integrateEmployeev2
+      parameters:
+      - name: scopeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: companyId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/3.29.14_IntegrateEmployeeResourceV2'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_IntegrateEmployeeResourceV2Result'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Integrate employeev2
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+components:
+  schemas:
+    3.29.14_AddressResource:
+      required:
+      - country
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        address:
+          maxLength: 200
+          minLength: 0
+          type: string
+        town:
+          maxLength: 50
+          minLength: 0
+          type: string
+        state:
+          maxLength: 50
+          minLength: 0
+          type: string
+        postcode:
+          maxLength: 15
+          minLength: 0
+          type: string
+        country:
+          maxLength: 2
+          minLength: 0
+          type: string
+    3.29.14_StatusType:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        reasonPhrase:
+          type: string
+    3.29.14_NextOfKinDetailedResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        firstName:
+          maxLength: 35
+          minLength: 0
+          type: string
+        lastName:
+          maxLength: 45
+          minLength: 0
+          type: string
+        phone1:
+          maxLength: 50
+          minLength: 0
+          type: string
+        phone2:
+          maxLength: 50
+          minLength: 0
+          type: string
+        email1:
+          maxLength: 255
+          minLength: 0
+          type: string
+        email2:
+          maxLength: 255
+          minLength: 0
+          type: string
+        relationship:
+          type: string
+          enum:
+          - SPOUSE
+          - PARTNER
+          - MOTHER
+          - FATHER
+          - BROTHER
+          - SISTER
+          - SON
+          - DAUGHTER
+          - BOYFRIEND
+          - GIRLFRIEND
+          - SON_IN_LAW
+          - DAUGHTER_IN_LAW
+          - MOTHER_IN_LAW
+          - FATHER_IN_LAW
+          - OTHER
+          - DOCTOR
+    3.29.14_IntegrateEmployeeResourceV2Result:
+      type: object
+      properties:
+        employeeResource:
+          $ref: '#/components/schemas/3.29.14_IntegrateEmployeeResourceV2'
+        pendingReason:
+          type: string
+        resultType:
+          type: string
+          enum:
+          - APPROVED
+          - LEGACY_ID_IN_USE
+          - NON_SUBMITTABLE_STATUS
+          - AUTO_APPROVE_DISABLED
+          - MULTIPLE_MATCHES
+          - PARTIAL_MATCH
+    3.29.14_FullErrorResource:
+      type: object
+      properties:
+        errorType:
+          type: string
+          enum:
+          - GENERAL_ERROR
+          - BAD_REQUEST
+          - FORBIDDEN
+          - UNAUTHORISED
+          - NO_ACCESS_TO_PORTAL
+          - INVALID_PASSWORD
+          - NOT_FOUND
+          - CONSTRAINT_VIOLATION
+          - VALIDATION_ERROR
+          - ALREADY_EXISTS
+          - DATA_MISMATCH
+          - NOT_AN_EMPLOYEE
+          - CANNOT_BE_TERMINATED
+          - TOO_MANY_FAILED_ATTEMPTS
+          - REQUIRED_FIELD_MISSING
+          - VERIFICATION_TOKEN_EXPIRED
+          - PURCHASE_ORDER_EXPIRED
+          - DUPLICATE_PAYMENT
+          - PAYMENT_ERROR
+          - CANNOT_BE_UPDATED
+          - PENDING_CARD_IN_PROGRESS
+          - CANNOT_ASSIGN
+          - INVALID_PERSON_STATE
+        error:
+          type: string
+        field:
+          type: string
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_Problem'
+        errorDetail:
+          type: string
+    3.29.14_IntegrateEmployeeResourceV2:
+      type: object
+      properties:
+        personId:
+          type: integer
+          format: int32
+        extSysKey:
+          maxLength: 255
+          minLength: 0
+          type: string
+        idKey:
+          maxLength: 255
+          minLength: 0
+          type: string
+        firstName:
+          maxLength: 35
+          minLength: 0
+          type: string
+        lastName:
+          maxLength: 45
+          minLength: 0
+          type: string
+        middleName:
+          maxLength: 30
+          minLength: 0
+          type: string
+        gender:
+          type: string
+          enum:
+          - UNSET
+          - F
+          - M
+          - OTHER
+          - PREFER_NOT_TO_SAY
+        email1:
+          maxLength: 255
+          minLength: 0
+          type: string
+        email2:
+          maxLength: 255
+          minLength: 0
+          type: string
+        trainingEmail:
+          maxLength: 255
+          minLength: 0
+          type: string
+        phone1:
+          maxLength: 50
+          minLength: 0
+          type: string
+        phone2:
+          maxLength: 50
+          minLength: 0
+          type: string
+        dateOfBirth:
+          type: string
+        placeOfBirth:
+          maxLength: 30
+          minLength: 0
+          type: string
+        address:
+          $ref: '#/components/schemas/3.29.14_AddressResource'
+        employeeNumber:
+          maxLength: 30
+          minLength: 0
+          type: string
+        employmentStatus:
+          maxLength: 100
+          minLength: 0
+          type: string
+        department:
+          maxLength: 100
+          minLength: 0
+          type: string
+        businessUnit:
+          maxLength: 100
+          minLength: 0
+          type: string
+        division:
+          maxLength: 100
+          minLength: 0
+          type: string
+        position:
+          maxLength: 128
+          minLength: 0
+          type: string
+        nextOfKinDetailed:
+          $ref: '#/components/schemas/3.29.14_NextOfKinDetailedResource'
+        comment:
+          type: string
+        active:
+          type: boolean
+    3.29.14_ErrorResource:
+      type: object
+      properties:
+        errorType:
+          type: string
+          enum:
+          - GENERAL_ERROR
+          - BAD_REQUEST
+          - FORBIDDEN
+          - UNAUTHORISED
+          - NO_ACCESS_TO_PORTAL
+          - INVALID_PASSWORD
+          - NOT_FOUND
+          - CONSTRAINT_VIOLATION
+          - VALIDATION_ERROR
+          - ALREADY_EXISTS
+          - DATA_MISMATCH
+          - NOT_AN_EMPLOYEE
+          - CANNOT_BE_TERMINATED
+          - TOO_MANY_FAILED_ATTEMPTS
+          - REQUIRED_FIELD_MISSING
+          - VERIFICATION_TOKEN_EXPIRED
+          - PURCHASE_ORDER_EXPIRED
+          - DUPLICATE_PAYMENT
+          - PAYMENT_ERROR
+          - CANNOT_BE_UPDATED
+          - PENDING_CARD_IN_PROGRESS
+          - CANNOT_ASSIGN
+          - INVALID_PERSON_STATE
+        error:
+          type: string
+        field:
+          type: string
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_Problem'
+    3.29.14_Problem:
+      type: object
+      properties:
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        detail:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: '#/components/schemas/3.29.14_StatusType'
+  securitySchemes:
+    3.29.14_security_auth:
+      type: oauth2
+      scheme: Bearer
+      flows:
+        authorizationCode:
+          authorizationUrl: https://login.poweredbyonsite.com/cas/oidc/authorize
+          tokenUrl: https://login.poweredbyonsite.com/cas/oidc/accessToken
+          scopes:
+            pegasus: Pegasus Authentication Scope
+    3.29.14_security_apikey:
+      type: apiKey
+      name: api_key
+      in: header
+x-refined-from:
+- avetta-pegasus-dist.json
+- avetta-pegasus-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

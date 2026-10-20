@@ -1,0 +1,1033 @@
+openapi: 3.2.0
+info:
+  title: Avetta Sites API
+  version: '2026-05-08'
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  description: 'Operations tagged Sites across 2 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+security:
+- ApiKeyAuth: []
+tags:
+- name: Sites
+  description: The Sites API allows you to retrieve site information and assign users to sites.
+paths:
+  /sites:
+    get:
+      operationId: getSites
+      tags:
+      - Sites
+      summary: Get sites the user has reporting permission over
+      description: 'Retrieve the sites the caller can report on, plus sites of client companies connected
+
+        to the caller''s nodes (external connections). Supports filtering, searching, sorting and
+
+        pagination.
+
+
+        Requires the `Report` security type.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/components-parameters-sortParam'
+      - $ref: '#/components/parameters/components-parameters-searchParam'
+      - $ref: '#/components/parameters/parameters-siteParam'
+      - $ref: '#/components/parameters/pathParam'
+      - $ref: '#/components/parameters/parameters-userIDParam'
+      - $ref: '#/components/parameters/connectionsParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulSites'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /sites/assign:
+    get:
+      operationId: getSitesAssign
+      tags:
+      - Sites
+      summary: Get sites for user assignment
+      description: 'Retrieve the sites the caller can assign users to. Pass `user_id` to limit the list to
+
+        sites that specific user can be assigned to.
+
+
+        Requires the `User` or `Supervisor Workforce` security type.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/components-parameters-sortParam'
+      - $ref: '#/components/parameters/components-parameters-searchParam'
+      - $ref: '#/components/parameters/parameters-siteParam'
+      - $ref: '#/components/parameters/pathParam'
+      - $ref: '#/components/parameters/parameters-userIDParam'
+      - $ref: '#/components/parameters/connectionsParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulSites'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /sites/assign/{id}:
+    get:
+      operationId: getSitesAssignById
+      tags:
+      - Sites
+      summary: Get site for user assignment by ID
+      description: 'Same as `GET /sites/assign`, filtered to the site with the given ID. The result is an
+
+        array with one element, or empty when the site is not visible to the caller.
+
+
+        Requires the `User` or `Supervisor Workforce` security type.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/siteIDPathParam'
+      - $ref: '#/components/parameters/parameters-siteParam'
+      - $ref: '#/components/parameters/pathParam'
+      - $ref: '#/components/parameters/parameters-userIDParam'
+      - $ref: '#/components/parameters/connectionsParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulSites'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /sites/variances:
+    get:
+      operationId: getSitesVariances
+      tags:
+      - Sites
+      summary: Get sites for variance management
+      description: 'Retrieve the sites the caller can manage variances for.
+
+
+        Requires the `Variance` security type.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/components-parameters-sortParam'
+      - $ref: '#/components/parameters/components-parameters-searchParam'
+      - $ref: '#/components/parameters/parameters-siteParam'
+      - $ref: '#/components/parameters/pathParam'
+      - $ref: '#/components/parameters/parameters-userIDParam'
+      - $ref: '#/components/parameters/connectionsParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulSites'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /sites/variances/{id}:
+    get:
+      operationId: getSitesVariancesById
+      tags:
+      - Sites
+      summary: Get site for variance management by ID
+      description: 'Same as `GET /sites/variances`, filtered to the site with the given ID. The result is an
+
+        array with one element, or empty when the site is not visible to the caller.
+
+
+        Requires the `Variance` security type.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/siteIDPathParam'
+      - $ref: '#/components/parameters/parameters-siteParam'
+      - $ref: '#/components/parameters/pathParam'
+      - $ref: '#/components/parameters/parameters-userIDParam'
+      - $ref: '#/components/parameters/connectionsParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulSites'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /sites/register:
+    get:
+      operationId: getSitesRegister
+      tags:
+      - Sites
+      summary: Get sites for self-registration
+      description: 'Retrieve the sites the caller can register themselves to, scoped to the caller''s own
+
+        company and its connected clients.
+
+
+        No security type is required. Instead, self-registration must be enabled with
+
+        `ShowSites` in the caller company''s self-registration configuration; otherwise the
+
+        request is rejected with code 403.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/components-parameters-sortParam'
+      - $ref: '#/components/parameters/components-parameters-searchParam'
+      - $ref: '#/components/parameters/pathParam'
+      - $ref: '#/components/parameters/parameters-userIDParam'
+      - $ref: '#/components/parameters/connectionsParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulSites'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/selfRegistrationDisabled'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /sites/register/{id}:
+    get:
+      operationId: getSitesRegisterById
+      tags:
+      - Sites
+      summary: Get site for self-registration by ID
+      description: 'Same as `GET /sites/register`, filtered to the site with the given ID. The result is an
+
+        array with one element, or empty when the site is not visible to the caller.
+
+
+        Self-registration (`ShowSites`) must be enabled for the caller''s company.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/siteIDPathParam'
+      - $ref: '#/components/parameters/pathParam'
+      - $ref: '#/components/parameters/parameters-userIDParam'
+      - $ref: '#/components/parameters/connectionsParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulSites'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/selfRegistrationDisabled'
+    post:
+      operationId: registerUserToSite
+      tags:
+      - Sites
+      summary: Self-register to site
+      description: 'Assign the calling user to a site. Same rules as `POST /sites/{id}/users/{uid}`, with
+
+        the caller as the user.
+
+
+        Self-registration (`ShowSites`) must be enabled for the caller''s company.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/siteIDPathParam'
+      responses:
+        '200':
+          description: User assigned to site
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sitesMessageResponse'
+              examples:
+                userAssigned:
+                  $ref: '#/components/examples/insertNewSite'
+        '204':
+          description: User already assigned to (or already working on) the site; no change made
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sitesMessageResponse'
+              examples:
+                alreadyAssigned:
+                  $ref: '#/components/examples/siteAlreadyAssigned'
+        '400':
+          description: Assignment not allowed, denied, or could not be saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sitesMessageResponse'
+              examples:
+                outsideConnection:
+                  $ref: '#/components/examples/invalidConnection'
+                assignmentDenied:
+                  $ref: '#/components/examples/siteHasBeenDenied'
+                cannotBeAssigned:
+                  $ref: '#/components/examples/userCannotBeAssigned'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/selfRegistrationDisabled'
+    delete:
+      operationId: unregisterUserFromSite
+      tags:
+      - Sites
+      summary: Self-unregister from site
+      description: 'Remove the calling user''s assignment to a site. Same rules as
+
+        `DELETE /sites/{id}/users/{uid}`, with the caller as the user.
+
+
+        Self-registration (`ShowSites`) must be enabled for the caller''s company.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/siteIDPathParam'
+      responses:
+        '200':
+          description: User removed from site
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sitesMessageResponse'
+              examples:
+                userRemoved:
+                  $ref: '#/components/examples/deleteSiteAssign'
+        '400':
+          description: No company connection to the site, or no active assignment to remove
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sitesMessageResponse'
+              examples:
+                noConnection:
+                  $ref: '#/components/examples/examples-noPermission'
+                notRemoved:
+                  $ref: '#/components/examples/userNotBeRemoved'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/selfRegistrationDisabled'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /sites/{id}:
+    get:
+      operationId: getSiteById
+      tags:
+      - Sites
+      summary: Get site by ID
+      description: 'Same as `GET /sites`, filtered to the site with the given ID. The result is still an
+
+        array: it holds one element when the site is visible to the caller, and is empty when the
+
+        site does not exist or the caller has no permission over it.
+
+
+        Requires the `Report` security type.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/siteIDPathParam'
+      - $ref: '#/components/parameters/parameters-siteParam'
+      - $ref: '#/components/parameters/pathParam'
+      - $ref: '#/components/parameters/parameters-userIDParam'
+      - $ref: '#/components/parameters/connectionsParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulSites'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /sites/{id}/users/{uid}:
+    post:
+      operationId: assignUserToSite
+      tags:
+      - Sites
+      summary: Assign user to site
+      description: 'Assign a user to a site on behalf of the user''s company connection to that site.
+
+        A previously deleted assignment is reactivated and approved; a previously denied
+
+        assignment cannot be reassigned. The user''s event profile is rebuilt after a successful
+
+        assignment.
+
+
+        Requires the `User` or `Supervisor Workforce` security type.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/siteIDPathParam'
+      - $ref: '#/components/parameters/userIDPathParam'
+      responses:
+        '200':
+          description: User assigned to site
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sitesMessageResponse'
+              examples:
+                userAssigned:
+                  $ref: '#/components/examples/insertNewSite'
+        '204':
+          description: User already assigned to (or already working on) the site; no change made
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sitesMessageResponse'
+              examples:
+                alreadyAssigned:
+                  $ref: '#/components/examples/siteAlreadyAssigned'
+        '400':
+          description: Assignment not allowed, denied, or could not be saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sitesMessageResponse'
+              examples:
+                outsideConnection:
+                  $ref: '#/components/examples/invalidConnection'
+                assignmentDenied:
+                  $ref: '#/components/examples/siteHasBeenDenied'
+                cannotBeAssigned:
+                  $ref: '#/components/examples/userCannotBeAssigned'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    delete:
+      operationId: removeUserFromSite
+      tags:
+      - Sites
+      summary: Remove user from site
+      description: 'Remove a user''s active assignment to a site made on behalf of the user''s company
+
+        connection to that site.
+
+
+        Requires the `User` or `Supervisor Workforce` security type.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/siteIDPathParam'
+      - $ref: '#/components/parameters/userIDPathParam'
+      responses:
+        '200':
+          description: User removed from site
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sitesMessageResponse'
+              examples:
+                userRemoved:
+                  $ref: '#/components/examples/deleteSiteAssign'
+        '400':
+          description: No company connection to the site, or no active assignment to remove
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sitesMessageResponse'
+              examples:
+                noConnection:
+                  $ref: '#/components/examples/examples-noPermission'
+                notRemoved:
+                  $ref: '#/components/examples/userNotBeRemoved'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+components:
+  examples:
+    invalidConnection:
+      summary: 400 - Assignment outside supplier connection
+      value:
+        stats:
+          command: Sites
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          id: 560
+          uid: 1410
+        sites:
+          message: Assignment outside supplier connection, could not save
+          status: Bad Request
+          detail: ''
+          success: false
+          code: 400
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+    userNotBeRemoved:
+      summary: 400 - User could not be removed from site
+      value:
+        stats:
+          command: Sites
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          id: 560
+          uid: 1410
+        sites:
+          message: User could not be removed from site
+          status: Bad Request
+          detail: ''
+          success: false
+          code: 400
+    selfRegistrationDisabled:
+      summary: 403 - Self-registration not enabled
+      value:
+        stats:
+          command: Sites
+          version: v1
+          type: token
+          time: 0.21513
+          owner: 1234567890
+        error:
+          status: Forbidden
+          success: false
+          code: 403
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+    insertNewSite:
+      summary: 200 - User assigned to site
+      value:
+        stats:
+          command: Sites
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          id: 560
+          uid: 1410
+        sites:
+          message: User assigned to site
+          status: Good
+          detail: ''
+          success: true
+          code: 200
+    siteAlreadyAssigned:
+      summary: 204 - User already assigned to site
+      value:
+        stats:
+          command: Sites
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          id: 560
+          uid: 1410
+        sites:
+          message: User already assigned to site
+          status: No Content
+          detail: ''
+          success: true
+          code: 204
+    deleteSiteAssign:
+      summary: 200 - User removed from site
+      value:
+        stats:
+          command: Sites
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          id: 560
+          uid: 1410
+        sites:
+          message: User removed from site
+          status: Good
+          detail: ''
+          success: true
+          code: 200
+    successfulSites:
+      summary: 200 - List of sites
+      value:
+        stats:
+          command: Sites
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          records: 2
+        sites:
+        - id: 110
+          con_id: CORP
+          name: Company Corp
+          parent_id: 0
+          top_id: 110
+        - id: 112
+          con_id: SITE002
+          name: Company Corp::Warehouse A
+          parent_id: 111
+          top_id: 110
+    siteHasBeenDenied:
+      summary: 400 - Site assignment has been denied
+      value:
+        stats:
+          command: Sites
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          id: 560
+          uid: 1410
+        sites:
+          message: Site assignment has been denied
+          status: Bad Request
+          detail: ''
+          success: false
+          code: 400
+    examples-noPermission:
+      summary: 400 - No company connection to the site
+      value:
+        stats:
+          command: Sites
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          id: 560
+          uid: 1410
+        sites:
+          message: This user does not have the permissions to perform this action
+          status: Bad Request
+          detail: ''
+          success: false
+          code: 400
+    userCannotBeAssigned:
+      summary: 400 - User could not be assigned to site
+      value:
+        stats:
+          command: Sites
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          id: 560
+          uid: 1410
+        sites:
+          message: User could not be assigned to site
+          status: Bad Request
+          detail: ''
+          success: false
+          code: 400
+  parameters:
+    components-parameters-sortParam:
+      name: sort
+      in: query
+      description: Field to sort by, optionally followed by `:asc` or `:desc`
+      required: false
+      schema:
+        type: string
+        pattern: ^(id|con_id|name|parent_id|top_id)(:(asc|desc))?$
+        default: name:asc
+    components-parameters-searchParam:
+      name: search
+      in: query
+      description: 'Search terms matched against the site code and title and its top-level site code and
+
+        title. Space-separated terms match any field; wrap a phrase in double quotes to keep it
+
+        together; prefix a term with `-` to exclude matches.
+
+        '
+      required: false
+      schema:
+        type: string
+    limitParam:
+      name: limit
+      in: query
+      description: Maximum number of records to return
+      required: false
+      schema:
+        type: integer
+        default: 3000
+    parameters-userIDParam:
+      name: user_id
+      in: query
+      description: Limit the results to sites this user can be assigned to
+      required: false
+      schema:
+        type: integer
+    connectionsParam:
+      name: connections
+      in: query
+      description: 'When `1`, changes the status filter applied to the caller''s own sites (sites from
+
+        external client connections are always included and always active). Any other value is
+
+        treated as `0`, which returns only active sites.
+
+        '
+      required: false
+      schema:
+        type: integer
+        enum:
+        - 0
+        - 1
+        default: 0
+    parameters-siteParam:
+      name: site
+      in: query
+      description: Filter the results for a specify group
+      required: false
+      schema:
+        type: integer
+    siteIDPathParam:
+      name: id
+      in: path
+      description: Site ID
+      required: true
+      schema:
+        type: integer
+    userIDPathParam:
+      name: uid
+      in: path
+      description: ID of the user to assign to or remove from the site
+      required: true
+      schema:
+        type: integer
+    startParam:
+      name: start
+      in: query
+      description: Offset of the first record to return
+      required: false
+      schema:
+        type: integer
+        default: 1
+    pathParam:
+      name: path
+      in: query
+      description: 'Direction to traverse the site hierarchy from the caller''s nodes: `down` (descendants),
+
+        `up` (ancestors) or `branch` (both). Unrecognized values fall back to `down`.
+
+        '
+      required: false
+      schema:
+        type: string
+        enum:
+        - down
+        - up
+        - branch
+        default: down
+  schemas:
+    sitesMessageResponse:
+      type: object
+      properties:
+        stats:
+          $ref: '#/components/schemas/statsSchema'
+        sites:
+          $ref: '#/components/schemas/messageSchema'
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+    siteSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the site
+          example: 112
+        name:
+          type: string
+          description: Name of the site. For non top-level sites it is prefixed with the top-level site name (`Top::Site`)
+          example: Company Corp::Warehouse A
+        con_id:
+          type: string
+          description: Code identifier for the site (empty string when not set)
+          example: SITE002
+        top_id:
+          type: integer
+          description: ID of the top-level (root) site
+          example: 110
+        parent_id:
+          type: integer
+          description: ID of the parent site (0 for a top-level site)
+          example: 111
+  responses:
+    successfulSites:
+      description: List of sites
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              sites:
+                type: array
+                items:
+                  $ref: '#/components/schemas/siteSchema'
+          examples:
+            successfulSites:
+              $ref: '#/components/examples/successfulSites'
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+    selfRegistrationDisabled:
+      description: Self-registration is not enabled for the caller's company
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              error:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            selfRegistrationDisabled:
+              $ref: '#/components/examples/selfRegistrationDisabled'
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v1-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

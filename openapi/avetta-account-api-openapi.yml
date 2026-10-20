@@ -1,0 +1,1921 @@
+openapi: 3.2.0
+info:
+  title: Avetta Account API
+  version: 1.0.0
+  description: 'Operations tagged Account across 2 of this provider''s published API definitions: avetta-connect-dist.json, avetta-connect-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.avetta.com
+  description: Production (as named in the Client API Service documentation examples)
+tags:
+- name: Account
+  x-displayName: Account
+paths:
+  /connect/v1/corporate-hierarchy/sites:
+    servers:
+    - url: https://api.avetta.com
+      description: PROD
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/AccountManagementGateway/1.0.0
+    parameters: []
+    get:
+      parameters:
+      - description: Billing Id of parent node in the hierarchy
+        in: query
+        name: parentId
+        schema:
+          type: number
+      - description: The record to start with for pagination (0-based)
+        in: query
+        name: start
+        schema:
+          type: number
+      - description: The total number of records to return, maximum of 500
+        in: query
+        name: limit
+        schema:
+          type: number
+      - description: 'Filter by site name. Glob patterns can be used ( example: Acme* )'
+        in: query
+        name: name
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                items:
+                  properties:
+                    id:
+                      type: number
+                    name:
+                      minLength: 1
+                      type: string
+                    parentId:
+                      type: number
+                    rootId:
+                      type: number
+                    level:
+                      minLength: 1
+                      type: string
+                    children:
+                      items:
+                        properties: {}
+                      type: array
+                  example:
+                  - id: 123
+                    name: Company 1
+                    parentId: 321
+                    rootId: 234
+                    level: site
+                    children: []
+                  - id: 124
+                    name: Company 2
+                    parentId: 321
+                    rootId: 234
+                    level: site
+                    children: []
+                  - id: 125
+                    name: Company 3
+                    parentId: 321
+                    rootId: 234
+                    level: site
+                    children: []
+                  required:
+                  - id
+                  - name
+                  - parentId
+                  - rootId
+                  - level
+                  - children
+                  type: object
+                minItems: 1
+                type: array
+                uniqueItems: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                description: ''
+                properties:
+                  code:
+                    minLength: 1
+                    type: string
+                  service:
+                    minLength: 1
+                    type: string
+                  message:
+                    minLength: 1
+                    type: string
+                  displayMessage:
+                    minLength: 1
+                    type: string
+                example:
+                  code: '1'
+                  service: Gateway
+                  message: Missing Auth
+                  displayMessage: Missing Auth
+                required:
+                - code
+                - service
+                - message
+                - displayMessage
+                type: object
+                x-examples:
+                  example-1:
+                    code: '1'
+                    service: Gateway
+                    message: Missing Auth
+                    displayMessage: Missing Auth
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                description: ''
+                properties:
+                  code:
+                    minLength: 1
+                    type: string
+                  message:
+                    minLength: 1
+                    type: string
+                example:
+                  code: '3'
+                  message: Broad Error message
+                required:
+                - code
+                - message
+                type: object
+                x-examples:
+                  example-1:
+                    code: '3'
+                    message: Broad Error message
+      tags:
+      - Account
+      description: 'Get all the sites which are contained in a given active connection within the corporate hierarchy.
+
+
+        The Hierarchy consists of a collection of nodes that link every site to a hub and at the top of the Hierarchy is the root node that serves as the Corporate Account Billing Id.
+
+
+        Each supplier links to one or more Site nodes via a Connection.
+
+
+        If the API is called with only the required parameters (api key) then all sites for this client corporate account should be returned. The corporate account is determined by a lookup to identify the client linked to the apikey.
+
+
+        The following restrictions apply:
+
+
+        The client should be a corporate, which is the root node of the hierarchy.
+
+
+        `parentId` is a filter to show only the nodes with that selected Parent Id
+
+
+        Parent here means the direct parent of a site, it can be a hub or a corporate.
+
+
+        The reason to use the Parent Id filter is to identify a list of sites that have the same parent.
+
+
+        Name is a filter on the site name to show only the sites with that selected name.
+
+
+        Sites will only be returned only if they are linked to an active (approved) a connection.
+
+
+        Parameters:
+
+
+        Best practice is to set the limit to 500 the total number of records to return'
+      operationId: getConnectV1CorporateHierarchySites
+      summary: Get Corporate Hierarchy Sites
+      x-internal: false
+      x-operation-id-source: derived
+  /connect/v1/registrations:
+    servers:
+    - url: https://api.avetta.com
+      description: PROD
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/AccountManagementGateway/1.0.0
+    parameters: []
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              properties:
+                name:
+                  description: The supplier’s company name.
+                  example: Bob's Plumbing Services
+                  maxLength: 120
+                  minLength: 1
+                  type: string
+                primaryContact:
+                  properties:
+                    firstName:
+                      description: The first name of the supplier’s primary contact.
+                      example: Bob
+                      maxLength: 40
+                      minLength: 1
+                      type: string
+                    lastName:
+                      description: The last name of the supplier’s primary contact.
+                      example: Smith
+                      maxLength: 80
+                      minLength: 1
+                      type: string
+                    email:
+                      description: 'The email of the supplier’s primary contact.
+
+                        > Email address must have a valid format.'
+                      example: bob.smith@bobsplumbing.com
+                      format: email
+                      minLength: 3
+                      type: string
+                    phone:
+                      description: "The phone number of the supplier’s primary contact.\n1. For suppliers based in the United States or Canada (US/CA), the phone number may be provided without the country code in one of the following formats:\n  * A 10-digit number (e.g., 1234567890)\n  * A hyphenated format (e.g., XXX-XXX-XXXX)\n\n2. For phone numbers outside the United States and Canada (US/CA), please include the \"+\" symbol followed by the appropriate country code. The number should be formatted in one of the following ways:\n  * Without hyphens: +[Country Code] [Area Code] [Local Number] (e.g., +61 412 345 678)\n  * With hyphens: +[Country Code]-[Area Code]-[Local Number] (e.g., +61-412-345-678) <br /><br />\n  Examples of valid international formats:\n    * Australia: +61-412-345-678 or +61 412 345 678\n    * United Kingdom: +44-20-7946-0958 or +44 20 7946 0958\n    * Brazil: +55-11-91234-5678 or +55 11 91234 5678\n> Please ensure the area code is correct and valid for the respective country."
+                      example: 999-999-9999
+                      maxLength: 17
+                      minLength: 10
+                      type: string
+                    language:
+                      description: 'These languages are specified within a recognition request using language code parameters as noted on this page. Most language code parameters conform to [ISO-639-1](https://en.wikipedia.org/wiki/ISO_639-1) identifiers, except where noted.
+
+                        >Language must be a valid/supported language.'
+                      example: en
+                      maxLength: 2
+                      minLength: 2
+                      type: string
+                  required:
+                  - lastName
+                  - language
+                  type: object
+                billingAddress:
+                  properties:
+                    country:
+                      description: 'The country must be passed as either a two-character or a three-character,  ISO 3166 compatible country code.  <br /> For example, `US` for the United States  (2-letter code) or `USA` (3-letter code).
+
+                        > This field is case sensitive.'
+                      example: US
+                      maxLength: 3
+                      minLength: 2
+                      type: string
+                  required:
+                  - country
+                  type: object
+                reasonForRequest:
+                  description: The reason for requesting registration of the supplier.
+                  type: string
+                requestDeadline:
+                  description: 'Used for inputting a date & time. Follows W3C format (ISO 8601). The best practice is to always include the time zone offset. Use the yyyy-MM-ddTHH:mm:ss.SSZ formats to specify dateTime fields.
+
+
+                    * yyyy is the four-digit year
+
+                    * MM is the two-digit month (01-12)
+
+                    * dd is the two-digit day (01-31)
+
+                    * ''T'' is a separator indicating that time-of-day follows
+
+                    * HH is the two-digit hour (00-23)
+
+                    * mm is the two-digit minute (00-59)
+
+                    * ss is the two-digit seconds (00-59)
+
+                    * SSS is the optional three-digit milliseconds (000-999)
+
+                    * +/-HH:mm is the Zulu (UTC) time zone offset
+
+                    * ''Z'' is the reference UTC timezone
+
+
+                    See [W3C XML Schema Part 2: DateTime Datatype](https://www.w3.org/TR/xmlschema-2/#dateTime).
+
+
+                    > Date must be in a valid format.'
+                  example: '2021-10-01T00:00:00.00Z'
+                  type: string
+                requestedByClientId:
+                  description: The Corporate Id of the site(s) that is requesting the connection.
+                  example: 480
+                  type: number
+                requestedBySiteIds:
+                  description: 'The site Id(s) that are requesting the connection. Example: `[481, 482]`.'
+                  items:
+                    type: integer
+                  maxItems: 100
+                  minItems: 0
+                  type: array
+                  uniqueItems: true
+                  example:
+                  - 481
+                  - 482
+                requestorFullName:
+                  description: The requestor full name.
+                  type: string
+                requestorEmail:
+                  description: 'The requestor email address.
+
+                    > Email address must have a valid format.'
+                  format: email
+                  minLength: 3
+                  type: string
+                tags:
+                  items:
+                    properties:
+                      id:
+                        description: The numeric Id of the supplier tag applied to this supplier.
+                        example: 908
+                        type: number
+                      appliedAtAccount:
+                        description: The Account Id in the hierarchy where the tag is applied.
+                        example: 480
+                        type: number
+                    required:
+                    - id
+                    - appliedAtAccount
+                    type: object
+                  minItems: 0
+                  type: array
+                  uniqueItems: true
+                externalIds:
+                  items:
+                    properties:
+                      vendorId:
+                        description: The client’s reference Id for a supplier from one of their internal systems.
+                        example: ABC711
+                        minLength: 1
+                        type: string
+                      type:
+                        description: The type of Vendor Id that a client can attach to a supplier.
+                        enum:
+                        - DAB
+                        - BRAVO
+                        - EHS
+                        - Salesforce
+                        - Badging
+                        - JDE
+                        - Buyer
+                        - ERP
+                        - AX
+                        - LMS
+                        - ORACLE
+                        - CRM
+                        - SAP
+                        - COUPA
+                        - SAP ARIBA
+                        - XPRO
+                        - Vendor
+                        - Other
+                        example: ORACLE
+                        type: string
+                      appliedAtAccount:
+                        description: The Corporate Id of the client.
+                        example: 480
+                        type: number
+                    required:
+                    - vendorId
+                    - type
+                    - appliedAtAccount
+                    type: object
+                  minItems: 0
+                  type: array
+                  uniqueItems: true
+                ccEmail:
+                  description: 'Optional list of email addresses to be copied on the communication.
+
+                    > Each email address must have a valid format.'
+                  type:
+                  - array
+                  - 'null'
+                  items:
+                    type: string
+                    format: email
+                    minLength: 3
+                  minItems: 0
+                  maxItems: 10
+                  uniqueItems: true
+                  example:
+                  - example1@mail.com
+                  - example2@mail.com
+              required:
+              - name
+              - primaryContact
+              - billingAddress
+              - reasonForRequest
+              - requestDeadline
+              - requestedByClientId
+              - requestedBySiteIds
+              - requestorFullName
+              - requestorEmail
+              type: object
+              x-examples:
+                example-1:
+                  tags:
+                  - id: 908
+                    appliedAtAccount: 480
+                  billingAddress:
+                    country: US
+                  externalIds:
+                  - vendorId: ABC711
+                    type: ORACLE
+                    appliedAtAccount: 480
+                  name: test_tags_external_ids
+                  primaryContact:
+                    email: bob.smith@bobsplumbing.com
+                    firstName: Bob
+                    language: en
+                    lastName: Smith
+                    phone: '123467890'
+                  reasonForRequest: We need more plumbers for industrial site maintenance.
+                  requestDeadline: '2021-10-01T00:00:00.00Z'
+                  requestedByClientId: 250117111
+                  requestorEmail: bob.smith@corp.com
+                  requestorFullName: Bob Smith
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                description: ''
+                properties:
+                  code:
+                    minLength: 1
+                    type: string
+                    example: Missing Auth
+                  service:
+                    minLength: 1
+                    type: string
+                    example: Gateway
+                  message:
+                    minLength: 1
+                    type: string
+                    example: Api Key Not Found
+                  displayMessage:
+                    minLength: 1
+                    type: string
+                    example: Api Key Not Found
+                required:
+                - code
+                - service
+                - message
+                - displayMessage
+                type: object
+                x-examples:
+                  example-1:
+                    code: '1'
+                    displayMessage: Missing Auth
+                    message: Missing Auth
+                    service: Gateway
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                description: ''
+                properties:
+                  code:
+                    minLength: 1
+                    type: string
+                    example: '13'
+                  message:
+                    minLength: 1
+                    type: string
+                    example: Duplicate data request
+                required:
+                - code
+                - message
+                type: object
+                x-examples:
+                  example-1:
+                    code: '13'
+                    message: Duplicate data request
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                description: ''
+                properties:
+                  code:
+                    minLength: 1
+                    type: string
+                  message:
+                    minLength: 1
+                    type: string
+                required:
+                - code
+                - message
+                type: object
+                example:
+                  code: '3'
+                  message: Broad Error message
+      tags:
+      - Account
+      description: Register supplier.
+      operationId: register-supplier
+      summary: Register Supplier
+  /client-api/v1/clients/{clientId}/suppliers/{accountId}:
+    servers:
+    - url: https://api.avetta.com
+      description: PROD
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/AccountManagementGateway/1.0.0
+    parameters:
+    - description: The numeric identifier for a corporate account.
+      in: path
+      name: clientId
+      required: true
+      schema:
+        type: number
+    - description: The numeric identifier for a supplier.
+      in: path
+      name: accountId
+      required: true
+      schema:
+        type: number
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              properties:
+                externalIds:
+                  items:
+                    properties:
+                      externalId:
+                        description: The value of the External Id to be added.
+                        minLength: 1
+                        type: string
+                        example: SAP-1234
+                      externalIdType:
+                        description: 'The type of External Id that a client can attach to a supplier.
+
+
+                          > This field is case sensitive.'
+                        enum:
+                        - SAP
+                        - ORACLE
+                        - Salesforce
+                        - CRM
+                        - LMS
+                        - ERP
+                        - EHS
+                        - Badging
+                        - Vendor
+                        - Other
+                        - Buyer
+                        - JDE
+                        - AX
+                        - DAB
+                        - BRAVO
+                        - COUPA
+                        - SAP ARIBA
+                        - XPRO
+                        example: SAP
+                        type: string
+                      clientId:
+                        description: The client Id (Billing Id) in the hierarchy where the External Id is applied.
+                        example: 1234
+                        type: number
+                    required:
+                    - externalId
+                    - externalIdType
+                    - clientId
+                    type: object
+                  minItems: 1
+                  type: array
+                  uniqueItems: true
+              required:
+              - externalIds
+              type: object
+              x-examples:
+                example-1:
+                  externalIds:
+                    value: SAP-1234
+                    type: SAP
+                    appliedAtAccount: 12345
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                description: ''
+                properties:
+                  code:
+                    minLength: 1
+                    type: number
+                  message:
+                    minLength: 1
+                    type: string
+                required:
+                - code
+                - message
+                type: object
+                x-examples-1:
+                  Invalid External Id Type:
+                    code: 12
+                    message: sap externalIdType is invalid.
+                x-examples-2:
+                  Invalid Client Id:
+                    code: '12'
+                    message: 999 clientId does not belong to your hierarchy.
+                x-examples-3:
+                  Invalid Body:
+                    code: '12'
+                    message: 'Malformed message body: Invalid JSON'
+                x-examples-4:
+                  Empty External Id:
+                    code: '12'
+                    message: 'requirement failed: ExternalId value cannot be empty'
+                x-examples-5:
+                  Duplicate External Id:
+                    code: '12'
+                    message: 'requirement failed: Duplicate external id in request'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                description: ''
+                properties:
+                  code:
+                    minLength: 1
+                    type: string
+                  message:
+                    minLength: 1
+                    type: string
+                required:
+                - code
+                - message
+                type: object
+                x-examples:
+                  example-1:
+                    code: '3'
+                    message: Broad Error message
+      tags:
+      - Account
+      description: 'Update supplier account with one or more new External Id''s.
+
+
+        Note: There is no limit to how many External Id''s are added; however, `externalId` and `externalIdType` must be unique per client. Only external IDs for active suppliers are allowed.'
+      operationId: put-v1-clients-clientId-suppliers-supplierId
+      summary: Client Update Supplier
+  /account-management-gateway/v1/clients/{clientId}/suppliers/{supplierId}/profile:
+    servers:
+    - url: https://api.avetta.com
+      description: PROD
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/AccountManagementGateway/1.0.0
+    parameters:
+    - schema:
+        type: number
+      name: supplierId
+      in: path
+      required: true
+    - schema:
+        type: number
+      name: clientId
+      in: path
+      required: true
+    get:
+      operationId: getSupplierProfile
+      summary: Supplier Profile
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    id: 89010
+                    name: Bob's Plumbing Services
+                    dbaNames:
+                    - Bob's Plumbing Services, LLC
+                    description: Providing plumbing services
+                    accountStatus: Active
+                    website: www.bobsplumbing.com
+                    primaryContact:
+                      id: 123
+                      firstName: Bob
+                      lastName: Smith
+                      email: bob.smith@fakeemail.com
+                      phone: 555 555 1234
+                      fax: 555 555 4567
+                      language: en
+                    billingAddress:
+                      addressLine1: 44 Woerdens Road
+                      city: Raymond Terrace
+                      state: New South Wales
+                      postalCode: '2324'
+                      country: Australia
+                    createdDate: '2022-04-25 01:39:54'
+                    updatedDate: '2022-04-25 01:39:54'
+                    diversity:
+                    - basic
+                    externalId:
+                    - clientId: 123
+                      type: Vendor
+                      value: '132001'
+                    businessNumbers:
+                    - type: ABN
+                      value: '12345578922'
+              schema:
+                $ref: '#/components/schemas/1.0.0_SupplierProfile'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                x-examples:
+                  example-1:
+                    error: Unable to evaluate supplier account for supplier id 8905dsds5.
+              examples:
+                example-1:
+                  value:
+                    error: Error message.
+                example-2:
+                  value: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                x-examples:
+                  example-1:
+                    error: Error message.
+              examples:
+                example-1:
+                  value:
+                    error: Error message.
+      parameters:
+      - in: path
+        name: supplierId
+        schema:
+          type: number
+        required: true
+      x-internal: false
+      tags:
+      - Account
+      description: Retrieves the supplier profile information for a given `supplierId`.
+  /account-management-gateway/v1/clients/{clientId}/suppliers:
+    servers:
+    - url: https://api.avetta.com
+      description: PROD
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/AccountManagementGateway/1.0.0
+    parameters:
+    - schema:
+        type: string
+      name: supplierId
+      in: query
+      required: false
+      description: Optional filter on the client hierarchy to show only matching supplier in their network.
+    - schema:
+        type: string
+        default: active, pending, and deactivated
+      name: accountStatus
+      in: query
+      required: false
+      description: Optional filter on the client hierarchy to show only matching supplier status.
+    - schema:
+        type: string
+        default: 30 days
+      name: modifiedAfter
+      in: query
+      required: false
+      description: Optional filter for suppliers updatedDate. The available range is capped at the last 30 days.
+    - schema:
+        type: integer
+        default: '0'
+      name: start
+      in: query
+      required: false
+      description: Optional filter. The record to start with for pagination (0-based)
+    - schema:
+        type: integer
+        default: '500'
+      name: limit
+      in: query
+      required: false
+      description: Optional filter. Total number of records to be returned.
+    get:
+      operationId: getConnectedSupplierProfile
+      summary: Connected Supplier Profile
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_SupplierProfiles'
+              examples:
+                example-1:
+                  value:
+                    totalCount: 1
+                    suppliers:
+                    - id: 250377257
+                      name: Suppliers Inc.
+                      dbaNames:
+                      - John Doe
+                      website: suppliersinc.co
+                      description: A company specializing in heavy tractor transport/logistics.
+                      contactInformation:
+                      - phoneNumber: 123-456-7890
+                        faxNumber: 098-765-4321
+                        isPrimary: true
+                        type: Office
+                      billingAddress:
+                        addressLine1: 7 Road Avenue
+                        city: Metropolis
+                        state: Grand Line
+                        postalCode: 112 200
+                        country: Country
+                        poBox: '111111'
+                        suiteNumber: '12'
+                      numberOfEmployees: 200
+                      accountStatus: active
+                      updatedDate: '2023-11-11T05:28:48.943Z'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    minLength: 1
+                    type: string
+                    example: Missing Auth
+                  service:
+                    minLength: 1
+                    type: string
+                    example: Gateway
+                  message:
+                    minLength: 1
+                    type: string
+                    example: Missing Auth
+                  displayMessage:
+                    minLength: 1
+                    type: string
+                    example: Missing Auth
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                x-examples:
+                  example-1:
+                    error: Error message.
+              examples:
+                example-1:
+                  value:
+                    error: Error message.
+      parameters:
+      - in: path
+        name: clientId
+        schema:
+          type: number
+        required: true
+      x-internal: false
+      tags:
+      - Account
+      description: 'Retrieves all unique suppliers at corporate, hub or site (depending on `clientId` path parameter). By default, all suppliers are retrieved regardless of account status. Note: This endpoint does not return records modified before 30 days.'
+  /account-management-gateway/v1/clients/{clientId}/suppliers/{supplierId}/primeandsubcontractors:
+    servers:
+    - url: https://api.avetta.com
+      description: PROD
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/AccountManagementGateway/1.0.0
+    parameters:
+    - schema:
+        type: number
+      name: clientId
+      in: path
+      required: true
+    - schema:
+        type: number
+      name: supplierId
+      in: path
+      required: true
+    get:
+      operationId: getContractors
+      summary: Contractors (Sub/Prime)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                x-examples:
+                  example-1:
+                  - siteId: ''
+                    siteName: ''
+                    supplierId: ''
+                    supplierBillingId: ''
+                    supplierName: ''
+                    isDirect: false
+                    primeContractors:
+                    - accountId: ''
+                      supplierName: ''
+                      supplierBillingId: ''
+                    subcontractors:
+                    - accountId: ''
+                      supplierName: ''
+                      supplierBillingId: ''
+                items:
+                  type: object
+                  properties:
+                    clientId:
+                      type: number
+                      description: This field describes a siteId for the client.
+                    clientName:
+                      type: string
+                      description: This field describes a siteName for the client.
+                    supplierId:
+                      type: number
+                    supplierName:
+                      type: string
+                    isDirect:
+                      type: boolean
+                      description: Represents a "Direct" relationship between the supplier and site.
+                    primeContractors:
+                      type: array
+                      description: The prime contractors for the given supplier.
+                      items:
+                        type: object
+                        properties:
+                          supplierName:
+                            type: string
+                          supplierId:
+                            type: number
+                    subContractors:
+                      type: array
+                      description: The sub-contractors for the given supplier.
+                      items:
+                        type: object
+                        properties:
+                          supplierName:
+                            type: string
+                          supplierId:
+                            type: number
+                  required:
+                  - clientId
+                  - clientName
+                  - supplierId
+                  - supplierName
+                  - isDirect
+                  - primeContractors
+                  - subContractors
+              examples:
+                example-1:
+                  value:
+                  - clientId: 2337753
+                    clientName: SiteName
+                    supplierId: 2095553
+                    supplierName: All for One, LLC
+                    isDirect: true
+                    primeContractors:
+                    - supplierName: Empire Traditions, Inc.
+                      supplierId: 2500122
+                    subContractors:
+                    - supplierName: 2 BROS, LLC
+                      supplierId: 250231
+                example-2:
+                  value:
+                  - clientId: 2337753
+                    clientName: SiteName
+                    supplierId: 2095553
+                    supplierName: All for One, LLC
+                    isDirect: true
+                    primeContractors:
+                    - supplierName: Empire Traditions, Inc.
+                      supplierId: 2500122
+                    subContractors: []
+                example-3:
+                  value:
+                  - clientId: 2337753
+                    clientName: SiteName
+                    supplierId: 2095553
+                    supplierName: All for One, LLC
+                    isDirect: true
+                    primeContractors: []
+                    subContractors:
+                    - supplierName: 2 BROS, LLC
+                      supplierId: 250231
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+            multipart/form-data:
+              schema:
+                type: object
+                properties: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                x-examples:
+                  example-1:
+                    error: Error message.
+              examples:
+                example-1:
+                  value:
+                    error: Error message.
+      x-internal: false
+      tags:
+      - Account
+      description: This API retreives all subContractors and primeContractors for each supplier-site connection for the given `supplierId` passed in the query parameters.
+  /account-management-gateway/v1/clients/{clientId}/hierarchy:
+    servers:
+    - url: https://api.avetta.com
+      description: PROD
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/AccountManagementGateway/1.0.0
+    parameters:
+    - schema:
+        type: number
+      name: clientId
+      in: path
+      required: true
+      description: Required filter for client account. Passing client Id in parameter will return hierarchy for that clientId in the hierarchy
+    - schema:
+        type: string
+      name: clientName
+      in: query
+      required: false
+      description: Optional filter on the site name to show only the sites with that selected name.
+    get:
+      operationId: getFullHierarchy
+      summary: Hierarchy
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_FullHierarchyResponse'
+              examples:
+                example-1:
+                  value:
+                  - clientId: 123
+                    clientName: AI Global
+                    hierarchyLevel: corporate
+                    children:
+                    - clientId: 123456
+                      clientName: ML United States
+                      hierarchyLevel: hub
+                      children:
+                      - clientId: 12345678
+                        clientName: GPT4 Los Angeles
+                        hierarchyLevel: site
+                        children: []
+                      - clientId: 12345679
+                        clientName: GPT3.5 San Diego
+                        hierarchyLevel: site
+                        children: []
+                    - clientId: 20677
+                      clientName: DS Canada
+                      hierarchyLevel: hub
+                      children:
+                      - clientId: 2067739
+                        clientName: Bayesian Toronto
+                        hierarchyLevel: hub
+                        children:
+                        - clientId: 206773941
+                          clientName: regression Markham
+                          hierarchyLevel: site
+                          children: []
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+            multipart/form-data:
+              schema:
+                type: object
+                properties: {}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    minLength: 1
+                    type: string
+                    example: Missing Auth
+                  service:
+                    minLength: 1
+                    type: string
+                    example: Gateway
+                  message:
+                    minLength: 1
+                    type: string
+                    example: Missing Auth
+                  displayMessage:
+                    minLength: 1
+                    type: string
+                    example: Missing Auth
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                x-examples:
+                  example-1:
+                    error: Error message.
+              examples:
+                example-1:
+                  value:
+                    error: Error message.
+      x-internal: false
+      tags:
+      - Account
+      description: 'The API retrieves the whole hierarchy for a client.
+
+
+        The Hierarchy consists of a collection of nodes that link every site to a hub and at the top of the Hierarchy is the root node that serves as the Corporate Account Billing Id.
+
+
+        If the API is called with only the required parameters (api key) then entire hierarchy for the client corporate account will be returned.
+
+
+        The endpoint returns only active sites. To view inactive sites an Admin can log into the Connect application and view the hierarchy.'
+  /account-management-gateway/v1/clients/{clientId}/suppliers/external-ids:
+    servers:
+    - url: https://api.avetta.com
+      description: PROD
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/AccountManagementGateway/1.0.0
+    parameters:
+    - schema:
+        type: number
+      name: clientId
+      in: path
+      required: true
+      description: Required filter for client account. Passing client Id in parameter will give all external Ids related to client Id
+    - schema:
+        type: string
+      name: supplierId
+      in: query
+      required: false
+      description: Optional filter to return externalIds only applied at a given supplier
+    - schema:
+        type: string
+      name: externalIdType
+      in: query
+      required: false
+      description: Optional filter. When passed in query parameter give list of suppliers for given External Id Type
+    - schema:
+        type: string
+      name: externalId
+      in: query
+      required: false
+      description: Optional filter. When passed in query parameter give list of suppliers for given External Id
+    - schema:
+        type: integer
+      name: start
+      in: query
+      required: false
+      description: Optional filter. The record to start with for pagination (0-based)
+    - schema:
+        type: integer
+      name: limit
+      in: query
+      required: false
+      description: Optional filter. Total number of records to be returned.
+    - schema:
+        type: string
+        default: 90 days
+      name: modifiedAfter
+      example: '2026-03-20'
+      in: query
+      required: false
+      description: Optional filter for suppliers data modified after this date. The available range is capped at the last 90 days.
+    get:
+      operationId: getExternalIds
+      tags:
+      - Account
+      summary: Get External-Ids
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_GetExternalIdsResponse'
+              examples:
+                example-1:
+                  summary: Example of GetExternalIdsResponse
+                  description: An example response containing external IDs.
+                  value:
+                    totalCount: 3
+                    externalIds:
+                    - supplierId: '123'
+                      supplierName: Hank's Hardware
+                      clientId: '456'
+                      externalId: '789'
+                      externalIdType: SAP
+                      clientName: Skyler's Supply Europe
+                      hierarchyLevel: hub
+                      updatedDate: '2024-02-02T09:11:21.517Z'
+                      updatedByUserEmail: tester@avetta.com
+                    - supplierId: '124'
+                      supplierName: Walt's Warehouse
+                      clientId: '457'
+                      externalId: '790'
+                      externalIdType: Vendor
+                      clientName: Skyler's Supply UK
+                      hierarchyLevel: site
+                      updatedDate: '2023-12-05T13:15:01.234Z'
+                      updatedByUserEmail: tester@avetta.com
+                    - supplierId: '125'
+                      supplierName: Jesse's Plumbing Services
+                      clientId: '458'
+                      externalId: 123-Limited-456
+                      externalIdType: COUPA
+                      clientName: Skyler's Supply Global
+                      hierarchyLevel: corporate
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    minLength: 1
+                    type: string
+                    example: Missing Auth
+                  service:
+                    minLength: 1
+                    type: string
+                    example: Gateway
+                  message:
+                    minLength: 1
+                    type: string
+                    example: Missing Auth
+                  displayMessage:
+                    minLength: 1
+                    type: string
+                    example: Missing Auth
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                x-examples:
+                  example-1:
+                    error: Error message.
+              examples:
+                example-1:
+                  value:
+                    error: Error message.
+      description: 'Note: This only pulls external IDs of active or pending suppliers and not deactivated.'
+  /account-management-gateway/v1/clients/{clientId}/suppliers/{supplierId}/external-ids:
+    servers:
+    - url: https://api.avetta.com
+      description: PROD
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/AccountManagementGateway/1.0.0
+    delete:
+      operationId: deleteExternalIds
+      summary: Delete External Ids
+      tags:
+      - Account
+      description: 'Deletes external ID(s) for a supplier at a specific client hierarchy level.
+
+
+        **Usage Modes:**
+
+        - **Delete all external IDs:** Omit both `externalId` and `externalIdType` to delete all external IDs associated with the supplier at the specified client level, regardless of type.
+
+        - **Delete specific external IDs:** Provide one or more `externalId` values along with a single `externalIdType` to delete only those specific IDs of that type.
+
+
+        **Important Considerations:**
+
+        - External IDs can only be deleted if they belong to the specified `supplierId` at the given `clientId` hierarchy level.
+
+        - When deleting specific external IDs, only one `externalIdType` can be specified per request. To delete IDs of different types, make separate API calls for each type.'
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The client hierarchy level where the external IDs reside. Only external IDs that belong to the supplier at this specific hierarchy level can be deleted.
+        schema:
+          type: number
+      - name: supplierId
+        in: path
+        required: true
+        description: The supplier whose external IDs will be deleted. The supplier must exist at the specified `clientId` hierarchy level.
+        schema:
+          type: number
+      - name: externalId
+        in: query
+        required: false
+        description: One or more external ID values to delete. When provided, `externalIdType` is required. To delete multiple IDs, repeat the parameter (e.g., `externalId=id1&externalId=id2&externalId=id3`).
+        schema:
+          type: string
+        examples:
+          single:
+            summary: A single external ID to be deleted
+            value: ?externalId=id1&externalIdType=Vendor
+          multiple:
+            summary: Multiple external IDs of the same type to be deleted
+            value: ?externalId=id1&externalId=id2&externalId=id3&externalIdType=Vendor
+      - name: externalIdType
+        in: query
+        required: false
+        description: The type of external ID to delete. Required when `externalId` is provided. When used without `externalId`, deletes all external IDs of this type for the supplier.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                Successfully deleted:
+                  value: Successfully deleted the external ids
+                No external Id is deleted:
+                  value: No external id is deleted.
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+            multipart/form-data:
+              schema:
+                type: object
+                properties: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    minLength: 1
+                    type: string
+                    example: Missing Auth
+                  service:
+                    minLength: 1
+                    type: string
+                    example: Gateway
+                  message:
+                    minLength: 1
+                    type: string
+                    example: 'Failed to delete externalIds: please provide the ''externalIdType'' when passing the ''externalId'' value(s).'
+                  displayMessage:
+                    minLength: 1
+                    type: string
+                    example: 'Failed to delete externalIds: please provide the ''externalIdType'' when passing the ''externalId'' value(s).'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    minLength: 1
+                    type: string
+                    example: Missing Auth
+                  service:
+                    minLength: 1
+                    type: string
+                    example: Gateway
+                  message:
+                    minLength: 1
+                    type: string
+                    example: Missing Auth
+                  displayMessage:
+                    minLength: 1
+                    type: string
+                    example: Missing Auth
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                x-examples:
+                  example-1:
+                    error: Error message.
+              examples:
+                example-1:
+                  value:
+                    error: Error message.
+components:
+  schemas:
+    1.0.0_SupplierProfiles:
+      properties:
+        totalCount:
+          type: integer
+        suppliers:
+          type: array
+          items:
+            properties:
+              id:
+                type: number
+              name:
+                type: string
+              dbaNames:
+                type: array
+                items:
+                  type: string
+              website:
+                type: string
+              description:
+                type: string
+              primaryContact:
+                properties:
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  phoneNumber:
+                    type:
+                    - string
+                    - 'null'
+                  faxNumber:
+                    type:
+                    - string
+                    - 'null'
+                  isPrimary:
+                    type: boolean
+                  type:
+                    type: string
+              billingAddress:
+                properties:
+                  addressLine1:
+                    type:
+                    - string
+                    - 'null'
+                  city:
+                    type:
+                    - string
+                    - 'null'
+                  state:
+                    type:
+                    - string
+                    - 'null'
+                  postalCode:
+                    type:
+                    - string
+                    - 'null'
+                  country:
+                    type:
+                    - string
+                    - 'null'
+                  poBox:
+                    type:
+                    - string
+                    - 'null'
+                  suiteNumber:
+                    type:
+                    - string
+                    - 'null'
+              numberOfEmployees:
+                type: number
+              accountStatus:
+                type: string
+                enum:
+                - active
+                - pending
+                - deactivated
+              updatedDate:
+                type: string
+                format: date-time
+            required:
+            - id
+            - name
+            - dbaNames
+            - description
+            - accountStatus
+            - website
+            - primaryContact
+            - billingAddress
+            - createdDate
+            - updatedDate
+            - diversity
+            - externalId
+            - businessNumbers
+    1.0.0_FullHierarchyResponse:
+      properties:
+        clientId:
+          type: integer
+          format: int64
+        clientName:
+          type: string
+        hierarchyLevel:
+          type: string
+        children:
+          type: array
+          items:
+            type: object
+      required:
+      - clientId
+      - clientName
+      - hierarchyLevel
+      - children
+    1.0.0_SupplierProfile:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        dbaNames:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        accountStatus:
+          type: string
+          enum:
+          - active
+          - pending
+          - deactivated
+        website:
+          type: string
+        primaryContact:
+          properties:
+            id:
+              type: number
+            firstName:
+              type: string
+            lastName:
+              type: string
+            email:
+              type: string
+            phone:
+              type:
+              - string
+              - 'null'
+            fax:
+              type:
+              - string
+              - 'null'
+            language:
+              type: string
+          required:
+          - id
+          - userId
+          - firstName
+          - lastName
+          - email
+          - language
+        billingAddress:
+          properties:
+            addressLine1:
+              type:
+              - string
+              - 'null'
+            city:
+              type:
+              - string
+              - 'null'
+            state:
+              type:
+              - string
+              - 'null'
+            postalCode:
+              type:
+              - string
+              - 'null'
+            country:
+              type: string
+          required:
+          - country
+        location:
+          type: array
+          items:
+            type: object
+            properties:
+              addressLine1:
+                type:
+                - string
+                - 'null'
+              city:
+                type:
+                - string
+                - 'null'
+              state:
+                type:
+                - string
+                - 'null'
+              postalCode:
+                type:
+                - string
+                - 'null'
+              country:
+                type: string
+        serviceAreas:
+          type: array
+          items:
+            type: object
+            properties:
+              addressLine1:
+                type:
+                - string
+                - 'null'
+              city:
+                type:
+                - string
+                - 'null'
+              state:
+                type:
+                - string
+                - 'null'
+              postalCode:
+                type:
+                - string
+                - 'null'
+              country:
+                type: string
+        createdDate:
+          type: string
+          format: date-time
+        updatedDate:
+          type: string
+          format: date-time
+        diversity:
+          type: array
+          items:
+            type: string
+        externalId:
+          type: array
+          items:
+            type: object
+            properties:
+              clientId:
+                type:
+                - number
+                - 'null'
+              type:
+                type:
+                - string
+                - 'null'
+              value:
+                type:
+                - string
+                - 'null'
+        businessNumbers:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              value:
+                type: string
+            required:
+            - type
+            - value
+        authorizations:
+          type:
+          - array
+          - 'null'
+          items:
+            type: object
+            properties:
+              authorizationCategory:
+                type: string
+              authorizationType:
+                type: string
+              issuingAuthority:
+                type:
+                - string
+                - 'null'
+              licenseNumber:
+                type: string
+              expirationDate:
+                type: string
+              files:
+                type:
+                - array
+                - 'null'
+                items:
+                  type: string
+        clientTags:
+          type:
+          - array
+          - 'null'
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              displayId:
+                type:
+                - string
+                - 'null'
+              appliedDate:
+                type:
+                - string
+                - 'null'
+              appliedByUserId:
+                type:
+                - string
+                - 'null'
+              appliedByFirstName:
+                type:
+                - string
+                - 'null'
+              appliedByLastName:
+                type:
+                - string
+                - 'null'
+              name:
+                type:
+                - string
+                - 'null'
+              internal:
+                type:
+                - string
+                - 'null'
+              createdByClientId:
+                type:
+                - string
+                - 'null'
+              createdByClientName:
+                type:
+                - string
+                - 'null'
+              visibleToContractor:
+                type:
+                - boolean
+                - 'null'
+        supplierSettings:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        trades:
+          type:
+          - array
+          - 'null'
+          items:
+            type: object
+            properties:
+              tradeId:
+                type: string
+              primary:
+                type: boolean
+              selfPerformed:
+                type: boolean
+              manufacture:
+                type: boolean
+              activityPercent:
+                type: string
+              displayText:
+                type:
+                - string
+                - 'null'
+              taxonomyName:
+                type:
+                - string
+                - 'null'
+              tradeCode:
+                type:
+                - string
+                - 'null'
+      required:
+      - id
+      - name
+      - dbaNames
+      - description
+      - accountStatus
+      - website
+      - primaryContact
+      - billingAddress
+      - createdDate
+      - updatedDate
+      - diversity
+      - externalId
+      - businessNumbers
+    1.0.0_GetExternalIdsResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          format: int64
+        externalIds:
+          type: array
+          items:
+            type: object
+            properties:
+              supplierId:
+                type: string
+              supplierName:
+                type: string
+              clientId:
+                type: string
+              externalId:
+                type: string
+              externalIdType:
+                type:
+                - string
+                - 'null'
+              clientName:
+                type: string
+              hierarchyLevel:
+                type: string
+                enum:
+                - hub
+                - site
+                - corporate
+              updatedDate:
+                type:
+                - string
+                - 'null'
+              updatedByUserEmail:
+                type:
+                - string
+                - 'null'
+            required:
+            - supplierId
+            - supplierName
+            - clientId
+            - externalId
+            - clientName
+            - hierarchyLevel
+      required:
+      - totalCount
+      - externalIds
+x-refined-from:
+- avetta-connect-dist.json
+- avetta-connect-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

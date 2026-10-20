@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/avetta/main/json-schema/avetta-3-29-14-client-company-registration-resource-schema.json",
+  "title": "3.29.14_ClientCompanyRegistrationResource",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/avetta-pegasus-openapi.yml#/components/schemas/3.29.14_ClientCompanyRegistrationResource",
+  "required": [
+    "clientExtSysKey",
+    "clientIdKey",
+    "contactEmail",
+    "contactFirstName",
+    "contactLastName",
+    "countryId",
+    "name"
+  ],
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "name": {
+      "maxLength": 185,
+      "minLength": 0,
+      "type": "string"
+    },
+    "address": {
+      "$ref": "#/$defs/3.29.14_AddressResource"
+    },
+    "deliveryAddress": {
+      "$ref": "#/$defs/3.29.14_DeliveryAddressResource"
+    },
+    "phone": {
+      "maxLength": 20,
+      "minLength": 0,
+      "type": "string"
+    },
+    "mobilePhone": {
+      "maxLength": 20,
+      "minLength": 0,
+      "type": "string"
+    },
+    "fax": {
+      "maxLength": 20,
+      "minLength": 0,
+      "type": "string"
+    },
+    "contactFirstName": {
+      "maxLength": 30,
+      "minLength": 0,
+      "type": "string"
+    },
+    "contactLastName": {
+      "maxLength": 30,
+      "minLength": 0,
+      "type": "string"
+    },
+    "contactEmail": {
+      "maxLength": 80,
+      "minLength": 0,
+      "type": "string"
+    },
+    "countryId": {
+      "maxLength": 2,
+      "minLength": 0,
+      "type": "string"
+    },
+    "locale": {
+      "type": "string"
+    },
+    "extSysKey": {
+      "type": "string"
+    },
+    "idKey": {
+      "type": "string"
+    },
+    "connectStatus": {
+      "type": "string",
+      "enum": [
+        "ACTIVE",
+        "INACTIVE",
+        "REJECTED",
+        "PENDING"
+      ]
+    },
+    "abn": {
+      "maxLength": 14,
+      "minLength": 0,
+      "type": "string"
+    },
+    "businessNo": {
+      "maxLength": 20,
+      "minLength": 0,
+      "type": "string"
+    },
+    "webAddress": {
+      "maxLength": 64,
+      "minLength": 0,
+      "type": "string"
+    },
+    "createdBy": {
+      "maxLength": 60,
+      "minLength": 0,
+      "type": "string"
+    },
+    "integrationSource": {
+      "type": "string"
+    },
+    "clientExtSysKey": {
+      "maxLength": 255,
+      "minLength": 0,
+      "type": "string"
+    },
+    "clientIdKey": {
+      "maxLength": 255,
+      "minLength": 0,
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "town": {
+      "type": "string"
+    },
+    "postCode": {
+      "type": "string"
+    },
+    "deliveryTown": {
+      "type": "string"
+    },
+    "deliveryState": {
+      "type": "string"
+    },
+    "deliveryPostCode": {
+      "type": "string"
+    },
+    "streetAddress": {
+      "type": "string"
+    },
+    "deliveryStreetAddress": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "3.29.14_AddressResource": {
+      "required": [
+        "country"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "address": {
+          "maxLength": 200,
+          "minLength": 0,
+          "type": "string"
+        },
+        "town": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "state": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "postcode": {
+          "maxLength": 15,
+          "minLength": 0,
+          "type": "string"
+        },
+        "country": {
+          "maxLength": 2,
+          "minLength": 0,
+          "type": "string"
+        }
+      }
+    },
+    "3.29.14_DeliveryAddressResource": {
+      "required": [
+        "country"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "address": {
+          "maxLength": 200,
+          "minLength": 0,
+          "type": "string"
+        },
+        "town": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "state": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "postcode": {
+          "maxLength": 15,
+          "minLength": 0,
+          "type": "string"
+        },
+        "country": {
+          "maxLength": 2,
+          "minLength": 0,
+          "type": "string"
+        }
+      }
+    }
+  }
+}

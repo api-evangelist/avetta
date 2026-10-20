@@ -1,0 +1,3858 @@
+# x-archived-from: avetta-worker-v2-openapi.yml
+# x-archived-on: 2026-10-20
+openapi: 3.1.3
+info:
+  title: Worker Management v2
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  description: "Worker Management API v2. See v1 (index.yaml) for the base API description.\n\n**Authentication**\n\nWhen using the API, include your secret API key in the `Authorization` request header for the service to authenticate your account. This API Key will be provided to you by your point of contact in Avetta.\n\nThe `Authorization` header must be formatted as:\n\n    Authorization: apikey <key>\n\nAll API requests must be made over HTTPS. API requests without an `Authorization: apikey <key>` header will fail.\n"
+  version: '2026-06-25'
+servers:
+- url: https://{environment}.avetta.com/api/v2
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - worker-au
+tags:
+- name: Users
+  description: 'The Users API allows you to retrieve all users information. It provides a list of all users visible to the API user. Extra parameters can be passed to retreive training, history, custom fields, variances, sites, and roles attached to the user. You can filter to 1 user by passing the id in the URL.
+
+    '
+- name: User
+  description: 'The User API allows you to retrieve user detail information.
+
+    '
+paths:
+  /users:
+    get:
+      operationId: v2GetUsers
+      tags:
+      - Users
+      summary: List all users (v2)
+      description: 'Returns all users attached to the API key regardless of training status.
+
+        Requires read-only (`ST_REPORT`) access. Supports pagination via `start` / `limit`.
+
+
+        **v2 differences from v1**
+
+        - All users are returned by default, not just trained workers.
+
+        - `extra=checkin` populates `last_checkin_date` and `last_checkout_date` as opt-in extras; they are omitted otherwise.
+
+        - `extra=status` populates `flag` and `flag_forced` as opt-in extras; they are omitted otherwise.
+
+        - `extra=external` populates the `external_id` and `account.external_id` arrays as an opt-in extra; they are omitted otherwise.
+
+        - `extra=variances` populates the `variances` array as an opt-in extra; it is omitted otherwise.
+
+        - `all_variances=1` includes all variances(past, current, and future) when `extra=variances` is requested.
+
+        - The `allusers` parameter is removed.
+
+        - `modifiedAfter` renamed to `modified_after`.
+
+        - `showInactive` renamed to `show_inactive`.
+
+        - `showRemoved` renamed to `show_removed`.
+
+        - `showAllConnections` renamed to `all_connections`.
+
+        - An invalid `modified_after`, `flag`, `sort`, `account_con_id`, or `connection_con_id` returns 400 instead of being ignored.
+
+        '
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParamV2'
+      - $ref: '#/components/parameters/v2SortParam'
+      - $ref: '#/components/parameters/searchParam'
+      - $ref: '#/components/parameters/modifiedAfterParam'
+      - $ref: '#/components/parameters/v2FlagParam'
+      - $ref: '#/components/parameters/searchTypeParam'
+      - $ref: '#/components/parameters/v2ExtraParam'
+      - $ref: '#/components/parameters/allVariancesParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/showInactiveParam'
+      - $ref: '#/components/parameters/showRemovedParam'
+      - $ref: '#/components/parameters/accountIDParam'
+      - $ref: '#/components/parameters/accountConIDParam'
+      - $ref: '#/components/parameters/siteIDParam'
+      - $ref: '#/components/parameters/connectionIDParam'
+      - $ref: '#/components/parameters/connectionConIDParam'
+      - $ref: '#/components/parameters/allConnectionsParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2Successful'
+        '400':
+          $ref: '#/components/responses/v2InvalidParameter'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2Forbidden'
+  /users/{id}:
+    get:
+      operationId: v2GetUsersID
+      tags:
+      - Users
+      summary: Get a single user by ID (v2)
+      description: 'Returns the user record for the given `id`. The response is wrapped in a
+
+        single-element array for backward compatibility with mobile clients.
+
+        Requires read-only (`ST_REPORT`) access.
+
+
+        A lookup by ID returns the user regardless of status (inactive users included);
+
+        deleted users are never returned and yield 404.
+
+        '
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/v2ExtraParam'
+      - $ref: '#/components/parameters/allVariancesParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/connectionIDParam'
+      - $ref: '#/components/parameters/siteIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2Successful'
+        '400':
+          $ref: '#/components/responses/v2InvalidParameter'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2Forbidden'
+        '404':
+          $ref: '#/components/responses/v2NotFound'
+  /users/{id}/checkin/{group}:
+    post:
+      operationId: v2PostUsersIDCheckinGroup
+      tags:
+      - Users
+      summary: Check a worker in at a group (v2)
+      description: 'Lets an admin check worker `id` in at `group`, opening a time card. Requires read-only (`ST_REPORT`) access
+
+        over `group`, and the caller must belong to the group''s company (sysadmins are exempt).
+
+
+        The check in is allowed only when:
+
+        - `group` is active and in the caller''s view (any level under the company, not only sites),
+
+        - the group''s company has Time Card enabled,
+
+        - the worker is active and has an approved, valid connection to `group`,
+
+        - the worker has no other open check in at any group.
+
+
+        Repeating a check in while the worker''s time card at `group` is still open returns `code` 204 with that
+
+        time card''s `id` instead of opening a second one.
+
+
+        Workers who are not Green at `group` may still be checked in, but `notes` is then required as the reason.
+
+        The time card records the worker''s current compliance flag at `group`.
+
+        '
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/groupPathParam'
+      - $ref: '#/components/parameters/checkinNotesParam'
+      - $ref: '#/components/parameters/timeinParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2CheckInOutSuccessful'
+        '400':
+          $ref: '#/components/responses/v2CheckInOutError'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2CheckInOutError'
+        '404':
+          $ref: '#/components/responses/v2CheckInOutError'
+  /users/{id}/checkout/{group}:
+    post:
+      operationId: v2PostUsersIDCheckoutGroup
+      tags:
+      - Users
+      summary: Check a worker out of a group (v2)
+      description: 'Lets an admin check worker `id` out of `group`, closing an open time card. Same access rules as check in:
+
+        `ST_REPORT` over `group`, caller in the group''s company (or sysadmin), Time Card enabled for the company,
+
+        and the worker holding an approved, valid connection to `group`.
+
+
+        Closes the worker''s most recent open time card at `group`, or the one given by `card_id`, which must be open
+
+        and belong to the worker and `group`; otherwise the response is 404. `time_out` cannot be earlier than the check in time.
+
+        '
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/groupPathParam'
+      - $ref: '#/components/parameters/cardIdParam'
+      - $ref: '#/components/parameters/notesParam'
+      - $ref: '#/components/parameters/timeoutParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2CheckInOutSuccessful'
+        '400':
+          $ref: '#/components/responses/v2CheckInOutError'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2CheckInOutError'
+        '404':
+          $ref: '#/components/responses/v2CheckInOutError'
+  /users/credit:
+    get:
+      operationId: v2GetUsersCredit
+      tags:
+      - Users
+      summary: List creditable users (v2)
+      description: 'Returns all users that are eligible to be credited for a requirement, scoped
+
+        to the API key''s visible nodes. Requires `ST_CREDIT` access.
+
+        Supports pagination via `start` / `limit`.
+
+
+        `event_id` is only accepted on the credit routes. It limits the result to workers
+
+        with that requirement on their plan; if the requirement is not available to the
+
+        caller, the response is 404 `Event not found`.
+
+        '
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParamV2'
+      - $ref: '#/components/parameters/v2SortParam'
+      - $ref: '#/components/parameters/searchParam'
+      - $ref: '#/components/parameters/modifiedAfterParam'
+      - $ref: '#/components/parameters/v2FlagParam'
+      - $ref: '#/components/parameters/searchTypeParam'
+      - $ref: '#/components/parameters/v2ExtraParam'
+      - $ref: '#/components/parameters/allVariancesParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/showInactiveParam'
+      - $ref: '#/components/parameters/showRemovedParam'
+      - $ref: '#/components/parameters/accountIDParam'
+      - $ref: '#/components/parameters/accountConIDParam'
+      - $ref: '#/components/parameters/siteIDParam'
+      - $ref: '#/components/parameters/connectionIDParam'
+      - $ref: '#/components/parameters/connectionConIDParam'
+      - $ref: '#/components/parameters/v2EventParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2Successful'
+        '400':
+          $ref: '#/components/responses/v2InvalidParameter'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2Forbidden'
+        '404':
+          $ref: '#/components/responses/v2NotFound'
+  /users/credit/{id}:
+    get:
+      operationId: v2GetUsersCreditID
+      tags:
+      - Users
+      summary: Get a single creditable user by ID (v2)
+      description: 'Returns the user record (scoped to the credit context) for the given `id`.
+
+        Requires `ST_CREDIT` access. Typically used with `event_id` to verify a specific
+
+        worker has the requirement on their plan.
+
+
+        A lookup by ID returns the user regardless of status (inactive users included);
+
+        deleted users are never returned and yield 404.
+
+        '
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/connectionIDParam'
+      - $ref: '#/components/parameters/siteIDParam'
+      - $ref: '#/components/parameters/v2EventParam'
+      - $ref: '#/components/parameters/v2ExtraParam'
+      - $ref: '#/components/parameters/allVariancesParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2Successful'
+        '400':
+          $ref: '#/components/responses/v2InvalidParameter'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2Forbidden'
+        '404':
+          $ref: '#/components/responses/v2NotFound'
+  /users/manage:
+    get:
+      operationId: v2GetUsersManage
+      tags:
+      - Users
+      summary: List manageable users (v2)
+      description: 'Returns all users that can be managed (created or updated) by the caller.
+
+        Requires `ST_USER` or `ST_SUPWORK` access.
+
+        Supports pagination via `start` / `limit`.
+
+        '
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParamV2'
+      - $ref: '#/components/parameters/v2SortParam'
+      - $ref: '#/components/parameters/searchParam'
+      - $ref: '#/components/parameters/modifiedAfterParam'
+      - $ref: '#/components/parameters/v2FlagParam'
+      - $ref: '#/components/parameters/searchTypeParam'
+      - $ref: '#/components/parameters/v2ExtraParam'
+      - $ref: '#/components/parameters/allVariancesParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/showInactiveParam'
+      - $ref: '#/components/parameters/showRemovedParam'
+      - $ref: '#/components/parameters/accountIDParam'
+      - $ref: '#/components/parameters/accountConIDParam'
+      - $ref: '#/components/parameters/siteIDParam'
+      - $ref: '#/components/parameters/connectionIDParam'
+      - $ref: '#/components/parameters/connectionConIDParam'
+      - $ref: '#/components/parameters/allConnectionsParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2Successful'
+        '400':
+          $ref: '#/components/responses/v2InvalidParameter'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2Forbidden'
+  /users/manage/{id}:
+    get:
+      operationId: v2GetUsersManageID
+      tags:
+      - Users
+      summary: Get a single manageable user by ID (v2)
+      description: 'Returns the user record (scoped to the manage context) for the given `id`.
+
+        Requires `ST_USER` or `ST_SUPWORK` access.
+
+
+        A lookup by ID returns the user regardless of status (inactive users included);
+
+        deleted users are never returned and yield 404.
+
+        '
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/v2ExtraParam'
+      - $ref: '#/components/parameters/allVariancesParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/connectionIDParam'
+      - $ref: '#/components/parameters/siteIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2Successful'
+        '400':
+          $ref: '#/components/responses/v2InvalidParameter'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2Forbidden'
+        '404':
+          $ref: '#/components/responses/v2NotFound'
+  /users/variance:
+    get:
+      operationId: v2GetUsersVariance
+      tags:
+      - Users
+      summary: List variance-eligible users (v2)
+      description: 'Returns all users that are in scope for a variance. Requires `ST_VARIANCE` access.
+
+        Supports pagination via `start` / `limit`.
+
+        '
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParamV2'
+      - $ref: '#/components/parameters/v2SortParam'
+      - $ref: '#/components/parameters/searchParam'
+      - $ref: '#/components/parameters/modifiedAfterParam'
+      - $ref: '#/components/parameters/v2FlagParam'
+      - $ref: '#/components/parameters/searchTypeParam'
+      - $ref: '#/components/parameters/v2ExtraParam'
+      - $ref: '#/components/parameters/allVariancesParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/showInactiveParam'
+      - $ref: '#/components/parameters/showRemovedParam'
+      - $ref: '#/components/parameters/accountIDParam'
+      - $ref: '#/components/parameters/accountConIDParam'
+      - $ref: '#/components/parameters/siteIDParam'
+      - $ref: '#/components/parameters/connectionIDParam'
+      - $ref: '#/components/parameters/connectionConIDParam'
+      - $ref: '#/components/parameters/allConnectionsParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2Successful'
+        '400':
+          $ref: '#/components/responses/v2InvalidParameter'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2Forbidden'
+  /users/variance/{id}:
+    get:
+      operationId: v2GetUsersVarianceID
+      tags:
+      - Users
+      summary: Get a single variance-eligible user by ID (v2)
+      description: 'Returns the user record (scoped to the variance context) for the given `id`.
+
+        Requires `ST_VARIANCE` access. Used to confirm a specific worker is in scope
+
+        before creating or editing a variance.
+
+
+        A lookup by ID returns the user regardless of status (inactive users included);
+
+        deleted users are never returned and yield 404.
+
+        '
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/connectionIDParam'
+      - $ref: '#/components/parameters/siteIDParam'
+      - $ref: '#/components/parameters/v2ExtraParam'
+      - $ref: '#/components/parameters/allVariancesParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2Successful'
+        '400':
+          $ref: '#/components/responses/v2InvalidParameter'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2Forbidden'
+        '404':
+          $ref: '#/components/responses/v2NotFound'
+  /user:
+    get:
+      operationId: getUser
+      tags:
+      - User
+      summary: User Details (v2)
+      description: Composite endpoint for the currently authenticated user's data (profile, account, roles, requirements, history, permissions, security, custom fields, agreements, variances and connections)
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/parameters-allConnectionsParam'
+      - $ref: '#/components/parameters/connectionIdParam'
+      - $ref: '#/components/parameters/roleIdParam'
+      - $ref: '#/components/parameters/todoParam'
+      - $ref: '#/components/parameters/parameters-allVariancesParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulUser'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorForbidden'
+    post:
+      operationId: postUser
+      tags:
+      - User
+      summary: User Save (v2)
+      description: Save the user information in the profile form
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/jsonProfile'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulProfilePost'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+  /user/profile:
+    get:
+      operationId: getProfile
+      tags:
+      - User
+      summary: Profile Details (v2)
+      description: Profile form information
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulProfile'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    post:
+      operationId: postProfile
+      tags:
+      - User
+      summary: Profile Save (v2)
+      description: Save the logged user information in the profile form
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/jsonProfile'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulProfilePost'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+  /user/photo:
+    post:
+      operationId: postPhoto
+      tags:
+      - User
+      summary: User Photo Save (v2)
+      description: Save the user photo. Send the file as multipart form data (`file`), or as a JSON body with the base64-encoded image in `data`. The image is resized to at most 400x400 and stored as the user's profile photo, replacing any existing one.
+      security:
+      - ApiKeyAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/photoUpload'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulSavePhoto'
+        '400':
+          $ref: '#/components/responses/errorFile'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    delete:
+      operationId: deletePhoto
+      tags:
+      - User
+      summary: User Photo Delete (v2)
+      description: Delete the user photo. Returns 404 when there is no photo on file.
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulDeletePhoto'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+  /user/checkin:
+    post:
+      operationId: postCheckin
+      tags:
+      - User
+      summary: Self check in (v2)
+      description: 'Checks the currently authenticated user in at the given site. This is self-service only: the user being checked in is always the caller, never another user. The check in is allowed only when the site (or one of its parent groups) has worker check in/out enabled, the site''s company has Time Card enabled, the site is active, and the caller has a Green compliance status at the site. The caller cannot have another open check in at any site; check out first. The new time card is recorded with a Green flag.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/requiredSiteParam'
+      - $ref: '#/components/parameters/notesParam'
+      - $ref: '#/components/parameters/timeinParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulCheckInOut'
+        '400':
+          $ref: '#/components/responses/errorMessages'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorMessages'
+  /user/checkout:
+    post:
+      operationId: postCheckout
+      tags:
+      - User
+      summary: Self check out (v2)
+      description: 'Checks the currently authenticated user out of the given site. This is self-service only: the time card closed always belongs to the caller. Allowed only when worker check in/out and Time Card are enabled for the site. Closes the caller''s most recent open time card at `site`, or the time card given by `card_id`, which must belong to the caller and to `site`.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/requiredSiteParam'
+      - $ref: '#/components/parameters/cardIdParam'
+      - $ref: '#/components/parameters/notesParam'
+      - $ref: '#/components/parameters/timeoutParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulCheckInOut'
+        '400':
+          $ref: '#/components/responses/errorMessages'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorMessages'
+  /user/timecard:
+    get:
+      operationId: getTimeCard
+      tags:
+      - User
+      summary: History of check in/out(v2)
+      description: Return the history details of the check in and check out for the currently authenticated user
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/siteParam'
+      - $ref: '#/components/parameters/startDateParam'
+      - $ref: '#/components/parameters/endDateParam'
+      - $ref: '#/components/parameters/sortParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/startParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulTimeCard'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+  /user/whoami:
+    get:
+      operationId: getWhoami
+      tags:
+      - User
+      summary: Who am I (v2)
+      description: Return the identity, account and token details of the currently authenticated user. Requires an access token in the API key header
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulWhoami'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+security:
+- ApiKeyAuth: []
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+  parameters:
+    startParam:
+      name: start
+      in: query
+      description: Offset of the first record to return
+      required: false
+      schema:
+        type: integer
+        default: 1
+    limitParamV2:
+      name: limit
+      in: query
+      description: Maximum number of records to return. Values above 3000 are capped at 3000
+      required: false
+      schema:
+        type: integer
+        default: 1000
+        maximum: 3000
+    v2SortParam:
+      name: sort
+      in: query
+      description: 'Comma-separated list of fields to sort by, each optionally suffixed with `:asc` or `:desc`
+
+        (default `asc`), e.g. `last_name,created_date:desc`. Defaults to `last_name`.
+
+
+        Allowed fields: `id`, `first_name`, `last_name`, `login_id`, `email`, `status`,
+
+        `created_date`, `updated_date`. `flag` is not sortable in v2. Any other field returns 400 `Invalid sort`.
+
+        '
+      required: false
+      schema:
+        type: string
+        pattern: ^(id|first_name|last_name|login_id|email|status|created_date|updated_date)(:(asc|desc))?(,(id|first_name|last_name|login_id|email|status|created_date|updated_date)(:(asc|desc))?)*$
+        example: last_name,created_date:desc
+    searchParam:
+      name: search
+      in: query
+      description: Search term - It checks the term in login id, email, first name, last name, mobile phone, company name and company site name.
+      required: false
+      schema:
+        type: string
+    modifiedAfterParam:
+      name: modified_after
+      in: query
+      description: Filter, only users modified or added after this date (ISO 8601 date-time). An unparseable date returns 400 `Invalid modified_after`. Renamed from `modifiedAfter` in v1.
+      required: false
+      schema:
+        type: string
+        format: date-time
+    v2FlagParam:
+      name: flag
+      in: query
+      description: 'Filter to users whose rolled-up training flag matches: a single distinct flag across their
+
+        training status rows yields that flag, a mix of flags yields Amber. Scoped by `role_id`
+
+        and `connection_id` when supplied; client keys only roll up sites they can view.
+
+        Matched case-insensitively by first letter (`G`reen, `A`mber or `Y`ellow, `R`ed);
+
+        any other value returns 400 `Invalid flag`.
+
+        '
+      required: false
+      schema:
+        type: string
+        enum:
+        - Green
+        - Amber
+        - Yellow
+        - Red
+    searchTypeParam:
+      name: search_type
+      in: query
+      description: 'Restrict the search value by comparing first name and last name only (value: 2010 or null)'
+      required: false
+      schema:
+        type: integer
+        enum:
+        - 2010
+    v2ExtraParam:
+      name: extra
+      in: query
+      description: 'Comma-separated list of extra data blocks to include in each user record.
+
+        v2 adds `checkin`, `status`, and `external` to the v1 set; the fields they populate
+
+        are omitted from the user object unless requested.
+
+
+        | Value          | Added fields on each user object |
+
+        |----------------|----------------------------------|
+
+        | `checkin`      | `last_checkin_date`, `last_checkout_date` |
+
+        | `status`       | `flag`, `flag_forced` |
+
+        | `external`     | `external_id`, `account.external_id` (arrays of external ID maps keyed by source) |
+
+        | `photos`       | `photo` (name, size, base64 data) when the user has a profile picture |
+
+        | `connections`  | `connections` (sites the user is authorised to work at) |
+
+        | `history`      | `history` (training history records) |
+
+        | `permissions`  | `permissions` (admin privilege flags) |
+
+        | `requirements` | `requirements` (user''s UEP requirements) |
+
+        | `roles`        | `roles` (assigned role list) |
+
+        | `custom`       | `custom` (custom field values) |
+
+        | `variances`    | `variances` (open variance records; all records with `all_variances=1`) |
+
+
+        When any extra is requested, `stats.search_id` is returned.
+
+        '
+      required: false
+      schema:
+        type: string
+        example: checkin,status,external,roles
+    allVariancesParam:
+      name: all_variances
+      in: query
+      description: 'Return all non-deleted variances for each user (past, current, and future), not just the
+
+        currently open ones. Applies only with `extra=variances`.
+
+        '
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    roleIDParam:
+      name: role_id
+      in: query
+      description: Filter down to a role
+      required: false
+      schema:
+        type: integer
+    showInactiveParam:
+      name: show_inactive
+      in: query
+      description: Include inactive users in the results. Ignored on `{id}` routes, which always include inactive users. Renamed from `showInactive` in v1.
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    showRemovedParam:
+      name: show_removed
+      in: query
+      description: Include removed (deleted) users in the results, alongside non-removed users of any status (inactive included). Ignored on `{id}` routes, which never return deleted users. Renamed from `showRemoved` in v1.
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    accountIDParam:
+      name: account_id
+      in: query
+      description: Filter down from a group id where user belongs to
+      required: false
+      schema:
+        type: integer
+    accountConIDParam:
+      name: account_con_id
+      in: query
+      description: Filter down form a group code where user belongs to
+      required: false
+      schema:
+        type: integer
+    siteIDParam:
+      name: site_id
+      in: query
+      description: Filter from a specific site id to drill down
+      required: false
+      schema:
+        type: integer
+    connectionIDParam:
+      name: connection_id
+      in: query
+      description: Filter by the connected site id to drill down
+      required: false
+      schema:
+        type: integer
+    connectionConIDParam:
+      name: connection_con_id
+      in: query
+      description: Filter by the connected site code to drill down
+      required: false
+      schema:
+        type: integer
+    allConnectionsParam:
+      name: all_connections
+      in: query
+      description: Show all connections for the user even when no training is associated. Renamed from `showAllConnections` in v1.
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    idParam:
+      name: id
+      in: path
+      description: references an id to reduce list down to 1 item
+      required: false
+      schema:
+        type: integer
+    groupPathParam:
+      name: group
+      in: path
+      description: ID of the group (site or any other group under the company) to check the worker in at or out of
+      required: true
+      schema:
+        type: integer
+      example: 21345
+    checkinNotesParam:
+      name: notes
+      in: query
+      description: Notes about the check in, stored up to 255 characters. Required as the reason when the worker is not Green at `group`.
+      required: false
+      schema:
+        type: string
+      example: Supervisor approved pending renewal
+    timeinParam:
+      name: time_in
+      in: query
+      description: Time in. Defaults to the current date/time when not provided.
+      required: false
+      schema:
+        type: string
+      example: 2021-09-01 08:00
+    cardIdParam:
+      name: card_id
+      in: query
+      description: ID of the time card to check out. If omitted, the most recent time card for the user at the given site that has not yet been checked out is used automatically.
+      required: false
+      schema:
+        type: integer
+      example: 4521
+    notesParam:
+      name: notes
+      in: query
+      description: Notes about the check in/out
+      required: false
+      schema:
+        type: string
+      example: Check in
+    timeoutParam:
+      name: time_out
+      in: query
+      description: Time out. Defaults to the current date/time when not provided.
+      required: false
+      schema:
+        type: string
+      example: 2021-09-01 17:00
+    v2EventParam:
+      name: event_id
+      in: query
+      description: 'Limit the result to workers with this requirement on their plan. Only accepted on
+
+        `/users/credit` and `/users/credit/{id}`; on any other route it returns 400.
+
+        Returns 404 `Event not found` when the requirement is not available to the caller.
+
+        '
+      required: false
+      schema:
+        type: integer
+    parameters-allConnectionsParam:
+      name: all_connections
+      in: query
+      description: Show all connections for the user, even if there is no training associated
+      required: false
+      schema:
+        type: integer
+        enum:
+        - 0
+        - 1
+    connectionIdParam:
+      name: connection_id
+      in: query
+      description: Restrict requirements and connections to a specific connection (site) ID
+      required: false
+      schema:
+        type: integer
+      example: 44
+    roleIdParam:
+      name: role_id
+      in: query
+      description: Restrict requirements and connections to a specific role ID
+      required: false
+      schema:
+        type: integer
+      example: 12
+    todoParam:
+      name: todo
+      in: query
+      description: When 1, restrict requirements to those that are due or overdue (to-do) only
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    parameters-allVariancesParam:
+      name: all_variances
+      in: query
+      description: When 1, include expired/inactive variances in the variances list, instead of only currently active ones
+      required: false
+      schema:
+        type: integer
+        enum:
+        - 0
+        - 1
+    requiredSiteParam:
+      name: site
+      in: query
+      description: Site ID
+      required: true
+      schema:
+        type: integer
+      example: 44
+    siteParam:
+      name: site
+      in: query
+      description: Site ID
+      required: false
+      schema:
+        type: integer
+      example: 44
+    startDateParam:
+      name: start_date
+      in: query
+      description: Filter by check in date where the check in date is greater than or equal to the given date
+      required: false
+      schema:
+        type: string
+      example: 2021-09-01 00:00
+    endDateParam:
+      name: end_date
+      in: query
+      description: Filter by check in date where the check in date is less than or equal to the given date
+      required: false
+      schema:
+        type: string
+      example: 2021-09-01 23:59
+    sortParam:
+      name: sort
+      in: query
+      description: 'Sort the results by the given field: name - site name, con_id - site code, checkin - date to check in, checkout - date to check out'
+      required: false
+      schema:
+        type: string
+        enum:
+        - name
+        - con_id
+        - checkin
+        - checkout
+      example: checkin
+    limitParam:
+      name: limit
+      in: query
+      description: Maximum number of records to return
+      required: false
+      schema:
+        type: integer
+        default: 3000
+  schemas:
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+    userSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: User ID
+          example: 1235
+        con_id:
+          type: integer
+          description: User code from Connect
+          example: 1568432
+        first_name:
+          type: string
+          description: First name
+          example: John
+        last_name:
+          type: string
+          description: Last name
+          example: Doe
+        login_id:
+          type: string
+          description: User login id
+          example: jdoe
+        email:
+          type: string
+          description: User email
+          example: test@test.com
+        dob:
+          type: string
+          description: User date of birth
+          example: '1998-08-10'
+        sap_id:
+          type: string
+          description: User SAP id
+          example: 265813
+        cat_code:
+          type: string
+          description: User category code
+          example: 15546
+        phone:
+          type: string
+          description: User phone
+          example: 123456789
+        status:
+          type: string
+          description: User status
+          example: active
+          enum:
+          - active
+          - inactive
+        flag:
+          type: string
+          description: User flag
+          example: Green
+          enum:
+          - Green
+          - Amber
+          - Red
+        flag_forced:
+          type: boolean
+          description: User flag forced - when a variance is applied to the user
+          example: false
+          enum:
+          - true
+          - false
+        title:
+          type: string
+          description: User title
+          example: Director of Software Development
+        created_date:
+          type: string
+          description: Date user was created
+          example: '2018-10-23 18:31:00'
+        updated_date:
+          type: string
+          description: Last date user was updated
+          example: '2017-15-05 16:41:00'
+        last_checkin_date:
+          type: string
+          description: Last date user checked in to a site
+          example: '2020-10-23 15:00:00'
+        last_checkout_date:
+          type: string
+          description: Last date user checked out of a site
+          example: '2020-10-23 19:45:00'
+        badge_link:
+          type: string
+          description: User badge link
+        external_id:
+          type: array
+          description: Contain the external id fields configured for the user
+          items:
+            type: object
+            properties:
+              ExtSource:
+                type: object
+                description: Name of the external source
+                example: Connect
+                properties:
+                  ExtKey:
+                    type: string
+                    description: Key and value configured for the external source
+                    example: 'SAP: 11035178'
+        removed:
+          type: integer
+          description: Flag to show if the user was removed (0 - it wasn't, 1 - it was)
+          example: 0
+          enum:
+          - 0
+          - 1
+        emergency_phone:
+          type: string
+          description: Phone number
+          example: 555-555-5555
+        emergency_contact_name:
+          type: string
+          description: Person to contact in case of emergency
+          example: Bob Smith
+        emergency_contact_relationship:
+          type: string
+          description: Relationship to the person to contact in case of emergency
+          example: Parent
+          enum:
+          - Parent
+          - Spouse
+          - Child
+          - Sibling
+          - Friend
+          - Relative
+          - Other
+        photo:
+          type: object
+          description: Show details of the user photo when requested in extras (photo)
+          properties:
+            name:
+              type: string
+              description: Name of the user profile picture file requested
+              example: photo.jpg
+            size:
+              type: string
+              description: Size of the profile picture file
+              example: 123456789
+            data:
+              type: string
+              description: Profile picture data
+              example: data:image/jpeg;base64,/9j/...
+        account:
+          type: object
+          description: Company the user belongs to or is connected to
+          properties:
+            id:
+              type: integer
+              description: Account ID
+              example: 1235
+            parent_id:
+              type: integer
+              description: Account parent ID
+              example: 1235
+            name:
+              type: string
+              description: Name of the company
+              example: Avetta
+            type:
+              type: string
+              description: Type of the company
+              example: client
+              enum:
+              - Client
+              - Supplier
+              - Subcontractor
+            con_id:
+              type: integer
+              description: Company code
+              example: 235843
+            con_flag:
+              type: string
+              description: Rating of the company connection (Green, Amber, Red)
+              example: Red
+              enum:
+              - Green
+              - Amber
+              - Red
+            external_id:
+              type: array
+              description: Contain the external id fields configured for the company
+              items:
+                type: object
+                properties:
+                  ExtSource:
+                    type: object
+                    description: Name of the external source
+                    example: Connect
+                    properties:
+                      ExtKey:
+                        type: string
+                        description: Key and value configured for the external source
+                        example: 'SAP: 11035178'
+            permissions:
+              type: array
+              description: Permission the user has for the company
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Permission ID
+                    example: 3012
+                  name:
+                    type: string
+                    description: Permission name
+                    example: Reports
+        roles:
+          type: array
+          description: Roles assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Role ID
+                example: 132
+              code:
+                type: string
+                description: Role code
+                example: 15621
+              title:
+                type: string
+                description: Role title
+                example: Electrician
+              type:
+                type: string
+                description: Role type
+                example: Function
+                enum:
+                - Function
+                - Skill
+              flag:
+                type: string
+                description: Flag of the role (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Roles flag forced - when a variance is applied to the role
+                example: false
+                enum:
+                - true
+                - false
+        requirements:
+          type: array
+          description: Requirements assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Requirement ID
+                example: 15651
+              code:
+                type: string
+                description: Requirement code
+                example: 584135
+              title:
+                type: string
+                description: Requirement title
+                example: Driver's License
+              date:
+                type: string
+                description: Due date of the requirement when it should be retaken
+                example: '2024-05-15'
+              flag:
+                type: string
+                description: Flag of the requirement (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Requirement flag forced - when a variance is applied to the requirement
+                example: false
+                enum:
+                - true
+                - false
+              completed_date:
+                type: string
+                description: Date when the requirement was completed
+                example: '2022-10-08'
+              requires_mfa:
+                type: boolean
+                description: Show if the requirement requires MFA
+                example: false
+                enum:
+                - true
+                - false
+              status:
+                type: string
+                description: Status of the requirement
+                example: Completed
+                enum:
+                - past due (if worker is past due on the requirement)
+                - current (if worker is current and NOT due for requirement)
+                - in review (if there is a review currently in process for the worker)
+                - completed (if requirement is a take once and the worker has completed the training)
+        connections:
+          type: array
+          description: Connections assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Group IDs
+                example: 325
+              name:
+                type: string
+                description: Group company name as a path
+                example: 'Avetta :: Corporate'
+              flag:
+                type: string
+                description: Flag of the connection (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Connection flag forced - when a variance is applied to the site
+                example: false
+                enum:
+                - true
+                - false
+              con_id:
+                type: integer
+                description: Group code
+                example: 250000000
+              con_flag:
+                type: string
+                description: Rating of the connection (Green, Amber, Red)
+                example: Red
+                enum:
+                - Green
+                - Amber
+                - Red
+              removed:
+                type: integer
+                description: Show if the site - user connection was removed (0 - it wasn't, 1 - it was)
+                example: 0
+                enum:
+                - 0
+                - 1
+              checked_in:
+                type: integer
+                description: Show if the user is checked in to the site currently (0 - it isn't, 1 - it is)
+                example: 0
+                enum:
+                - 0
+                - 1
+        history:
+          type: array
+          description: History of the events the user has been involved
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Requirement ID
+                example: 123
+              code:
+                type: string
+                description: Requirement code
+                example: 1457
+              title:
+                type: string
+                description: Requirement Title
+                example: Driver's License
+              date:
+                type: string
+                description: Date and time of the history event
+                example: '2022-10-08'
+              score:
+                type: string
+                description: Score obtained in the history event
+                example: 100
+              result:
+                type: string
+                description: Result obtained in the history event
+                example: Pass
+                enum:
+                - Pass
+                - Fail
+        variances:
+          type: array
+          description: Open variances on the user, returned when extra=variances is requested
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Variance ID
+                example: 123
+              site:
+                type: string
+                description: Full hierarchical site title the variance applies to
+                example: 'Acme Corp :: Main Site'
+              type:
+                type: string
+                description: What the variance is against
+                example: Requirement
+                enum:
+                - Requirement
+                - Role
+                - Site
+              flag:
+                type: integer
+                description: Variance status type ID (rating)
+                example: 741
+              target:
+                type: object
+                description: The entity the variance targets
+                properties:
+                  id:
+                    type: integer
+                    description: Target entity ID
+                    example: 12
+                  title:
+                    type: string
+                    description: Target entity title
+                    example: Driver's License
+              begin:
+                type: string
+                description: Variance start date
+                example: '2024-01-01 00:00:00'
+              end:
+                type: string
+                description: Variance end date (null if open-ended)
+                example: '2024-12-31 00:00:00'
+              reason:
+                type: string
+                description: Reason for the variance (HTML stripped)
+                example: Worker has a medical exemption
+              files:
+                type: array
+                description: Documents attached to the variance
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Document ID
+                      example: 456
+                    name:
+                      type: string
+                      description: File name
+                      example: exemption.pdf
+                    size:
+                      type: integer
+                      description: File size in bytes
+                      example: 102400
+                    type:
+                      type: string
+                      description: Document delivery type
+                      example: web
+                    url:
+                      type: string
+                      description: URL to access the file (empty if caller lacks view permission)
+                      example: https://example.com/docs/exemption.pdf
+                    is_secure:
+                      type: boolean
+                      description: Whether the document is marked secure
+                      example: false
+        custom:
+          type: array
+          description: Custom fields configured for the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Custom ID
+                example: 2116
+              key:
+                type: string
+                description: Custom key
+                example: DOB
+              title:
+                type: string
+                description: Custom title
+                example: Date of birthday
+              value:
+                type: string
+                description: Custom value
+                example: '1998-05-25'
+              created_date:
+                type: string
+                description: Date the custom field was created
+                example: '2020-11-01'
+              updated_date:
+                type: string
+                description: Date the custom field was updated
+                example: '2022-01-21'
+              account:
+                type: object
+                description: Custom account
+                properties:
+                  name:
+                    type: string
+                    description: Account name
+                    example: Avetta
+                  id:
+                    type: integer
+                    description: Account ID
+                    example: 123
+                  con_id:
+                    type: integer
+                    description: Account code
+                    example: 15651
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    schemas-userSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: User ID
+          example: 1235
+        con_id:
+          type: integer
+          description: User code from Connect
+          example: 1568432
+        first_name:
+          type: string
+          description: First name
+          example: John
+        last_name:
+          type: string
+          description: Last name
+          example: Doe
+        login_id:
+          type: string
+          description: User login id
+          example: jdoe
+        email:
+          type: string
+          description: User email
+          example: test@test.com
+        mfa:
+          type: boolean
+          description: Whether multi-factor authentication is enabled for the user
+          example: false
+        badge_link:
+          type: string
+          description: User badge link
+        last_checkin_date:
+          type: string
+          description: Last date user checked in to a site
+          example: '2020-10-23 15:00:00'
+        last_checkout_date:
+          type: string
+          description: Last date user checked out of a site
+          example: '2020-10-23 19:45:00'
+        photo:
+          type: object
+          description: Show details of the user photo when requested in extras (photo)
+          properties:
+            name:
+              type: string
+              description: Name of the user profile picture file requested
+              example: photo.jpg
+            size:
+              type: string
+              description: Size of the profile picture file
+              example: 123456789
+            data:
+              type: string
+              description: Profile picture data
+              example: data:image/jpeg;base64,/9j/...
+        phone:
+          type: string
+          description: User phone
+          example: 123456789
+        status:
+          type: string
+          description: User status
+          example: active
+          enum:
+          - active
+          - inactive
+        removed:
+          type: integer
+          description: Flag to show if the user was removed (0 - it wasn't, 1 - it was)
+          example: 0
+          enum:
+          - 0
+          - 1
+        created_date:
+          type: string
+          description: Date user was created
+          example: '2018-10-23 18:31:00'
+        updated_date:
+          type: string
+          description: Last date user was updated
+          example: '2017-15-05 16:41:00'
+        geolocation_enabled:
+          type: boolean
+          description: Whether the user has enabled geolocation
+          example: true
+        locale:
+          type: string
+          description: Localization of the user
+          example: en-us
+        title:
+          type: string
+          description: User title
+          example: Director of Software Development
+        emergency_phone:
+          type: string
+          description: Phone number
+          example: 555-555-5555
+        emergency_contact_name:
+          type: string
+          description: Person to contact in case of emergency
+          example: Bob Smith
+        emergency_contact_relationship:
+          type: string
+          description: Relationship to the person to contact in case of emergency
+          example: Parent
+          enum:
+          - Parent
+          - Spouse
+          - Child
+          - Sibling
+          - Friend
+          - Relative
+          - Other
+        address:
+          type: object
+          description: User address
+          properties:
+            street:
+              type: string
+              description: Address line 1
+              example: 123 Main St
+            street2:
+              type: string
+              description: Address line 2
+              example: Apt 1
+            city:
+              type: string
+              description: City
+              example: Salt Lake City
+            state:
+              type: string
+              description: State
+              example: UT
+            zipcode:
+              type: string
+              description: Zip code
+              example: 84101
+            country:
+              type: string
+              description: Country
+              example: United States of America
+        flag:
+          type: string
+          description: User flag
+          example: Green
+          enum:
+          - Green
+          - Amber
+          - Red
+        flag_forced:
+          type: integer
+          description: User flag forced - when a variance is applied to the user
+          example: 0
+          enum:
+          - 1
+          - 0
+        account:
+          type: object
+          description: Company the user belongs to or is connected to
+          properties:
+            id:
+              type: integer
+              description: Account ID
+              example: 1235
+            name:
+              type: string
+              description: Name of the company
+              example: Avetta
+            con_id:
+              type: integer
+              description: Company code
+              example: 235843
+            con_flag:
+              type: string
+              description: Rating of the company connection (Green, Amber, Red)
+              example: Red
+              enum:
+              - Green
+              - Amber
+              - Red
+        roles:
+          type: array
+          description: Roles assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Role ID
+                example: 132
+              code:
+                type: string
+                description: Role code
+                example: 15621
+              title:
+                type: string
+                description: Role title
+                example: Electrician
+              type:
+                type: string
+                description: Role type
+                example: Function
+                enum:
+                - Function
+                - Skill
+              flag:
+                type: string
+                description: Flag of the role (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Roles flag forced - when a variance is applied to the role
+                example: false
+                enum:
+                - true
+                - false
+        requirements:
+          type: array
+          description: Requirements assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Requirement ID
+                example: 15651
+              code:
+                type: string
+                description: Requirement code
+                example: 584135
+              title:
+                type: string
+                description: Requirement title
+                example: Driver's License
+              date:
+                type: string
+                description: Due date of the requirement when it should be retaken
+                example: '2024-05-15'
+              flag:
+                type: string
+                description: Flag of the requirement (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Requirement flag forced - when a variance is applied to the requirement
+                example: false
+                enum:
+                - true
+                - false
+              completed_date:
+                type: string
+                description: Date when the requirement was completed
+                example: '2022-10-08'
+              requires_mfa:
+                type: boolean
+                description: Show if the requirement requires MFA
+                example: false
+                enum:
+                - true
+                - false
+              todo:
+                type: boolean
+                description: Show if the requirement should be in TODO list
+                example: true
+                enum:
+                - true
+                - false
+              status:
+                type: string
+                description: Status of the requirement
+                example: Completed
+                enum:
+                - past due (if worker is past due on the requirement)
+                - current (if worker is current and NOT due for requirement)
+                - in review (if there is a review currently in process for the worker)
+                - completed (if requirement is a take once and the worker has completed the training)
+        connections:
+          type: array
+          description: Connections assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Group IDs
+                example: 325
+              name:
+                type: string
+                description: Group company name as a path
+                example: 'Avetta :: Corporate'
+              flag:
+                type: string
+                description: Flag of the connection (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Connection flag forced - when a variance is applied to the site
+                example: false
+                enum:
+                - true
+                - false
+              con_id:
+                type: integer
+                description: Group code
+                example: 250000000
+              con_flag:
+                type: string
+                description: Rating of the connection (Green, Amber, Red)
+                example: Red
+                enum:
+                - Green
+                - Amber
+                - Red
+              removed:
+                type: integer
+                description: Show if the site - user connection was removed (0 - it wasn't, 1 - it was)
+                example: 0
+                enum:
+                - 0
+                - 1
+              checked_in:
+                type: integer
+                description: Show if the user is checked in to the site currently (0 - it isn't, 1 - it is)
+                example: 0
+                enum:
+                - 0
+                - 1
+        history:
+          type: array
+          description: History of the events the user has been involved
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Requirement ID
+                example: 123
+              code:
+                type: string
+                description: Requirement code
+                example: 1457
+              title:
+                type: string
+                description: Requirement Title
+                example: Driver's License
+              date:
+                type: string
+                description: Date and time of the history event
+                example: '2022-10-08'
+              score:
+                type: string
+                description: Score obtained in the history event
+                example: 100
+              result:
+                type: string
+                description: Result obtained in the history event
+                example: Pass
+                enum:
+                - Pass
+                - Fail
+        custom:
+          type: array
+          description: Custom fields configured for the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Custom ID
+                example: 2116
+              key:
+                type: string
+                description: Custom key
+                example: DOB
+              title:
+                type: string
+                description: Custom title
+                example: Date of birthday
+              value:
+                type: string
+                description: Custom value
+                example: '1998-05-25'
+              created_date:
+                type: string
+                description: Date the custom field was created
+                example: '2020-11-01'
+              updated_date:
+                type: string
+                description: Date the custom field was updated
+                example: '2022-01-21'
+              account:
+                type: object
+                description: Custom account
+                properties:
+                  name:
+                    type: string
+                    description: Account name
+                    example: Avetta
+                  id:
+                    type: integer
+                    description: Account ID
+                    example: 123
+                  con_id:
+                    type: integer
+                    description: Account code
+                    example: 15651
+        security:
+          type: array
+          description: Security groups assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: WM Site ID
+                example: 123
+              con_id:
+                type: integer
+                description: Connect Billing ID of site
+                example: 15651
+              parent_id:
+                type: integer
+                description: Parent ID of the site
+                example: 123
+              top_id:
+                type: integer
+                description: Corp ID of the site
+                example: 123
+              name:
+                type: string
+                description: Security name
+                example: Security Group
+              status:
+                type: string
+                description: Active/Inactive status of the security group
+                example: Active
+                enum:
+                - Active
+                - Inactive
+              created_date:
+                type: string
+                format: date-time
+                description: Date the security group was created
+                example: '2020-11-01 12:00:00'
+              updated_date:
+                type: string
+                format: date-time
+                description: Date the security group was updated
+                example: '2020-11-01 12:00:00'
+        agreements:
+          type: array
+          description: Agreements user agreed told
+          items:
+            type: object
+            properties:
+              file_id:
+                type: integer
+                description: Agreement file ID
+                example: 123
+              agr_id:
+                type: integer
+                description: Agreement code
+                example: 15651
+              title:
+                type: string
+                description: Agreement title
+                example: Agreement 1
+              date:
+                type: string
+                format: date-time
+                description: Date the agreement was accepted
+                example: '2020-11-01 12:00:00'
+              prompt:
+                type: string
+                description: What was presented
+                example: I agree
+              link:
+                type: string
+                description: URL to serve agreement
+                example: https://www.avetta.com/agreement/123
+              url:
+                type: string
+                description: URL to serve agreement
+                example: https://www.avetta.com/agreement/123
+              label:
+                type: string
+                description: Label of the agreement
+                example: Agreement 1
+        variances:
+          type: array
+          description: Variances applied to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Variance ID
+                example: 123
+              account:
+                type: object
+                description: Account the variance was applied to
+                properties:
+                  name:
+                    type: string
+                    description: Account name
+                    example: Avetta
+                  id:
+                    type: integer
+                    description: Account WM ID
+                    example: 123
+                  con_id:
+                    type: integer
+                    description: Account Billing ID
+                    example: 15651
+              flag:
+                type: string
+                description: Flag of the variance (Green, Red)
+                example: Green
+                enum:
+                - Green
+                - Red
+              target:
+                type: object
+                description: Target of the variance
+                properties:
+                  id:
+                    type: integer
+                    description: Target ID
+                    example: 123
+                  type:
+                    type: string
+                    description: What type of variance it is
+                    example: Role
+                    enum:
+                    - Role
+                    - Event
+                    - Site
+                  code:
+                    type: string
+                    description: Target code ( For site variance - this is con_id )
+                    example: ''
+                  title:
+                    type: string
+                    description: Target title ( For site variance - this is name )
+                    example: ''
+              begin_date:
+                type: string
+                format: date-time
+                description: Date the variance begins
+                example: '2020-11-01 12:00:00'
+              end_date:
+                type: string
+                format: date-time
+                description: Date the variance ends
+                example: '2020-11-01 12:00:00'
+              reason:
+                type: string
+                description: Reason for the variance
+                example: Reason for the variance
+    messageForbiddenSchema:
+      type: object
+      format: object
+      properties:
+        code:
+          type: integer
+          description: Error code
+          example: 403
+        status:
+          type: string
+          description: Error status
+          example: Forbidden
+        success:
+          type: boolean
+          description: Success status
+          example: false
+    jsonProfileSchema:
+      type: object
+      format: object
+      properties:
+        UsrFirstName:
+          type: string
+          description: First name
+          example: John
+        UsrMiddleInitial:
+          type: string
+          description: Middle initial
+          example: A
+        UsrLastName:
+          type: string
+          description: Last name
+          example: Doe
+        UsrTitleID:
+          type: integer
+          description: Title ID
+          example: 0
+        UsrEmailAddr:
+          type: string
+          description: Email address
+          example: john.doe@example.com
+        UsrEmploymentTypID:
+          type: integer
+          description: Employment type ID
+          example: 1641
+        UsrAddrTypID:
+          type: integer
+          description: Address type ID
+          example: 61
+        UsrAddress1:
+          type: string
+          description: Address line 1
+          example: 123 Main St
+        UsrAddress2:
+          type: string
+          description: Address line 2
+          example: Apt 4
+        UsrCity:
+          type: string
+          description: City
+          example: Anytown
+        UsrState:
+          type: string
+          description: State
+          example: Anystate
+        UsrZipCode:
+          type: string
+          description: Zip code
+          example: 12345
+        UsrCountryID:
+          type: integer
+          description: Country ID
+          example: 10
+        UsrMobilePhone:
+          type: string
+          description: Mobile phone
+          example: 555-123-4567
+        UsrHomePhone:
+          type: string
+          description: Home phone
+          example: 555-987-6543
+        UsrWorkPhone:
+          type: string
+          description: Work phone
+          example: 555-555-5555
+        UsrFaxPhone:
+          type: string
+          description: Fax phone
+          example: 555-666-7777
+        UsrEmergencyContactName:
+          type: string
+          description: Emergency contact name
+          example: Jane Doe
+        UsrEmergencyContactPhone:
+          type: string
+          description: Emergency contact phone
+          example: 555-111-2222
+        UsrEmergencyContactTypID:
+          type: integer
+          description: Emergency contact type ID
+          example: 1725
+        UsrGenderTypID:
+          type: integer
+          description: Gender type ID
+          example: 161
+        UsrBirthDate:
+          type: string
+          description: Birth date
+          example: '1980-01-01'
+        UsrLegalWorkingAge:
+          type: boolean
+          description: Legal working age
+          example: true
+          enum:
+          - true
+          - false
+        UsrSSN:
+          type: string
+          description: Protected field Social security number
+          example: 123-45-6789
+        IsGeolocationEnabled:
+          type: boolean
+          description: Whether the user has enabled geolocation
+          example: true
+        Passport:
+          type: string
+          description: Custom field sample
+          example: AB1234567
+    profileSaveSchema:
+      type: object
+      format: object
+      properties:
+        status:
+          type: string
+          description: Status of the response
+          example: Good
+        message:
+          type: array
+          description: Message of the response
+          items:
+            type: string
+            example: Changes Saved
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          example: true
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+          example: 200
+    profileSchema:
+      type: object
+      format: object
+      properties:
+        fields:
+          type: array
+          description: List of fields
+          items:
+            type: object
+            properties:
+              group:
+                type: string
+                description: Group name
+                example: name
+              typename:
+                type: string
+                description: Type name
+                example: textfield
+              type:
+                type: string
+                description: Type of the field
+                example: 501
+              readonly:
+                type: boolean
+                description: Read only field
+                example: true
+                enum:
+                - true
+                - false
+              validation:
+                type: object
+                description: Validation of the field
+                properties:
+                  required:
+                    type: boolean
+                    description: Required field
+                    example: true
+                    enum:
+                    - true
+                    - false
+                  maxvalue:
+                    type: string
+                    description: Maximum value
+                    example: 100
+                  maxlength:
+                    type: string
+                    description: Maximum length
+                    example: 128
+                  minlength:
+                    type: string
+                    description: Minimum length
+                    example: 1
+                  special:
+                    type: string
+                    description: Special validation
+                    example: null
+              order:
+                type: integer
+                description: Order of the field
+                example: 1
+              value:
+                type: string
+                description: Value of the field
+                example: Alex.Bennett
+              title:
+                type: string
+                description: Title of the field
+                example: Login ID
+              key:
+                type: string
+                description: Key of the field
+                example: UsrLoginID
+              values:
+                type: array
+                description: List of values
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: ID of the value
+                      example: 0
+                    value:
+                      type: string
+                      description: Value of the value
+                      example: N/A
+        groups:
+          type: array
+          description: List of groups
+          items:
+            type: object
+            properties:
+              value:
+                type: string
+                description: Value of the group
+                example: '{UsrFirstName} {UsrMiddleInitial} {UsrLastName}'
+              name:
+                type: string
+                description: Name of the group
+                example: name
+              title:
+                type: string
+                description: Title of the group
+                example: Name
+    photoSaveSchema:
+      type: object
+      format: object
+      properties:
+        code:
+          type: integer
+          description: Code of the response
+          example: 200
+        message:
+          type: string
+          description: Message of the response
+          example: The User Photo has been uploaded
+        status:
+          type: string
+          description: Status of the response
+          example: Good
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          example: true
+          enum:
+          - true
+          - false
+    photoDeleteSchema:
+      type: object
+      format: object
+      properties:
+        code:
+          type: integer
+          description: Code of the response
+          example: 200
+        message:
+          type: string
+          description: Message of the response
+          example: The User Photo has been deleted
+        status:
+          type: string
+          description: Status of the response
+          example: Good
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          example: true
+          enum:
+          - true
+          - false
+    timeCardSchema:
+      type: object
+      format: object
+      properties:
+        entries:
+          type: array
+          description: List of check in/out entries
+          items:
+            type: object
+            properties:
+              account:
+                type: object
+                description: Site of the company the user checked in to
+                properties:
+                  id:
+                    type: integer
+                    description: Site ID
+                    example: 123
+                  con_id:
+                    type: integer
+                    description: Site code
+                    example: 15651
+                  name:
+                    type: string
+                    description: Extended site name
+                    example: client company::Site A
+              checkin_by:
+                type: string
+                description: User who register the check in
+                example: Worker Supplier 2
+              checkin_date:
+                type: string
+                description: Check in date
+                example: '2024-07-09 05:00:00'
+              checkout_by:
+                type: string
+                description: User who register the check out
+                example: Worker Supplier 2
+              checkin_flag:
+                type: string
+                description: Compliance status of the user for the site
+                example: Red
+                enum:
+                - Green
+                - Amber
+                - Red
+              checkout_date:
+                type: string
+                description: Check out date
+                example: '2024-07-09 15:00:00'
+              id:
+                type: integer
+                description: Id of the check in/out entry
+                example: 7033
+              checkin_notes:
+                type: string
+                description: Notes registered at check in
+                example: null
+              checkout_notes:
+                type: string
+                description: Notes registered at check out
+                example: null
+    whoamiSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: User ID
+          example: 123
+        con_id:
+          type: string
+          description: User code
+          example: '2500000'
+        login_id:
+          type: string
+          description: Login ID of the user
+          example: alice@example.com
+        account:
+          type: object
+          description: Company the user belongs to
+          properties:
+            id:
+              type: integer
+              description: Account ID
+              example: 123
+            con_id:
+              type: string
+              description: Account code
+              example: '2500000'
+            name:
+              type: string
+              description: Account name
+              example: Example Company
+            is_client:
+              type: boolean
+              description: Whether the account is a client
+              example: false
+        region:
+          type: string
+          description: Region of the server. 01 is EU, 02 is AU
+          example: '01'
+        is_admin:
+          type: boolean
+          description: Whether the user is an administrator
+          example: false
+        token_issued_at:
+          type: string
+          description: Date and time the token was issued (GMT)
+          example: '2026-10-01 12:00:00'
+        token_expires_at:
+          type: string
+          description: Date and time the token expires (GMT)
+          example: '2026-10-01 12:30:00'
+  responses:
+    v2Successful:
+      description: 'List of users. `last_checkin_date`, `last_checkout_date`, `flag`, `flag_forced`,
+
+        `external_id`, and `account.external_id` are present only when requested through `extra`.
+
+        `{id}` routes wrap the user in a single-element array.
+
+        `dob` (`YYYY-MM-DD`) is `''''` unless the caller holds a worker-PII grant over a site the user is connected to.
+
+        `account.con_flag` rolls up the account''s connection ratings (one distinct rating => that rating,
+
+        mixed => Amber, none => None), scoped to the caller''s sites for client keys and to `connection_id` / `site_id` when supplied.
+
+        '
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                allOf:
+                - $ref: '#/components/schemas/statsSchema'
+                - type: object
+                  properties:
+                    search_id:
+                      type: integer
+                      description: Search ID used to load extras; present only when `extra` is supplied
+                      example: 231019020
+              users:
+                type: array
+                items:
+                  $ref: '#/components/schemas/userSchema'
+          examples:
+            successful:
+              summary: Default user (no extras)
+              value:
+                users:
+                - id: 1235
+                  con_id: 1568432
+                  first_name: John
+                  last_name: Doe
+                  login_id: jdoe
+                  email: test@test.com
+                  dob: '1998-05-25'
+                  sap_id: 265813
+                  cat_code: 1632
+                  phone: 4561231159
+                  status: Active
+                  title: Director of Software Development
+                  created_date: '2018-10-23 18:31:00'
+                  updated_date: '2019-05-15 16:41:00'
+                  badge_link: ''
+                  removed: 0
+                  emergency_phone: 555-555-5555
+                  emergency_contact_name: Bob Smith
+                  emergency_contact_relationship: Parent
+                  account:
+                    id: 1235
+                    parent_id: 1235
+                    name: Avetta
+                    type: client
+                    con_id: 235843
+                    con_flag: 0
+            successfulExtraCheckinStatusExternal:
+              summary: With extra=checkin,status,external
+              value:
+                stats:
+                  search_id: 231019020
+                users:
+                - id: 1235
+                  con_id: 1568432
+                  first_name: John
+                  last_name: Doe
+                  login_id: jdoe
+                  email: test@test.com
+                  status: Active
+                  flag: Green
+                  flag_forced: 0
+                  last_checkin_date: '2020-10-23 15:00:00'
+                  last_checkout_date: '2020-10-23 19:45:00'
+                  external_id:
+                  - Connect:
+                      SAP: 11035178
+                  removed: 0
+                  account:
+                    id: 1235
+                    parent_id: 1235
+                    name: Avetta
+                    type: client
+                    con_id: 235843
+                    con_flag: 0
+                    external_id:
+                    - Connect:
+                        SAP: 11035178
+    v2InvalidParameter:
+      description: 'Invalid parameter value. v2 rejects invalid filters rather than ignoring them. Possible messages:
+
+        `Invalid modified_after`, `Invalid flag`, `Invalid sort`, `Invalid account_con_id`,
+
+        `Invalid connection_con_id`, `event_id is only supported on /users/credit`.
+
+        '
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              error:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            invalidSort:
+              summary: Unknown sort field
+              value:
+                error:
+                  success: false
+                  code: 400
+                  status: Bad Request
+                  message: Invalid sort
+            eventIDNotSupported:
+              summary: event_id on a non-credit route
+              value:
+                error:
+                  success: false
+                  code: 400
+                  status: Bad Request
+                  message: event_id is only supported on /users/credit
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+    v2Forbidden:
+      description: 'Caller does not hold the route''s security type, or has no viewing groups to search within.
+
+        Missing or invalid credentials return 401 instead.
+
+        '
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              error:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            missingSecurityType:
+              summary: Caller does not hold the route's security type
+              value:
+                error:
+                  success: false
+                  code: 403
+                  status: Forbidden
+            noViewingNodes:
+              summary: No viewing groups for the route's security type
+              value:
+                error:
+                  success: false
+                  code: 403
+                  status: Forbidden
+                  message: Invalid security
+    v2NotFound:
+      description: User not found (`{id}` routes), or `event_id` not available to the caller (credit routes)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              error:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            userNotFound:
+              summary: No visible, non-deleted user with this id
+              value:
+                error:
+                  success: false
+                  code: 404
+                  status: Not Found
+                  message: User not found
+            eventNotFound:
+              summary: Requirement not available to the caller
+              value:
+                error:
+                  success: false
+                  code: 404
+                  status: Not Found
+                  message: Event not found
+    v2CheckInOutSuccessful:
+      description: Successful - the time card was saved. `id` is the time card id (pass it as `card_id` to check out).
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              users:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Time card id
+                      example: 915482
+          examples:
+            successful:
+              summary: Time card saved
+              value:
+                users:
+                  success: true
+                  code: 200
+                  status: Good
+                  id: 915482
+            alreadyCheckedIn:
+              summary: Check in repeated while already checked in at the same group
+              value:
+                users:
+                  success: true
+                  code: 204
+                  status: No Content
+                  message: User already checked in to this group
+                  id: 915482
+    v2CheckInOutError:
+      description: "Check in/out rejected. Possible messages by code:\n- 400: `User is not connected to the group` (check in only), `User is already checked in. Please check out before checking in to another site.` (open time card at a different group),\n  `Reason required to check in a non-compliant worker`, `time_out is before the check in time`\n- 403: no message (caller does not hold the route's security type), `Invalid security`, `Invalid security - group belongs to another company`, `Timecard not enabled`\n- 404: `Group not found`, `User not found` (check in only), `Failed to find check in`\n\nCheck out does not require the worker to be active or connected; it only needs an open time card for the worker at the group.\n"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              error:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            reasonRequired:
+              summary: Non-Green worker checked in without notes
+              value:
+                error:
+                  success: false
+                  code: 400
+                  status: Bad Request
+                  message: Reason required to check in a non-compliant worker
+            otherCompany:
+              summary: Caller does not belong to the group's company
+              value:
+                error:
+                  success: false
+                  code: 403
+                  status: Forbidden
+                  message: Invalid security - group belongs to another company
+            noOpenCheckin:
+              summary: No open time card for the worker at the group
+              value:
+                error:
+                  success: false
+                  code: 404
+                  status: Not Found
+                  message: Failed to find check in
+    successfulUser:
+      description: Successful
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/schemas-userSchema'
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+    errorForbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              users:
+                $ref: '#/components/schemas/messageForbiddenSchema'
+    successfulProfilePost:
+      description: A successful response confirms the save and returns any issue found as part of the message
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/profileSaveSchema'
+          example:
+            summary: 200 - Successful profile save example
+            value:
+              stats:
+                command: User
+                version: v1
+                type: token
+                msg: Good
+                start: 1
+                time: 0.71513
+                limit: 3000
+                owner: 1234567890
+                count: 0
+                records: 0
+              user:
+                status: Good
+                message:
+                - SSN is not valid
+                - Changes Saved
+                success: true
+                code: 200
+    successfulProfile:
+      description: A successful response returns the user profile fields
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/profileSchema'
+          example:
+            summary: 200 - Successful profile example
+            value:
+              stats:
+                command: User
+                version: v1
+                type: token
+                msg: Good
+                start: 1
+                time: 0.71513
+                limit: 3000
+                owner: 1234567890
+                count: 0
+                records: 0
+              user:
+                fields:
+                - group: null
+                  key: UsrLoginID
+                  order: 1
+                  readonly: true
+                  title: Login ID
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 128
+                    maxvalue: null
+                    minlength: null
+                    required: true
+                    special: null
+                  value: Alex.Bennett
+                - group: name
+                  key: UsrFirstName
+                  order: 2
+                  readonly: false
+                  title: First Name
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 35
+                    maxvalue: null
+                    minlength: null
+                    required: true
+                    special: null
+                  value: Alex
+                - group: name
+                  key: UsrMiddleInitial
+                  order: 3
+                  readonly: false
+                  title: MI
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 1
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: name
+                  key: UsrLastName
+                  order: 4
+                  readonly: false
+                  title: Last Name
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 45
+                    maxvalue: null
+                    minlength: null
+                    required: true
+                    special: null
+                  value: Bennett
+                - group: null
+                  key: UsrTitleID
+                  order: 30
+                  readonly: false
+                  title: Title
+                  type: 507
+                  typename: combo
+                  validation:
+                    maxlength: null
+                    maxvalue: null
+                    minlength: null
+                    required: true
+                    special: null
+                  value: 365
+                  values:
+                  - id: 0
+                    value: N/A
+                  - id: 2
+                    value: Technician
+                  - id: 4
+                    value: Supervisor
+                - group: null
+                  key: UsrEmailAddr
+                  order: 26
+                  readonly: false
+                  title: E-mail
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 255
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: email:1
+                  value: null
+                - group: null
+                  key: UsrEmploymentTypID
+                  order: 47
+                  readonly: false
+                  title: Employment Type
+                  type: 508
+                  typename: popup
+                  validation:
+                    maxlength: null
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: 1641
+                  values:
+                  - id: 1641
+                    value: Employee
+                  - id: 1642
+                    value: Subcontractor
+                  - id: 1643
+                    value: Labor Hire
+                - group: address
+                  key: UsrAddrTypID
+                  order: 7
+                  readonly: false
+                  title: Address Type
+                  type: 508
+                  typename: popup
+                  validation:
+                    maxlength: null
+                    maxvalue: null
+                    minlength: null
+                    required: true
+                    special: null
+                  value: 61
+                  values:
+                  - id: 61
+                    value: Business
+                  - id: 62
+                    value: Residence
+                - group: address
+                  key: UsrAddress1
+                  order: 8
+                  readonly: false
+                  title: Address Line 1
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 100
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: address
+                  key: UsrAddress2
+                  order: 9
+                  readonly: false
+                  title: Address Line 2
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 100
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: address
+                  key: UsrCity
+                  order: 10
+                  readonly: false
+                  title: City
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 50
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: address
+                  key: UsrState
+                  order: 11
+                  readonly: false
+                  title: State
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 50
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: address
+                  key: UsrZipCode
+                  order: 13
+                  readonly: false
+                  title: Zip
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 15
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: address
+                  key: UsrCountryID
+                  order: 12
+                  readonly: false
+                  title: Country
+                  type: 524
+                  typename: popup
+                  validation:
+                    maxlength: null
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: 840
+                  values:
+                  - id: 32
+                    value: Argentina
+                  - id: 36
+                    value: Australia
+                  - id: 68
+                    value: Bolivia (Plurinational State of)
+                  - id: 124
+                    value: Canada
+                  - id: 356
+                    value: India
+                  - id: 840
+                    value: United States of America
+                - group: phone
+                  key: UsrMobilePhone
+                  order: 14
+                  readonly: false
+                  title: Mobile Phone
+                  type: 526
+                  typename: textfield
+                  validation:
+                    maxlength: 18
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: phone
+                  key: UsrHomePhone
+                  order: 15
+                  readonly: false
+                  title: Home Phone
+                  type: 526
+                  typename: textfield
+                  validation:
+                    maxlength: 18
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: phone
+                  key: UsrWorkPhone
+                  order: 16
+                  readonly: false
+                  title: Work Phone
+                  type: 526
+                  typename: textfield
+                  validation:
+                    maxlength: 18
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: phone
+                  key: UsrFaxPhone
+                  order: 17
+                  readonly: false
+                  title: Fax Phone
+                  type: 526
+                  typename: textfield
+                  validation:
+                    maxlength: 18
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: emergencycontact
+                  key: UsrEmergencyContactName
+                  order: null
+                  readonly: false
+                  title: Emergency Contact Name
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 100
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: emergencycontact
+                  key: UsrEmergencyContactPhone
+                  order: null
+                  readonly: false
+                  title: Emergency Contact Phone
+                  type: 526
+                  typename: textfield
+                  validation:
+                    maxlength: 18
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: emergencycontact
+                  key: UsrEmergencyContactTypID
+                  order: null
+                  readonly: false
+                  title: Emergency Contact Relationship
+                  type: 508
+                  typename: popup
+                  validation:
+                    maxlength: null
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: 0
+                  values:
+                  - id: 1721
+                    value: Parent
+                  - id: 1722
+                    value: Child
+                  - id: 1723
+                    value: Spouse
+                  - id: 1724
+                    value: Sibling
+                  - id: 1725
+                    value: Friend
+                  - id: 1726
+                    value: Relative
+                  - id: 1727
+                    value: Other
+                - group: personalinfo
+                  key: UsrGenderTypID
+                  order: 18
+                  readonly: false
+                  title: Gender
+                  type: 508
+                  typename: popup
+                  validation:
+                    maxlength: null
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: 0
+                  values:
+                  - id: 161
+                    value: Male
+                  - id: 162
+                    value: Female
+                - group: personalinfo
+                  key: UsrBirthDate
+                  order: 32
+                  readonly: false
+                  title: Birth Date
+                  type: 518
+                  typename: textfield
+                  validation:
+                    maxlength: null
+                    maxvalue: '2024-07-08 23:59:59'
+                    minlength: null
+                    required: false
+                    special: null
+                  value: null
+                - group: personalinfo
+                  key: UsrLegalWorkingAge
+                  order: 45
+                  readonly: false
+                  title: Legal Working Age
+                  type: 509
+                  typename: checkbox
+                  validation:
+                    maxlength: null
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: null
+                  value: 0
+                - group: personalinfo
+                  key: UsrSSN
+                  order: 6
+                  readonly: false
+                  title: SSN
+                  type: 501
+                  typename: textfield
+                  validation:
+                    maxlength: 100
+                    maxvalue: null
+                    minlength: null
+                    required: false
+                    special: ssn
+                  value: ''
+                - group: custom
+                  id: 20
+                  key: Gender
+                  readonly: false
+                  title: EchoSphere Inc
+                  type: 502
+                  typename: textfield
+                  validation:
+                    maxlength: 255
+                    maxvalue: null
+                    minlength: null
+                    required: true
+                  value: null
+                groups:
+                - name: name
+                  title: Name
+                  value: '{UsrFirstName} {UsrMiddleInitial} {UsrLastName}'
+                - name: address
+                  title: Address ({UsrAddrTypID})
+                  value: '{UsrAddress1} {UsrAddress2} {UsrCity}, {UsrState} {UsrZipCode} {UsrCountryID}'
+                - name: phone
+                  title: Phone
+                  value: null
+                - name: emergencycontact
+                  title: Emergency Contact
+                  value: '{UsrEmergencyContactPhone} ( {UsrEmergencyContactName} )'
+                - name: personalinfo
+                  title: Personal Information
+                  value: null
+                - name: custom
+                  title: Custom
+                  value: null
+    successfulSavePhoto:
+      description: Successful response with the user photo saved
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/photoSaveSchema'
+    errorFile:
+      description: Error while checking files
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    virusName:
+                      type: string
+                      description: Name of the virus found in the file
+                      example: sample virus name
+                    maxSize:
+                      type: integer
+                      description: Maximum size allowed for the file
+                      example: 10
+                    size:
+                      type: number
+                      description: Size of the file checked
+                      example: 10.5390701293945
+                    allowedExtensions:
+                      type: array
+                      description: List of allowed extensions for the file
+                      example:
+                      - t3
+                      - mid
+                      - zip
+                      - rtf
+                      - docx
+                      - tar
+                      - midi
+                      - tif
+                      - m4a
+                      - png
+                      - xps
+                      - xml
+                      - mp3
+                      - htm
+                      - gz
+                      - mp4
+                      - doc
+                      - tiff
+                      - jpeg
+                      - avi
+                      - mpeg
+                      - qst
+                      - txt
+                      - wmv
+                      - msg
+                      - xlsx
+                      - webp
+                      - gif
+                      - html
+                      - bmp
+                      - csv
+                      - pdf
+                      - jpg
+                      - xls
+                      - swf
+                      - mov
+                      - dng
+                      - heic
+                      items:
+                        type: string
+                        enum:
+                        - t3
+                        - mid
+                        - zip
+                        - rtf
+                        - docx
+                        - tar
+                        - midi
+                        - tif
+                        - m4a
+                        - png
+                        - xps
+                        - xml
+                        - mp3
+                        - htm
+                        - gz
+                        - mp4
+                        - doc
+                        - tiff
+                        - jpeg
+                        - avi
+                        - mpeg
+                        - qst
+                        - txt
+                        - wmv
+                        - msg
+                        - xlsx
+                        - webp
+                        - gif
+                        - html
+                        - bmp
+                        - csv
+                        - pdf
+                        - jpg
+                        - xls
+                        - swf
+                        - mov
+                        - dng
+                        - heic
+          examples:
+            virusCheck:
+              $ref: '#/components/examples/virusCheck'
+            sizeCheck:
+              $ref: '#/components/examples/sizeCheck'
+            extensionCheck:
+              $ref: '#/components/examples/extensionCheck'
+    successfulDeletePhoto:
+      description: Successful response with the user photo deleted
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/photoDeleteSchema'
+    successfulCheckInOut:
+      description: Successful - the time card was saved
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/messageSchema'
+    errorMessages:
+      description: Different responses when the request is not successful
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    detail:
+                      type: object
+                      properties:
+                        fail:
+                          type: array
+                          description: list of users that failed to insert or update with the user id and the error messages
+                          items:
+                            type: object
+                            properties:
+                              UsrID:
+                                type: integer
+                                description: User ID processed
+                                example: 22822
+                              code:
+                                type: integer
+                                description: Code of the error for this particular user
+                                example: 400
+                              message:
+                                type: array
+                                description: Message related to the failure of the insert or update of the user
+                        success:
+                          type: array
+                          description: list of users that were successfully inserted or updated with the user id and the informative messages
+                          items:
+                            type: object
+                            properties:
+                              UsrID:
+                                type: integer
+                                description: User ID processed
+                                example: 22822
+                              code:
+                                type: integer
+                                description: Code of the success for this particular user
+                                example: 200
+                              message:
+                                type: array
+                                description: Message related to the validation of data during the insert or update of the user
+          examples:
+            invalidSecurity:
+              $ref: '#/components/examples/invalidSecurity'
+    successfulTimeCard:
+      description: Successful - Return the history details of the check in and check out for a user
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/timeCardSchema'
+    successfulWhoami:
+      description: Successful - Return the identity, account and token details of the calling user
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              user:
+                $ref: '#/components/schemas/whoamiSchema'
+  examples:
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+    virusCheck:
+      summary: Virus check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.103
+          message: This file might be infected with a virus
+          virusName: sample virus name
+    sizeCheck:
+      summary: Size check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.100
+          message: The file size is too large
+          maxSize: 10
+          size: 10.5390701293945
+    extensionCheck:
+      summary: Extension check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.101
+          message: The file extension is not allowed
+          allowedExtensions:
+          - t3
+          - mid
+          - zip
+          - rtf
+          - docx
+          - tar
+          - midi
+          - tif
+          - m4a
+          - png
+          - xps
+          - xml
+          - mp3
+          - htm
+          - gz
+          - mp4
+          - doc
+          - tiff
+          - jpeg
+          - avi
+          - mpeg
+          - qst
+          - txt
+          - wmv
+          - msg
+          - xlsx
+          - webp
+          - gif
+          - html
+          - bmp
+          - csv
+          - pdf
+          - jpg
+          - xls
+          - swf
+          - mov
+          - dng
+          - heic
+    invalidSecurity:
+      summary: 403 - Invalid security
+      value:
+        stats:
+          command: User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        user:
+          message: Invalid security
+          status: Bad Request
+          success: false
+          code: 403
+  requestBodies:
+    jsonProfile:
+      description: JSON data with the user information details - it could be a json object for one user or an array of objects for multiple users
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/jsonProfileSchema'
+    photoUpload:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              file:
+                type: string
+                format: binary
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: string
+                contentEncoding: base64
+                description: Base64-encoded image

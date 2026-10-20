@@ -1,0 +1,37 @@
+generated: '2026-10-20'
+method: derived
+source: openapi/avetta-pegasus-openapi.yml, openapi/avetta-worker-v1-openapi.yml, openapi/avetta-worker-v2-openapi.yml
+summary:
+  types:
+  - apiKey
+  - oauth2
+  api_key_in:
+  - header
+  oauth2_flows:
+  - authorizationCode
+schemes:
+- name: 3.29.14_security_auth
+  type: oauth2
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://login.poweredbyonsite.com/cas/oidc/authorize
+    tokenUrl: https://login.poweredbyonsite.com/cas/oidc/accessToken
+    scopes: 1
+  sources:
+  - openapi/avetta-pegasus-openapi.yml
+- name: 3.29.14_security_apikey
+  type: apiKey
+  in: header
+  parameter: api_key
+  sources:
+  - openapi/avetta-pegasus-openapi.yml
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: Authorization
+  description: 'API key authentication. Provide your API key in the `Authorization` request
+    header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing
+    this header will fail.'
+  sources:
+  - openapi/avetta-worker-v1-openapi.yml
+  - openapi/avetta-worker-v2-openapi.yml

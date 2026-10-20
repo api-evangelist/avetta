@@ -1,0 +1,17 @@
+generated: '2026-10-20'
+method: derived
+source: openapi/avetta-pegasus-openapi.yml
+schemes:
+- name: 3.29.14_security_auth
+  source: openapi/avetta-pegasus-openapi.yml
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://login.poweredbyonsite.com/cas/oidc/authorize
+    tokenUrl: https://login.poweredbyonsite.com/cas/oidc/accessToken
+scopes:
+- scope: pegasus
+  description: Pegasus Authentication Scope
+  flows:
+  - authorizationCode
+  sources:
+  - openapi/avetta-pegasus-openapi.yml

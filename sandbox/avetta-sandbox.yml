@@ -1,0 +1,13 @@
+name: Avetta sandbox
+generated: '2026-10-20'
+method: searched
+source: https://docs.pegasus.avetta.com/
+description: The Pegasus WorkForce (Onsite REST) API has a test environment called the Emulated Production Environment (EPE). "Access to EPE is for testing purposes only, and data is reset on a regular basis." Production access "is subject to an API agreement and payment terms."
+environments:
+- name: EPE (Test Environment)
+  base_url: https://epe.onsitetrackeasy.com.au/onsite-rest
+  note: The OpenAPI servers[] lists https://epe-onsitetrackeasy.com.au/onsite-rest (hyphenated) for the same environment; the prose uses epe.onsitetrackeasy.com.au.
+- name: Production
+  base_url: https://secure.onsitetrackeasy.com.au/onsite-rest
+docs: https://docs.pegasus.avetta.com/#section/Getting-Started
+scope: Pegasus WorkForce API only; the Connect and Worker Management docs publish no sandbox.

@@ -1,0 +1,848 @@
+openapi: 3.2.0
+info:
+  title: Avetta Reviews API
+  version: '2026-05-08'
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  description: 'Operations tagged Reviews across 2 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+security:
+- ApiKeyAuth: []
+tags:
+- name: Reviews
+  description: The Reviews API allows admins to perform document reviews for the workers
+paths:
+  /reviews:
+    get:
+      operationId: ListReviews
+      tags:
+      - Reviews
+      summary: List of pending reviews
+      description: Admin API to get pending reviews
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulReviews'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /reviews/count:
+    get:
+      operationId: getCountOfReviews
+      tags:
+      - Reviews
+      summary: Get count of pending reviews
+      description: Returns count of pending reviews
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulCount'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /reviews/{id}:
+    get:
+      operationId: EditReview
+      tags:
+      - Reviews
+      summary: Review and edit a review
+      description: Allows an admin to review documents uploaded
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulEdit'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /reviews/{id}/upload:
+    get:
+      operationId: AddDocument
+      tags:
+      - Reviews
+      summary: Add document to review
+      description: Allows an admin to upload a document to the review
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulUpload'
+        '201':
+          $ref: '#/components/responses/errorFile'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /reviews/{id}/remove/{docid}:
+    get:
+      operationId: RemoveDocument
+      tags:
+      - Reviews
+      summary: Remove document in review
+      description: Allows an admin to remove a document
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/docIdParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/removeUpload'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /reviews/{id}/count:
+    get:
+      operationId: submittedDocumentCount
+      tags:
+      - Reviews
+      summary: Get count of documents uploaded
+      description: Returns how many documents have been submitted to the review
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/uploadCount'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /reviews/{id}/approved:
+    get:
+      operationId: approvedDocumentCount
+      tags:
+      - Reviews
+      summary: Get count of documents uploaded and have been approved
+      description: Returns how many documents have been submitted to the review and admin has reviewed
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/viewedCount'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /reviews/{id}/view/{docid}:
+    get:
+      operationId: viewDocuments
+      tags:
+      - Reviews
+      summary: Mark upload as viewed
+      description: Marks a document as reviewed
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/docIdParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/viewedDocument'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /reviews/{id}/accept:
+    get:
+      operationId: AcceptReview
+      tags:
+      - Reviews
+      summary: Closes a review as accepted
+      description: Marks a review as reviewed
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/accepted'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /reviews/{id}/reject:
+    get:
+      operationId: RejectReview
+      tags:
+      - Reviews
+      summary: Rejects a pending review and sends it back to the worker
+      description: Marks a review as rejected and puts back on worker to do list
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/rejected'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+components:
+  responses:
+    successfulUpload:
+      description: successful response for upload a file
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              reviews:
+                type: object
+    viewedDocument:
+      description: Marks document as viewed by admin
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              reviews:
+                type: object
+    rejected:
+      description: Admin rejects submission and returns to worker
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              reviews:
+                type: object
+    successfulReviews:
+      description: successful response
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              reviews:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    account:
+                      type: object
+                      properties:
+                        con_id:
+                          type: integer
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                    user:
+                      type: object
+                      properties:
+                        login_id:
+                          type: string
+                        id:
+                          type: integer
+                        first_name:
+                          type: string
+                        last_name:
+                          type: string
+                    requirement:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        id:
+                          type: integer
+                        code:
+                          type: string
+                    id:
+                      type: integer
+                    submitted:
+                      type: string
+                      format: date-time
+    viewedCount:
+      description: Returns count of how many files have been viewed by admin
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              reviews:
+                type: object
+    uploadCount:
+      description: Returns count of how many files are tied to the review
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              reviews:
+                type: object
+    successfulEdit:
+      description: successful response for edit
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              reviews:
+                type: object
+                properties:
+                  required:
+                    type: object
+                  optional:
+                    type: object
+                  event:
+                    type: object
+                  action:
+                    type: object
+                  files:
+                    type: object
+    errorFile:
+      description: Error while checking files
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    virusName:
+                      type: string
+                      description: Name of the virus found in the file
+                      example: sample virus name
+                    maxSize:
+                      type: integer
+                      description: Maximum size allowed for the file
+                      example: 10
+                    size:
+                      type: number
+                      description: Size of the file checked
+                      example: 10.5390701293945
+                    allowedExtensions:
+                      type: array
+                      description: List of allowed extensions for the file
+                      example:
+                      - t3
+                      - mid
+                      - zip
+                      - rtf
+                      - docx
+                      - tar
+                      - midi
+                      - tif
+                      - m4a
+                      - png
+                      - xps
+                      - xml
+                      - mp3
+                      - htm
+                      - gz
+                      - mp4
+                      - doc
+                      - tiff
+                      - jpeg
+                      - avi
+                      - mpeg
+                      - qst
+                      - txt
+                      - wmv
+                      - msg
+                      - xlsx
+                      - webp
+                      - gif
+                      - html
+                      - bmp
+                      - csv
+                      - pdf
+                      - jpg
+                      - xls
+                      - swf
+                      - mov
+                      - dng
+                      - heic
+                      items:
+                        type: string
+                        enum:
+                        - t3
+                        - mid
+                        - zip
+                        - rtf
+                        - docx
+                        - tar
+                        - midi
+                        - tif
+                        - m4a
+                        - png
+                        - xps
+                        - xml
+                        - mp3
+                        - htm
+                        - gz
+                        - mp4
+                        - doc
+                        - tiff
+                        - jpeg
+                        - avi
+                        - mpeg
+                        - qst
+                        - txt
+                        - wmv
+                        - msg
+                        - xlsx
+                        - webp
+                        - gif
+                        - html
+                        - bmp
+                        - csv
+                        - pdf
+                        - jpg
+                        - xls
+                        - swf
+                        - mov
+                        - dng
+                        - heic
+          examples:
+            virusCheck:
+              $ref: '#/components/examples/virusCheck'
+            sizeCheck:
+              $ref: '#/components/examples/sizeCheck'
+            extensionCheck:
+              $ref: '#/components/examples/extensionCheck'
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+    successfulCount:
+      description: successful response for count
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              reviews:
+                type: object
+                properties:
+                  count:
+                    type: integer
+    removeUpload:
+      description: successful response for upload a file
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              reviews:
+                type: object
+    accepted:
+      description: Admin is finished and accepts review
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              reviews:
+                type: object
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+  examples:
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+    virusCheck:
+      summary: Virus check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.103
+          message: This file might be infected with a virus
+          virusName: sample virus name
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+    extensionCheck:
+      summary: Extension check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.101
+          message: The file extension is not allowed
+          allowedExtensions:
+          - t3
+          - mid
+          - zip
+          - rtf
+          - docx
+          - tar
+          - midi
+          - tif
+          - m4a
+          - png
+          - xps
+          - xml
+          - mp3
+          - htm
+          - gz
+          - mp4
+          - doc
+          - tiff
+          - jpeg
+          - avi
+          - mpeg
+          - qst
+          - txt
+          - wmv
+          - msg
+          - xlsx
+          - webp
+          - gif
+          - html
+          - bmp
+          - csv
+          - pdf
+          - jpg
+          - xls
+          - swf
+          - mov
+          - dng
+          - heic
+    sizeCheck:
+      summary: Size check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.100
+          message: The file size is too large
+          maxSize: 10
+          size: 10.5390701293945
+  schemas:
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+  parameters:
+    docIdParam:
+      name: docid
+      in: path
+      description: ID del documento a eliminar
+      required: true
+      schema:
+        type: integer
+    idParam:
+      name: id
+      in: path
+      description: references an id to reduce list down to 1 item
+      required: false
+      schema:
+        type: integer
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v1-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

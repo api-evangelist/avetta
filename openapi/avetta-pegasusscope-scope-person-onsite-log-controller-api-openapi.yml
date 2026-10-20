@@ -1,0 +1,976 @@
+openapi: 3.2.0
+info:
+  title: Avetta Pegasus Scope Scope Person Onsite Log Controller API
+  version: APSO-1355
+  x-logo:
+    url: avetta_logo.png
+  description: 'Operations tagged pegasusScope_scope-person-onsite-log-controller across 2 of this provider''s published API definitions: avetta-pegasus-dist.json, avetta-pegasus-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- description: EPE (Test Environment)
+  url: https://epe-onsitetrackeasy.com.au/onsite-rest
+- description: Production
+  url: https://secure.onsitetrackeasy.com.au/onsite-rest
+tags:
+- name: pegasusScope_scope-person-onsite-log-controller
+  x-displayName: scope-person-onsite-log-controller
+paths:
+  /api/v1/scope/{scopeId}/person/list-visitor-onsitenow:
+    get:
+      tags:
+      - pegasusScope_scope-person-onsite-log-controller
+      operationId: getOnsiteNowWithVisitor
+      parameters:
+      - name: scopeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: personId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: onsiteLogStatuses
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - LOGGED_IN
+            - POSSIBLE_OVERSTAYER
+            - OVERSTAYER
+            - LOGGED_OUT
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: possibleOverstayerThresholdHours
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: page.page
+        in: query
+        description: For results more than one page long, the page to load.
+        schema:
+          type: integer
+          default: 0
+      - name: page.size
+        in: query
+        description: The number of results to return per page
+        schema:
+          type: integer
+          default: 20
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/3.29.14_WorkerVisitorOnsiteNowResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get onsite now with visitor
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/scope/{scopeId}/person/list-visitor-onsitenow/status/counts:
+    get:
+      tags:
+      - pegasusScope_scope-person-onsite-log-controller
+      operationId: getOnsiteNowWithVisitorStatusCounts
+      parameters:
+      - name: scopeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: possibleOverstayerThresholdHours
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int32
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get onsite now with visitor status counts
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/scope/{scopeId}/person/list-visitor-onsitenow/person-type/counts:
+    get:
+      tags:
+      - pegasusScope_scope-person-onsite-log-controller
+      operationId: getOnsiteNowIncludingVisitorPersonTypeCounts
+      parameters:
+      - name: scopeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: integer
+                  format: int32
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get onsite now including visitor person type counts
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/scope/{scopeId}/person/list-visitor-onsitenow/location/counts:
+    get:
+      tags:
+      - pegasusScope_scope-person-onsite-log-controller
+      operationId: getOnsiteNowWithVisitorLocationStatusCounts
+      parameters:
+      - name: scopeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: possibleOverstayerThresholdHours
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  additionalProperties:
+                    type: integer
+                    format: int32
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get onsite now with visitor location status counts
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/scope/{scopeId}/person/list-onsitenow-by-person-type:
+    get:
+      tags:
+      - pegasusScope_scope-person-onsite-log-controller
+      operationId: getOnsiteNowByPersonType
+      parameters:
+      - name: scopeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: personId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: personTypes
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - CONTRACTOR
+            - EMPLOYEE
+            - VISITOR
+            - INVISIBLE
+      - name: page.page
+        in: query
+        description: For results more than one page long, the page to load.
+        schema:
+          type: integer
+          default: 0
+      - name: page.size
+        in: query
+        description: The number of results to return per page
+        schema:
+          type: integer
+          default: 20
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/3.29.14_WorkerVisitorOnsiteNowResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get onsite now by person type
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+components:
+  schemas:
+    3.29.14_NaturalKeyResource:
+      type: object
+      properties:
+        extSysKey:
+          type: string
+        idKey:
+          type: string
+    3.29.14_StatusType:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        reasonPhrase:
+          type: string
+    3.29.14_LogpointMoveResource:
+      type: object
+      properties:
+        logpoint:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        scope:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        moveDate:
+          type: string
+    3.29.14_KeyedIntegerResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    3.29.14_SiteLegacyIdResource:
+      type: object
+      properties:
+        site:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        legacyIdName:
+          type: string
+        legacyId:
+          type: string
+    3.29.14_WorkerVisitorResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        firstName:
+          type: string
+        lastName:
+          type: string
+        photoLink:
+          type: string
+        companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_KeyedIntegerClientResource'
+        email1:
+          type: string
+        email2:
+          type: string
+        uniqueEmail:
+          type: string
+        phone1:
+          type: string
+        phone2:
+          type: string
+        address:
+          $ref: '#/components/schemas/3.29.14_AddressResource'
+        nextOfKin:
+          $ref: '#/components/schemas/3.29.14_NextOfKinResource'
+        status:
+          type: string
+          enum:
+          - PENDING
+          - APPROVED
+          - ARCHIVED
+        locale:
+          type: string
+        mergedToPersonId:
+          type: integer
+          format: int32
+        createTime:
+          type: string
+        updateTime:
+          type: string
+        personTypes:
+          type: array
+          items:
+            type: string
+            enum:
+            - SITE_CONTACT
+            - PERSONAL_CONTACT
+            - USER
+            - EMPLOYEE
+            - CONTRACTOR
+            - VISITOR
+            - SUPERUSER
+            - UNICORN_USER
+            - INVALID_PERSON
+            - MASTERKEY
+            - CARDHOLDER
+            - PAST_CARDHOLDER
+            - INVISIBLE
+            - IMPOSSIBLE
+        email:
+          type: string
+        blocked:
+          type: boolean
+        blockRecursive:
+          type: boolean
+        defaultCompanies:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_ScopeDefaultCompanyResource'
+        siteLegacyIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_SiteLegacyIdResource'
+        externalIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_KeyedStringResource'
+        clientKey:
+          $ref: '#/components/schemas/3.29.14_NaturalKeyResource'
+        site:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        phone:
+          type: string
+        pin:
+          type: string
+        active:
+          type: boolean
+    3.29.14_ScopeDefaultCompanyResource:
+      type: object
+      properties:
+        scope:
+          $ref: '#/components/schemas/3.29.14_ScopeDetailResource'
+        company:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+    3.29.14_FullErrorResource:
+      type: object
+      properties:
+        errorType:
+          type: string
+          enum:
+          - GENERAL_ERROR
+          - BAD_REQUEST
+          - FORBIDDEN
+          - UNAUTHORISED
+          - NO_ACCESS_TO_PORTAL
+          - INVALID_PASSWORD
+          - NOT_FOUND
+          - CONSTRAINT_VIOLATION
+          - VALIDATION_ERROR
+          - ALREADY_EXISTS
+          - DATA_MISMATCH
+          - NOT_AN_EMPLOYEE
+          - CANNOT_BE_TERMINATED
+          - TOO_MANY_FAILED_ATTEMPTS
+          - REQUIRED_FIELD_MISSING
+          - VERIFICATION_TOKEN_EXPIRED
+          - PURCHASE_ORDER_EXPIRED
+          - DUPLICATE_PAYMENT
+          - PAYMENT_ERROR
+          - CANNOT_BE_UPDATED
+          - PENDING_CARD_IN_PROGRESS
+          - CANNOT_ASSIGN
+          - INVALID_PERSON_STATE
+        error:
+          type: string
+        field:
+          type: string
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_Problem'
+        errorDetail:
+          type: string
+    3.29.14_ScopeDetailResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        timezone:
+          type: string
+        fatigueLimit:
+          type: integer
+          format: int32
+        siteId:
+          type: integer
+          format: int32
+        realmId:
+          type: integer
+          format: int32
+        concoId:
+          type: integer
+          format: int32
+        type:
+          type: string
+          enum:
+          - SYSTEM
+          - REALM
+          - SITE
+          - LOCATION
+          - CONCO_WEB
+          - EMPLOYEE
+          - UNKNOWN
+        typeDisplayName:
+          type: string
+        ownerName:
+          type: string
+        connectAccountId:
+          type: string
+        connectClient:
+          type: boolean
+        parentId:
+          type: integer
+          format: int32
+        realm:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        site:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        conco:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        topLevel:
+          type: boolean
+    3.29.14_KeyedIntegerClientResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        clientKey:
+          $ref: '#/components/schemas/3.29.14_NaturalKeyResource'
+    3.29.14_ErrorResource:
+      type: object
+      properties:
+        errorType:
+          type: string
+          enum:
+          - GENERAL_ERROR
+          - BAD_REQUEST
+          - FORBIDDEN
+          - UNAUTHORISED
+          - NO_ACCESS_TO_PORTAL
+          - INVALID_PASSWORD
+          - NOT_FOUND
+          - CONSTRAINT_VIOLATION
+          - VALIDATION_ERROR
+          - ALREADY_EXISTS
+          - DATA_MISMATCH
+          - NOT_AN_EMPLOYEE
+          - CANNOT_BE_TERMINATED
+          - TOO_MANY_FAILED_ATTEMPTS
+          - REQUIRED_FIELD_MISSING
+          - VERIFICATION_TOKEN_EXPIRED
+          - PURCHASE_ORDER_EXPIRED
+          - DUPLICATE_PAYMENT
+          - PAYMENT_ERROR
+          - CANNOT_BE_UPDATED
+          - PENDING_CARD_IN_PROGRESS
+          - CANNOT_ASSIGN
+          - INVALID_PERSON_STATE
+        error:
+          type: string
+        field:
+          type: string
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_Problem'
+    3.29.14_WorkerSummaryResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        firstName:
+          type: string
+        lastName:
+          type: string
+        photoLink:
+          type: string
+        companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_KeyedIntegerClientResource'
+        email1:
+          type: string
+        email2:
+          type: string
+        uniqueEmail:
+          type: string
+        phone1:
+          type: string
+        phone2:
+          type: string
+        address:
+          $ref: '#/components/schemas/3.29.14_AddressResource'
+        nextOfKin:
+          $ref: '#/components/schemas/3.29.14_NextOfKinResource'
+        status:
+          type: string
+          enum:
+          - PENDING
+          - APPROVED
+          - ARCHIVED
+        locale:
+          type: string
+        mergedToPersonId:
+          type: integer
+          format: int32
+        createTime:
+          type: string
+        updateTime:
+          type: string
+        personTypes:
+          type: array
+          items:
+            type: string
+            enum:
+            - SITE_CONTACT
+            - PERSONAL_CONTACT
+            - USER
+            - EMPLOYEE
+            - CONTRACTOR
+            - VISITOR
+            - SUPERUSER
+            - UNICORN_USER
+            - INVALID_PERSON
+            - MASTERKEY
+            - CARDHOLDER
+            - PAST_CARDHOLDER
+            - INVISIBLE
+            - IMPOSSIBLE
+        email:
+          type: string
+        blocked:
+          type: boolean
+        blockRecursive:
+          type: boolean
+        defaultCompanies:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_ScopeDefaultCompanyResource'
+        siteLegacyIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_SiteLegacyIdResource'
+        externalIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_KeyedStringResource'
+        clientKey:
+          $ref: '#/components/schemas/3.29.14_NaturalKeyResource'
+    3.29.14_WorkerVisitorOnsiteNowResource:
+      type: object
+      properties:
+        workerSummary:
+          $ref: '#/components/schemas/3.29.14_WorkerSummaryResource'
+        onsiteLogDetailed:
+          $ref: '#/components/schemas/3.29.14_OnsiteLogDetailedResource'
+        visitor:
+          $ref: '#/components/schemas/3.29.14_WorkerVisitorResource'
+    3.29.14_Problem:
+      type: object
+      properties:
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        detail:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: '#/components/schemas/3.29.14_StatusType'
+    3.29.14_AddressResource:
+      required:
+      - country
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        address:
+          maxLength: 200
+          minLength: 0
+          type: string
+        town:
+          maxLength: 50
+          minLength: 0
+          type: string
+        state:
+          maxLength: 50
+          minLength: 0
+          type: string
+        postcode:
+          maxLength: 15
+          minLength: 0
+          type: string
+        country:
+          maxLength: 2
+          minLength: 0
+          type: string
+    3.29.14_PersonResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        clientKey:
+          $ref: '#/components/schemas/3.29.14_NaturalKeyResource'
+        personType:
+          type: string
+          enum:
+          - SITE_CONTACT
+          - PERSONAL_CONTACT
+          - USER
+          - EMPLOYEE
+          - CONTRACTOR
+          - VISITOR
+          - SUPERUSER
+          - UNICORN_USER
+          - INVALID_PERSON
+          - MASTERKEY
+          - CARDHOLDER
+          - PAST_CARDHOLDER
+          - INVISIBLE
+          - IMPOSSIBLE
+        phone1:
+          type: string
+        phone2:
+          type: string
+    3.29.14_NextOfKinResource:
+      type: object
+      properties:
+        firstName:
+          maxLength: 35
+          minLength: 0
+          type: string
+        lastName:
+          maxLength: 45
+          minLength: 0
+          type: string
+        phone:
+          maxLength: 50
+          minLength: 0
+          type: string
+        email:
+          maxLength: 255
+          minLength: 0
+          type: string
+        relationship:
+          type: string
+          enum:
+          - SPOUSE
+          - PARTNER
+          - MOTHER
+          - FATHER
+          - BROTHER
+          - SISTER
+          - SON
+          - DAUGHTER
+          - BOYFRIEND
+          - GIRLFRIEND
+          - SON_IN_LAW
+          - DAUGHTER_IN_LAW
+          - MOTHER_IN_LAW
+          - FATHER_IN_LAW
+          - OTHER
+          - DOCTOR
+        updateTime:
+          type: string
+    3.29.14_OnsiteLogDetailedResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        site:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        loginDate:
+          type: string
+        logoutDate:
+          type: string
+        person:
+          $ref: '#/components/schemas/3.29.14_PersonResource'
+        inLogpoint:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        inScope:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        lastLogpointMove:
+          $ref: '#/components/schemas/3.29.14_LogpointMoveResource'
+        outLogpoint:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        outScope:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        siteContact:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        inScopeDetailed:
+          $ref: '#/components/schemas/3.29.14_ScopeDetailResource'
+        outScopeDetailed:
+          $ref: '#/components/schemas/3.29.14_ScopeDetailResource'
+    3.29.14_KeyedStringResource:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+  securitySchemes:
+    3.29.14_security_auth:
+      type: oauth2
+      scheme: Bearer
+      flows:
+        authorizationCode:
+          authorizationUrl: https://login.poweredbyonsite.com/cas/oidc/authorize
+          tokenUrl: https://login.poweredbyonsite.com/cas/oidc/accessToken
+          scopes:
+            pegasus: Pegasus Authentication Scope
+    3.29.14_security_apikey:
+      type: apiKey
+      name: api_key
+      in: header
+x-refined-from:
+- avetta-pegasus-dist.json
+- avetta-pegasus-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

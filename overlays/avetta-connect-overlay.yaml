@@ -1,0 +1,16 @@
+overlay: 1.0.0
+info:
+  title: Avetta Client API Service - API Evangelist enhancements
+  version: 1.0.0
+extends: ../openapi/_original/avetta-connect-openapi.yml
+x-generated: '2026-10-20'
+x-method: generated
+actions:
+- target: $.info
+  update:
+    x-provider: Avetta
+    x-provider-website: https://www.avetta.com
+    x-docs: https://docs.connect.avetta.com/
+- target: $.info
+  update:
+    x-rate-limits: rate-limits/avetta-rate-limits.yml

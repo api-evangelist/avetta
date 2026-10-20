@@ -1,0 +1,336 @@
+openapi: 3.2.0
+info:
+  title: Avetta Authentication API
+  version: 1.0.0
+  description: 'Operations tagged Authentication across 2 of this provider''s published API definitions: avetta-connect-dist.json, avetta-connect-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.avetta.com
+  description: Production (as named in the Client API Service documentation examples)
+tags:
+- name: Authentication
+  x-displayName: Authentication
+  description: '## How to authenticate
+
+
+    Every request to the Avetta APIs must include an `Authorization` header. You can fill it in using **one** of two methods. Pick the one that fits your integration; you do not need both.
+
+
+    Option A: OAuth 2.0 Bearer Token
+
+    Option B: API Key
+
+
+    Best for
+
+    Integrations that prefer a more secure authentication model using short-lived tokens
+
+    Existing integrations already set up with an API key
+
+
+    Works with
+
+    All endpoints
+
+    All endpoints
+
+
+    Steps
+
+    2 steps: get a token, then send the token
+
+    1 step: send your key
+
+
+    Expires
+
+    Yes, after expires_in seconds (typically 3600 = 1 hour)
+
+    No
+
+
+    Header value
+
+    Bearer <ACCESS_TOKEN>
+
+    apikey <API_KEY>
+
+
+    ### Before you start
+
+
+    - You need credentials from Avetta. If you don''t have them, contact APISupport@avetta.com.
+
+    - Your credentials are your Avetta **`accountId`** and **`apikey`**.
+
+
+    ---
+
+
+    ## Option A: OAuth 2.0 Bearer Token
+
+
+    This method takes two steps: first trade your credentials for a temporary access token, then send that token on each request.
+
+
+    ### Step 1: Get an access token
+
+
+    Send a `POST` request to `https://api.avetta.com/auth/v1/token`:
+
+
+    ```bash
+
+    curl --request POST ''https://api.avetta.com/auth/v1/token'' \
+
+    --header ''Content-Type: application/json'' \
+
+    --data ''{
+
+    "grant_type": "client_api_credentials",
+
+    "username": "",
+
+    "password": ""
+
+    }''
+
+    ```
+
+
+    | Field | What to put in it |
+
+    |---|---|
+
+    | `grant_type` | Always `client_api_credentials` |
+
+    | `username` | Your `accountId` |
+
+    | `password` | Your `apikey` |
+
+
+    A successful response looks like this:
+
+
+    ```json
+
+    {
+
+    "access_token": "",
+
+    "token_type": "Bearer",
+
+    "expires_in": 3600
+
+    }
+
+    ```
+
+
+    Copy the value of `access_token`. You will use it in Step 2.
+
+
+    ### Step 2: Send the token on each request
+
+
+    Add this header to every request:
+
+
+    ```
+
+    Authorization: Bearer
+
+    ```
+
+
+    **Example**
+
+
+    ```bash
+
+    curl ''https://api.avetta.com/api/v1/connections'' \
+
+    --header ''Authorization: Bearer ''
+
+    ```
+
+
+    ### When the token expires
+
+
+    - The token stops working after `expires_in` seconds (typically 3600 seconds, or 1 hour).
+
+    - There is no refresh token. To keep going, repeat **Step 1** to get a new token.
+
+    - Tip: request a new token shortly before the old one expires so requests don''t fail.
+
+
+    ---
+
+
+    ## Option B: API Key
+
+
+    Add this header to **every** request:
+
+
+    ```
+
+    Authorization: apikey
+
+    ```
+
+
+    Replace `` with your `apikey`. Keep the word `apikey` and the space before your key.
+
+
+    **Example**
+
+
+    ```bash
+
+    curl ''https://api.avetta.com/api/v1/connections'' \
+
+    --header ''Authorization: apikey ''
+
+    ```'
+paths:
+  /auth/v1/token:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    post:
+      summary: Get Access Token v1
+      description: 'Generates a JWT access token using the OAuth 2.0 client credentials flow. Include the returned `access_token` in the `Authorization` header as `Bearer ` for all subsequent authenticated API requests.
+
+
+        Note: Once the token expires, fetch a new token and use it for the next request. There is no refresh token.'
+      tags:
+      - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - grant_type
+              - username
+              - password
+              properties:
+                grant_type:
+                  type: string
+                  enum:
+                  - client_api_credentials
+                  description: The OAuth 2.0 grant type. Must be `client_api_credentials`.
+                  example: client_api_credentials
+                username:
+                  type: string
+                  description: The client's billing ID.
+                  example: '123456'
+                password:
+                  type: string
+                  description: The client's apikey.
+                  example: client-apikey
+            example:
+              grant_type: client_api_credentials
+              username: '123456'
+              password: client-apikey
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: The JWT access token to use in subsequent requests.
+                  token_type:
+                    type: string
+                    description: The type of token issued. Always `Bearer`.
+                    example: Bearer
+                  expires_in:
+                    type: integer
+                    description: Token lifetime in seconds.
+                    example: 3600
+              examples:
+                response:
+                  value:
+                    access_token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
+                    token_type: Bearer
+                    expires_in: 3600
+        '400':
+          description: Bad Request
+          headers: {}
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+              examples:
+                response:
+                  value:
+                    code: 3
+                    message: Bad Request
+        '401':
+          description: Unauthorized
+          headers: {}
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+              examples:
+                response:
+                  value:
+                    code: 401
+                    message: Invalid client credentials
+        '500':
+          description: Internal Server Error
+          headers: {}
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+      operationId: postAuthV1Token
+      x-operation-id-source: derived
+x-refined-from:
+- avetta-connect-dist.json
+- avetta-connect-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

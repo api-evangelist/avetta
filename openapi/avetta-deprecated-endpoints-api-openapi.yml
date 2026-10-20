@@ -1,0 +1,1639 @@
+openapi: 3.2.0
+info:
+  title: Avetta Deprecated Endpoints API
+  version: 1.0.0
+  description: 'Operations tagged Deprecated Endpoints across 2 of this provider''s published API definitions: avetta-connect-dist.json, avetta-connect-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.avetta.com
+  description: Production (as named in the Client API Service documentation examples)
+tags:
+- name: Deprecated Endpoints
+  description: Endpoints that are deprecated and will be removed in future versions.
+  x-displayName: Deprecated Endpoints
+paths:
+  /v1/forms/actions:
+    servers: []
+    post:
+      servers:
+      - url: https://api.avetta.com/api
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/ApiserviceV1/1.0.0
+        description: MOCK
+      deprecated: true
+      description: 'Access to the approval process of specific forms that are not yet in their final workflow status. In case of failure, the form remains unchanged.
+
+        Max field lengths on String fields will be strictly enforced, and requests that exceed the maximum field length will result in a validation failure.
+
+        Action field will be validated to only allow applicable status that can be applied on the form.'
+      parameters:
+      - description: The numeric id of the form to approve/reject. Should be in a numeric format.
+        in: query
+        name: formId
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                action: approve
+                comments: Good to go
+                lang: En
+              properties:
+                action:
+                  description: The value should be one of the applicable actions (Refer to the previous endpoint)
+                  type: string
+                comments:
+                  maxLength: 4000
+                  type: string
+                lang:
+                  default: en
+                  description: The language of the action specified. Optional
+                  type: string
+              required:
+              - action
+              - comments
+              type: object
+        description: The type of approval for the form.
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    code: '1'
+                    message: The form is in a worfklow state that is no longer actionable.
+              schema:
+                properties:
+                  code:
+                    format: numeric
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+        '422':
+          description: Unprocessable Entity
+        '500':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    code: '5'
+                    message: Server Error
+              schema:
+                properties:
+                  code:
+                    format: numeric
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+      summary: Post Form Approval v1
+      tags:
+      - Deprecated Endpoints
+      operationId: postV1FormsActions
+      x-operation-id-source: derived
+  /v1/forms/activities:
+    servers: []
+    get:
+      servers:
+      - url: https://api.avetta.com/api
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/ApiserviceV1/1.0.0
+        description: MOCK
+      deprecated: true
+      description: Gets all activities/comments made on a specific form from newest to oldest.
+      parameters:
+      - description: The numeric id of the form. Should be in a numeric format.
+        in: query
+        name: formId
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - formId: '1234'
+                    comments: This form was rejected due to insurance limit...
+                    createdDate: '2021-04-29T15:59:34Z'
+                    createdBy: John Doe
+                  - formId: '1234'
+                    comments: This form was rejected due to incomplete info
+                    createdDate: '2021-01-20T10:51:31Z'
+                    createdBy: Jane Doe
+              schema:
+                items:
+                  properties:
+                    comments:
+                      type: string
+                    createdBy:
+                      format: firstname lastname
+                      type: string
+                    createdDate:
+                      format: UTC DateTime
+                      type: string
+                    formId:
+                      format: numeric
+                      type: string
+                  type: object
+                type: array
+          description: OK
+        '400':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    code: '10'
+                    message: formId is not in a valid numeric format.
+              schema:
+                properties:
+                  code:
+                    format: numeric
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+        '429':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    code: '11'
+                    message: Can’t process the request right now. Please try again later.
+              schema:
+                properties:
+                  code:
+                    format: numeric
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Too Many Requests
+        '500':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    code: '5'
+                    message: Server Error
+              schema:
+                properties:
+                  code:
+                    format: numeric
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+      summary: Get Form Activities v1
+      tags:
+      - Deprecated Endpoints
+      operationId: getV1FormsActivities
+      x-operation-id-source: derived
+  /v1/forms/count:
+    servers: []
+    get:
+      servers:
+      - url: https://api.avetta.com/api
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/ApiserviceV1/1.0.0
+        description: MOCK
+      deprecated: true
+      description: 'Returns the total number of records from the `Form` Endpoint. All query parameters from the `Form` endpoint are also applicable in this endpoint as those values will be used in determining the number of records given the provided parameters.
+
+
+        By default, only Active Forms created within the last 12 months are returned.'
+      parameters:
+      - description: Optional filter for a supplier
+        in: query
+        name: supplierId
+        schema:
+          type: number
+      - description: Optional filter for a client account
+        in: query
+        name: clientId
+        schema:
+          type: number
+      - description: Optional filter for a specific form
+        in: query
+        name: formId
+        schema:
+          type: number
+      - description: Optional filter for a form year
+        in: query
+        name: year
+        schema:
+          type: string
+      - description: Optional filter for a category
+        in: query
+        name: categoryId
+        schema:
+          type: string
+      - description: Optional filter for a question
+        in: query
+        name: questionId
+        schema:
+          type: string
+      - description: Optional value to return records after the specified date and time [yyyy-MM-dd hh:mm:ss]. When the `supplierId` is provided, the available range is the last 12 months. When the `supplierId` is not provided, the available range is capped at 1 month ago. If no date is specified, the endpoint will only count records from the past month.
+        in: query
+        name: modifiedAfter
+        schema:
+          format: date-time
+          type: string
+      - description: Optional value to return archived only records
+        in: query
+        name: archivedOnly
+        schema:
+          type: boolean
+      - description: Optional value to return active only records
+        in: query
+        name: activeOnly
+        schema:
+          default: 'true'
+          type: boolean
+      - description: Optional filter for a formType
+        in: query
+        name: formTypeId
+        schema:
+          type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - total_records: 1845
+              schema:
+                items:
+                  properties:
+                    total_records:
+                      type: integer
+                  type: object
+                type: array
+                x-examples:
+                  example-1:
+                  - total_records: 3039225
+          description: OK
+        '400':
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: 10
+                    message: Invalid Param Value
+          description: Bad Request
+      summary: Get Form Count v1
+      tags:
+      - Deprecated Endpoints
+      operationId: getV1FormsCount
+      x-operation-id-source: derived
+  /v1/forms/statuses:
+    servers: []
+    get:
+      servers:
+      - url: https://api.avetta.com/api
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/ApiserviceV1/1.0.0
+        description: MOCK
+      deprecated: true
+      description: Gets the applicable statuses to apply for a specific form. The list of statuses would be the applicable status to set based on the current status of the form. If the form is in its final workflow status, then it will return an empty list.
+      parameters:
+      - description: The numeric id of the form. Should be in a numeric format.
+        in: query
+        name: formId
+        required: true
+        schema:
+          type: integer
+      - description: The target language of the applicable statuses
+        in: query
+        name: lang
+        required: false
+        schema:
+          default: en
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    formId: '1234'
+                    language: en
+                    applicableActions:
+                    - id: 4f8c65605049436c832e250d
+                      action: approve
+                    - id: 4f8dd5605049436c832e250d
+                      action: reject
+                    message: ''
+              schema:
+                properties:
+                  applicableActions:
+                    items:
+                      properties: {}
+                      type: object
+                    type: array
+                  formId:
+                    type: string
+                  language:
+                    type: string
+                  message:
+                    type: string
+                type: object
+                x-examples:
+                  example-1:
+                    applicableActions: []
+                    formId: '16837298'
+                    language: en
+                    message: Form is currently in a workflow state that you can not act on.
+          description: OK
+        '201':
+          content:
+            application/json:
+              schema:
+                properties: {}
+                type: object
+            example-1:
+              examples:
+                response:
+                  value: {}
+          description: Created
+        '400':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    code: '10'
+                    message: formId is not in a valid numeric format.
+              schema:
+                properties:
+                  code:
+                    format: numeric
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+        '500':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    code: '5'
+                    message: Server Error
+              schema:
+                properties:
+                  code:
+                    format: numeric
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+      summary: Get Form Status v1
+      tags:
+      - Deprecated Endpoints
+      operationId: getV1FormsStatuses
+      x-operation-id-source: derived
+  /v2/insurance:
+    servers: []
+    get:
+      servers:
+      - url: https://api.avetta.com/api
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/ApiserviceV1/1.0.0
+        description: MOCK
+      deprecated: true
+      description: Retrieves a set of `Insurance` data based on the provided apiKey and query parameters. If an `id` is provided, only the insurance data pertaining to that contractor will be returned. Only active contractors that have approved connections to clients will be returned in this endpoint.
+      parameters:
+      - description: The numeric identifier for a contractor
+        example: 44282
+        in: query
+        name: id
+        required: false
+        schema:
+          type: number
+      - description: The record to start with for pagination (0-based, not 1-based)
+        example: 1
+        in: query
+        name: start
+        required: false
+        schema:
+          default: 0
+          type: number
+      - description: The total number of records to return, maximum of 500
+        example: 500
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 500
+          type: number
+      - description: Optional value to return records based on updates made to forms after the specified date and time [yyyy-MM-dd hh:mm:ss]
+        example: '2016-07-23 05:10:57'
+        in: query
+        name: modifiedAfter
+        required: false
+        schema:
+          type: string
+      - description: Optional value allowing the retrieval of forms expired within 90 days
+        example: 2
+        in: query
+        name: daysExp
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                  - clients:
+                    - client_id: 8372
+                      client_name: Oil Rig
+                      insurance_data:
+                      - audit_id: 7365
+                        audit_status: Approved
+                        flags:
+                        - flag_id: 46305
+                          flag_name: Liability must be submitted by the supplier and approved according to client requirements for compliance
+                          flag_type: form
+                          flag_updated_date: '2020-06-01 12:55:08'
+                          forced_flag: ''
+                          forced_flag_expiration: ''
+                          original_flag: Green
+                        insurance_type_detail:
+                        - category_id: 628
+                          category_name: General Information
+                          values:
+                          - answer: 123 Luke St
+                            href: /client-api/v1/files/2839?questionId=395
+                            question: What is your Address?
+                            question_id: 395
+                            title: Some Title
+                            updated_date: '2016-09-23 10:11:31'
+                        insurance_type_id: 34
+                        insurance_type_name: General Policy
+                        insurance_updated_date: '2019-11-01 01:01:01'
+                    contractor_id: 2938
+                    contractor_name: ABC Painting
+                    external_id:
+                    - client_id: 123
+                      type: Other
+                      value: '234489'
+              schema:
+                items:
+                  properties:
+                    clients:
+                      items:
+                        properties:
+                          client_id:
+                            type: integer
+                          client_name:
+                            type: string
+                          insurance_data:
+                            items:
+                              properties:
+                                audit_id:
+                                  type: integer
+                                audit_status:
+                                  type: string
+                                flags:
+                                  items:
+                                    properties:
+                                      flag_id:
+                                        type: integer
+                                      flag_name:
+                                        type: string
+                                      flag_type:
+                                        type: string
+                                      flag_updated_date:
+                                        type: string
+                                      forced_flag:
+                                        type: string
+                                      forced_flag_expiration:
+                                        type: string
+                                      original_flag:
+                                        type: string
+                                    type: object
+                                  type: array
+                                insurance_type_detail:
+                                  items:
+                                    properties:
+                                      category_id:
+                                        type: integer
+                                      category_name:
+                                        type: string
+                                      values:
+                                        items:
+                                          properties:
+                                            answer:
+                                              type: string
+                                            href:
+                                              type: string
+                                            question:
+                                              type: string
+                                            question_id:
+                                              type: integer
+                                            title:
+                                              type: string
+                                            updated_date:
+                                              type: string
+                                          type: object
+                                        type: array
+                                    type: object
+                                  type: array
+                                insurance_type_id:
+                                  type: integer
+                                insurance_type_name:
+                                  type: string
+                                insurance_updated_date:
+                                  type: string
+                              type: object
+                            type: array
+                        type: object
+                      type: array
+                    contractor_id:
+                      type: integer
+                    contractor_name:
+                      type: string
+                    external_id:
+                      items:
+                        properties:
+                          client_id:
+                            type: integer
+                          type:
+                            type: string
+                          value:
+                            type: string
+                        type: object
+                      type: array
+                  type: object
+                type: array
+          description: OK
+        '400':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: 3
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+        '500':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+      summary: Get Insurance v2
+      tags:
+      - Deprecated Endpoints
+      x-private: true
+      operationId: getV2Insurance
+      x-operation-id-source: derived
+  /v2/insurance/count:
+    servers: []
+    parameters: []
+    get:
+      servers:
+      - url: https://api.avetta.com/api
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/ApiserviceV1/1.0.0
+        description: MOCK
+      deprecated: true
+      description: Retrieves the number of `Contractors` based on the provided apiKey and query parameters.
+      parameters:
+      - description: The numeric identifier for a contractor
+        example: 44282
+        in: query
+        name: id
+        required: false
+        schema:
+          type: number
+      - description: Optional value to return records based on updates made to forms after the specified date and time [yyyy-MM-dd hh:mm:ss]
+        example: '2016-07-23 05:10:57'
+        in: query
+        name: modifiedAfter
+        required: false
+        schema:
+          type: string
+      - description: Optional value allowing the retrieval of forms expired within 90 days
+        example: 2
+        in: query
+        name: daysExp
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            Insurance count:
+              examples:
+                response:
+                  value:
+                  - total_records: 0
+            application/json; charset=utf-8:
+              schema:
+                description: ''
+                items:
+                  properties:
+                    total_records:
+                      type: number
+                  required:
+                  - total_records
+                  type: object
+                minItems: 1
+                type: array
+                uniqueItems: true
+                x-examples:
+                  example-1:
+                  - total_records: 0
+          description: OK
+        '400':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: 3
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+        '500':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+      summary: Get Insurance Count v2
+      tags:
+      - Deprecated Endpoints
+      x-private: true
+      operationId: getV2InsuranceCount
+      x-operation-id-source: derived
+  /v1/audits:
+    servers: []
+    get:
+      servers:
+      - url: https://api.avetta.com/api
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/ApiserviceV1/1.0.0
+        description: MOCK
+      deprecated: true
+      description: 'Retrieves a set of `Audit` data based on the client making the request and the pagination parameters. The `href` field will only return for `Audit` data that are file related. Only active suppliers that have approved connections to clients will be returned in this endpoint.
+
+
+        By default, only Active Forms created within the last 12 months are returned.
+
+
+        If historical Audits data is needed, please contact technical support for assistance.'
+      parameters:
+      - description: The record to start with for pagination (0-based, not 1-based)
+        example: 1
+        in: query
+        name: start
+        required: false
+        schema:
+          default: 0
+          type: number
+      - description: The total number of records to return, maximum of 500
+        example: 500
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 500
+          type: number
+      - description: The Supplier Id to filter results by
+        example: 117463
+        in: query
+        name: id
+        required: false
+        schema:
+          type: number
+      - description: Optional value to return records after the specified date and time [yyyy-MM-dd hh:mm:ss]. When the `id` is provided, the available range is the last 12 months. When the `id` is not provided, the available range is capped at 1 month ago. If no date is specified, then the endpoint will only return records from the past month.
+        example: '2016-07-23 05:10:57'
+        in: query
+        name: modifiedAfter
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                  - answer: ABC Painting
+                    audit_period: 2018-01-01 - 2019-04-01
+                    audit_score: 0
+                    audit_type_id: 1
+                    audit_type_name: PQF
+                    audit_year: '2018'
+                    category_id: 78
+                    category_name: Contractor Information
+                    contractor_id: 78910
+                    contractor_name: ABC Painting
+                    question: What is the name of your company?
+                    question_id: 23
+                    title: ''
+                    updated_date: '2016-07-23 05:10:57'
+              schema:
+                items:
+                  properties:
+                    answer:
+                      type: string
+                    audit_period:
+                      type: string
+                    audit_score:
+                      type: integer
+                    audit_type_id:
+                      type: integer
+                    audit_type_name:
+                      type: string
+                    audit_year:
+                      type: string
+                    category_id:
+                      type: integer
+                    category_name:
+                      type: string
+                    contractor_id:
+                      type: integer
+                    contractor_name:
+                      type: string
+                    question:
+                      type: string
+                    question_id:
+                      type: integer
+                    title:
+                      type: string
+                    updated_date:
+                      type: string
+                  required:
+                  - contractor_id
+                  - contractor_name
+                  - audit_type_id
+                  - audit_type_name
+                  - audit_score
+                  - audit_year
+                  - audit_period
+                  - category_id
+                  - category_name
+                  - title
+                  - question_id
+                  - question
+                  - answer
+                  - updated_date
+                  type: object
+                type: array
+          description: OK
+        '400':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+        '500':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+      summary: Get Audits v1
+      tags:
+      - Deprecated Endpoints
+      x-private: true
+      operationId: getV1Audits
+      x-operation-id-source: derived
+  /v1/audits/count:
+    servers: []
+    get:
+      servers:
+      - url: https://api.avetta.com/api
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/ApiserviceV1/1.0.0
+        description: MOCK
+      deprecated: true
+      description: ''
+      parameters:
+      - description: Contractor Id to determine total records per contractor
+        example: 118577
+        in: query
+        name: id
+        required: false
+        schema:
+          type: number
+      - description: Optional value to return records after the specified date and time [yyyy-MM-dd hh:mm:ss]. When the `id` is provided, the available range  is the last 12 months. When the `id` is not provided, the available range is capped at 1 month ago. If no date is specified, then the endpoint will only count records from the past month.
+        example: '2016-07-23 05:10:57'
+        in: query
+        name: modifiedAfter
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                  - total_records: 1845
+              schema:
+                items: {}
+                type: array
+          description: OK
+        '400':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+        '500':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+      summary: Get Audit Count v1
+      tags:
+      - Deprecated Endpoints
+      x-private: true
+      operationId: getV1AuditsCount
+      x-operation-id-source: derived
+  /v2/audits:
+    servers: []
+    get:
+      servers:
+      - url: https://api.avetta.com/api
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/ApiserviceV1/1.0.0
+        description: MOCK
+      deprecated: true
+      description: 'Retrieves a set of `Audit` data based on the client making the request and the pagination parameters. The `href` field will only return for `Audit` data that are file related. Only active suppliers that have approved connections to clients will be returned in this endpoint.
+
+
+        By default, only Active Forms created within the last 12 months are returned.
+
+
+        If historical Audits data is needed, please contact technical support for assistance.'
+      parameters:
+      - description: The record to start with for pagination (0-based, not 1-based)
+        example: 1
+        in: query
+        name: start
+        required: false
+        schema:
+          default: 0
+          type: number
+      - description: The total number of records to return, maximum of 500
+        example: 500
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 500
+          type: number
+      - description: The Supplier Id to filter results by
+        example: 117463
+        in: query
+        name: id
+        required: false
+        schema:
+          type: number
+      - description: Optional value to return records after the specified date and time [yyyy-MM-dd hh:mm:ss]. When the `id` is provided, the available range is the last 12 months. When the `id` is not provided, the available range is capped at 1 month ago. If no date is specified, the endpoint will only return records from the past month.
+        example: '2016-07-23 05:10:57'
+        in: query
+        name: modifiedAfter
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                  - audit_data:
+                    - audit_details:
+                      - audit_id: '16863151'
+                        audit_period: 2018-01-01 - 2019-04-01
+                        audit_score: '0'
+                        audit_year: '2020'
+                        categories:
+                        - category_id: '78'
+                          category_name: Contractor Information
+                          questions:
+                          - answer: ABC Painting
+                            question: What is the name of your company?
+                            question_id: '23'
+                            updated_date: '2020-11-17 22:35:55'
+                          title: ''
+                      audit_name: PQF
+                      audit_type_id: '1'
+                    contractor_id: 78910
+                    contractor_name: ABC Painting
+              schema:
+                items:
+                  properties:
+                    audit_data:
+                      items:
+                        properties:
+                          audit_details:
+                            items:
+                              properties:
+                                audit_id:
+                                  type: string
+                                audit_period:
+                                  type: string
+                                audit_score:
+                                  type: string
+                                audit_year:
+                                  type: string
+                                categories:
+                                  items:
+                                    properties:
+                                      category_id:
+                                        type: string
+                                      category_name:
+                                        type: string
+                                      questions:
+                                        items:
+                                          properties:
+                                            answer:
+                                              type: string
+                                            question:
+                                              type: string
+                                            question_id:
+                                              type: string
+                                            updated_date:
+                                              type: string
+                                          type: object
+                                        type: array
+                                      title:
+                                        type: string
+                                    type: object
+                                  type: array
+                              type: object
+                            type: array
+                          audit_name:
+                            type: string
+                          audit_type_id:
+                            type: string
+                        type: object
+                      type: array
+                    contractor_id:
+                      type: integer
+                    contractor_name:
+                      type: string
+                  type: object
+                type: array
+          description: OK
+        '400':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+        '500':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+      summary: Get Audits v2
+      tags:
+      - Deprecated Endpoints
+      x-private: true
+      operationId: getV2Audits
+      x-operation-id-source: derived
+  /v2/audits/count:
+    servers: []
+    get:
+      servers:
+      - url: https://api.avetta.com/api
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/ApiserviceV1/1.0.0
+        description: MOCK
+      deprecated: true
+      description: ''
+      parameters:
+      - description: Contractor Id to determine total records per contractor
+        example: 118577
+        in: query
+        name: id
+        required: false
+        schema:
+          type: number
+      - description: Optional value to return records after the specified date and time [yyyy-MM-dd hh:mm:ss]. When the `id` is provided, the available range is the last 12 months. When `id` is not provided, the available range is capped at 1 month ago. If no date is specified, the endpoint will only count records from the past month.
+        example: '2016-07-23 05:10:57'
+        in: query
+        name: modifiedAfter
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                  - total_records: 123
+              schema:
+                items: {}
+                type: array
+          description: OK
+        '400':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+        '500':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+      summary: Get Audit Count v2
+      tags:
+      - Deprecated Endpoints
+      x-private: true
+      operationId: getV2AuditsCount
+      x-operation-id-source: derived
+  /v1/insurance:
+    servers: []
+    get:
+      servers:
+      - url: https://api.avetta.com/api
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/ApiserviceV1/1.0.0
+        description: MOCK
+      deprecated: true
+      description: Retrieves a set of `Insurance` data based on the provided apiKey and pagination parameters. If an `id` is provided, only the insurance data pertaining to that supplier will be returned. Only active suppliers that have approved connections to clients will be returned in this endpoint.
+      parameters:
+      - description: The numeric identifier for a supplier
+        example: 44282
+        in: query
+        name: id
+        required: false
+        schema:
+          type: number
+      - description: The record to start with for pagination (0-based, not 1-based)
+        example: 1
+        in: query
+        name: start
+        required: false
+        schema:
+          default: 0
+          type: number
+      - description: The total number of records to return, maximum of 500
+        example: 500
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 500
+          type: number
+      - description: Optional value to return records after the specified date and time [yyyy-MM-dd hh:mm:ss]
+        example: '2016-07-23 05:10:57'
+        in: query
+        name: modifiedAfter
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                  - contractor_id: 2938
+                    contractor_name: ABC Painting
+                    external_id:
+                    - client_id: 111111
+                      type: string
+                      value: someValue
+                    clients:
+                    - client_id: 8372
+                      client_name: Oil Rig
+                      insurance_data:
+                      - audit_id: 7365
+                        audit_status: Approved
+                        insurance_type_detail:
+                        - category_id: 628
+                          category_name: General Information
+                          values:
+                          - answer: 123 Luke St
+                            href: /client-api/v1/files/2839?questionId=395
+                            question: What is your Address?
+                            question_id: 395
+                            title: Some Title
+                            updated_date: '2016-09-23 10:11:31'
+                        insurance_type_id: 34
+                        insurance_type_name: General Policy
+              schema:
+                items:
+                  properties:
+                    clients:
+                      items:
+                        properties:
+                          client_id:
+                            type: integer
+                          client_name:
+                            type: string
+                          insurance_data:
+                            items:
+                              properties:
+                                audit_id:
+                                  type: integer
+                                audit_status:
+                                  type: string
+                                insurance_type_detail:
+                                  items:
+                                    properties:
+                                      category_id:
+                                        type: integer
+                                      category_name:
+                                        type: string
+                                      values:
+                                        items:
+                                          properties:
+                                            answer:
+                                              type: string
+                                            href:
+                                              type: string
+                                            question:
+                                              type: string
+                                            question_id:
+                                              type: integer
+                                            title:
+                                              type: string
+                                            updated_date:
+                                              type: string
+                                          type: object
+                                        type: array
+                                    type: object
+                                  type: array
+                                insurance_type_id:
+                                  type: integer
+                                insurance_type_name:
+                                  type: string
+                              type: object
+                            type: array
+                        type: object
+                      type: array
+                    contractor_id:
+                      type: integer
+                    contractor_name:
+                      type: string
+                    external_id:
+                      items:
+                        properties:
+                          client_id:
+                            type: integer
+                          type:
+                            type: string
+                          value:
+                            type: string
+                        type: object
+                      type: array
+                  type: object
+                type: array
+          description: OK
+        '201':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                properties: {}
+                type: object
+          description: Created
+        '400':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: 3
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+        '500':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+      summary: Get Insurance v1
+      tags:
+      - Deprecated Endpoints
+      x-private: true
+      operationId: getV1Insurance
+      x-operation-id-source: derived
+  /v1/forms:
+    servers: []
+    get:
+      servers:
+      - url: https://api.avetta.com/api
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/ApiserviceV1/1.0.0
+        description: MOCK
+      deprecated: true
+      description: 'Retrieves a set of `Form` data based on the provided request/pagination parameters.
+
+
+        The `href` field in the schema below will only return for `Form` data where the question requires a file upload as an answer. The `href` field may contain more than one file name, separated by “~^~". In the case of a file answer, the `answer` field will present the decoded name of the file along with its extension, for readability. However for download purposes, the value used in `href` should be used.
+
+
+        Only active suppliers that have approved connections to clients will be returned in this endpoint.
+
+
+        By default, only Active Forms created within the last 12 months are returned. Also, this endpoint is rate limited to 20 calls per minute.'
+      parameters:
+      - description: Optional record to start with for pagination
+        in: query
+        name: start
+        schema:
+          default: 0
+          minimum: 0
+          type: integer
+      - description: Optional total number of records to return, maximum of 100
+        in: query
+        name: limit
+        schema:
+          default: 100
+          maximum: 100
+          minimum: 1
+          type: integer
+      - description: Optional filter for a supplier
+        in: query
+        name: supplierId
+        schema:
+          type: number
+      - description: Optional filter for a client account
+        in: query
+        name: clientId
+        schema:
+          type: number
+      - description: Optional filter for a specific form
+        in: query
+        name: formId
+        schema:
+          type: number
+      - description: Optional filter for a form year
+        in: query
+        name: year
+        schema:
+          type: string
+      - description: Optional filter for a category
+        in: query
+        name: categoryId
+        schema:
+          type: string
+      - description: Optional filter for a question
+        in: query
+        name: questionId
+        schema:
+          type: string
+      - description: Optional value to return records after the specified date and time [yyyy-MM-dd hh:mm:ss]. When the `supplierId` is provided, the available range is the last 12 months. When the `supplierId` is not provided, the available range is capped at 1 month ago. If no date is specified, the endpoint returns only records from the past month.
+        in: query
+        name: modifiedAfter
+        schema:
+          format: date-time
+          type: string
+      - description: Optional value to return archived only records
+        in: query
+        name: archivedOnly
+        schema:
+          type: boolean
+      - description: Optional value to return active only records
+        in: query
+        name: activeOnly
+        schema:
+          default: 'true'
+          type: boolean
+      - description: Optional flag to transform question from HTML to plain text
+        in: query
+        name: noHtml
+        schema:
+          type: boolean
+      - description: Optional filter for a formType
+        in: query
+        name: formTypeId
+        schema:
+          type: number
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - supplierId: 11111
+                    supplierName: Supplier, Inc.
+                    formId: 33333333
+                    formName: Workers' Compensation
+                    formPeriod: 2022-05-01 - 2023-05-01
+                    formScore: 0
+                    formStatus: Submitted
+                    formTypeId: 22222
+                    formUpdatedDate: '2022-04-30 03:39:07'
+                    formYear: '2022'
+                    clientSites:
+                    - clientId: 44444
+                      clientName: Client Name
+                    categoryId: 555
+                    categoryName: Policy Limits
+                    questionId: 6666
+                    questionTitle: ''
+                    question: Question
+                    answer: '1000000'
+                    answerUpdatedDate: '2022-04-30 03:39:07'
+                    answerComment: null
+                    isActive: true
+                    href: null
+              schema:
+                items:
+                  properties:
+                    answer:
+                      type: string
+                    answerComment:
+                      oneOf:
+                      - type: string
+                    answerUpdatedDate:
+                      type: string
+                    categoryId:
+                      type: integer
+                    categoryName:
+                      type: string
+                    clientSites:
+                      items:
+                        properties:
+                          clientId:
+                            type: integer
+                          clientName:
+                            type: string
+                        type: object
+                      type: array
+                    formId:
+                      type: integer
+                    formName:
+                      type: string
+                    formPeriod:
+                      type: string
+                    formScore:
+                      type: integer
+                    formStatus:
+                      type: string
+                    formTypeId:
+                      type: integer
+                    formUpdatedDate:
+                      type: string
+                    formYear:
+                      type: string
+                    href:
+                      oneOf:
+                      - type: string
+                    isActive:
+                      type: boolean
+                    question:
+                      type: string
+                    questionId:
+                      type: integer
+                    questionTitle:
+                      type: string
+                    supplierId:
+                      type: integer
+                    supplierName:
+                      type: string
+                  type: object
+                type: array
+                x-examples:
+                  example-1:
+                  - answer: '1000000'
+                    answerComment: null
+                    answerUpdatedDate: '2022-04-30 03:39:07'
+                    categoryId: 555
+                    categoryName: Policy Limits
+                    clientSites:
+                    - clientId: 44444
+                      clientName: Client Name
+                    formId: 33333333
+                    formName: Workers' Compensation
+                    formPeriod: 2022-05-01 - 2023-05-01
+                    formScore: 0
+                    formStatus: Submitted
+                    formTypeId: 22222
+                    formUpdatedDate: '2022-04-30 03:39:07'
+                    formYear: '2022'
+                    href: null
+                    isActive: true
+                    question: Question
+                    questionId: 6666
+                    questionTitle: ''
+                    supplierId: 11111
+                    supplierName: Supplier, Inc.
+          description: OK
+        '400':
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: 10
+                    message: Invalid Param Value
+          description: Bad Request
+      summary: Get Forms v1
+      tags:
+      - Deprecated Endpoints
+      operationId: getV1Forms
+      x-operation-id-source: derived
+x-refined-from:
+- avetta-connect-dist.json
+- avetta-connect-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

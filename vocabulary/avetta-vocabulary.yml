@@ -1,0 +1,432 @@
+generated: '2026-10-20'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/avetta-connect-openapi.yml
+- openapi/avetta-pegasus-openapi.yml
+- openapi/avetta-worker-v1-openapi.yml
+- openapi/avetta-worker-v2-openapi.yml
+vocabulary:
+  name: Avetta Domain Vocabulary
+  description: 'Terms declared by Avetta''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-20'
+  terms:
+  - term: Authentication
+    definition: '## How to authenticate Every request to the Avetta APIs must include an `Authorization` header. You can fill it in using **one**
+      of two methods. Pick the one that fits your integration; you do not need both. Option A: OAuth 2.0 Bearer Token Option B: API Key Best for
+      Integrations that prefer a more secure authentication model using short-lived tokens Existing integrations already set up with an AP'
+    tags:
+    - Resource Group
+    source: openapi/avetta-connect-openapi.yml
+  - term: Worksite-Safety
+    definition: Worksite safety management operations including work requests and project management
+    tags:
+    - Resource Group
+    source: openapi/avetta-connect-openapi.yml
+  - term: Deprecated Endpoints
+    definition: Endpoints that are deprecated and will be removed in future versions.
+    tags:
+    - Resource Group
+    source: openapi/avetta-connect-openapi.yml
+  - term: Error Handling
+    definition: 'Our errors are listed below in the following format -> Code Error Number [Actual Message]: Description of the error. Code 1 [Validation
+      Failed]: An invalid API key was provided. Code 2 [Invalid Parameters]: The start and/or limit parameters entered are not within acceptable
+      limits. Code 3 [Unknown Record]: The entered start parameter is beyond the total number of records available. Code 4 [Unmappe'
+    tags:
+    - Resource Group
+    source: openapi/avetta-connect-openapi.yml
+  - term: Accounts
+    definition: The Accounts API allows you to retrieve account information.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: Admin
+    definition: The Admin API provides administrative endpoints for system overview and management data. Access requires appropriate security
+      permissions.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: Auth
+    definition: The Auth API allows you to authenticate into Worker Management. Handles multi-factor authentication, password reset, and single
+      sign-on.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: Countries
+    definition: The Countries API allows you to retrieve country information. Get country data, dialing codes, and more.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: Event
+    definition: The Event API allows you to retrieve event / requirement information.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: Events
+    definition: The Events API allows you to list events.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: Credit
+    definition: The endpoints to credit events.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: Languages
+    definition: The Languages API allows you to retrieve language information.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: Registration
+    definition: The Registration API allows you to register a new account or user.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: Reviews
+    definition: The Reviews API allows admins to perform document reviews for the workers
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: Roles
+    definition: The Roles API allows you to retrieve role information.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: Sites
+    definition: The Sites API allows you to retrieve site information and assign users to sites.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: TimeCard
+    definition: The TimeCard API allows you to retrieve a list of workers on site.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: User
+    definition: The User API allows you to retrieve user detail information.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: Users
+    definition: The Users API allows you to retrieve all users information.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: Variances
+    definition: The Variances API allows you to retrieve variance information or create a variance.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: Status
+    definition: The Status API allows you to retrieve status information.
+    tags:
+    - Resource Group
+    source: openapi/avetta-worker-v1-openapi.yml
+  - term: 1.0.0_ErrorResponse
+    definition: Standard error response format
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_ErrorResponse
+  - term: 1.0.0_User
+    definition: 'Object declared by the contract with fields: userId, firstName, lastName, userType.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_User
+  - term: 1.0.0_controllers.v1.messages.GetVarianceTasksResponse
+    definition: 'Object declared by the contract with fields: totalCount, varianceTasks.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.GetVarianceTasksResponse
+  - term: 1.0.0_controllers.v1.messages.VarianceTask
+    definition: 'Object declared by the contract with fields: workflowId, createdDate, createdByFirstName, createdByLastName, originalFlagResult,
+      recommendedFlagResult, reviewers, status, varianceEndDate, sites, notes.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.VarianceTask
+  - term: 1.0.0_controllers.v1.messages.VarianceReviewer
+    definition: 'Object declared by the contract with fields: userId, vote, voteDate, name.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.VarianceReviewer
+  - term: 1.0.0_controllers.v1.messages.Note
+    definition: 'Object declared by the contract with fields: userId, accountId, createdDate, text, visibleToSupplier.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.Note
+  - term: controllers.v1.messages.GetTasksResponse
+    definition: 'Object declared by the contract with fields: totalCount, forms.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.GetTasksResponse
+  - term: controllers.v1.messages.FormsTasks
+    definition: 'Object declared by the contract with fields: name, supplierFormName, workflowStatus, supplierName, supplierId, sites, taskId,
+      workflowStatusId, questionGroupId, questionGroupVersionId, validStartDate, updatedDate.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.FormsTasks
+  - term: controllers.v1.messages.IdNamePair
+    definition: 'Object declared by the contract with fields: id, name.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.IdNamePair
+  - term: controllers.v1.messages.EsgForm
+    definition: 'Object declared by the contract with fields: id, name.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.EsgForm
+  - term: controllers.v1.messages.EsgLevel
+    definition: 'Object declared by the contract with fields: level, minimumScore, maximumScore.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.EsgLevel
+  - term: controllers.v1.messages.EsgScore
+    definition: 'Object declared by the contract with fields: esgIndex, score.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.EsgScore
+  - term: controllers.v1.messages.GetEsgScoresResponse
+    definition: 'Object declared by the contract with fields: supplierId, supplierName, esgScores, esgLevels, scoreTier, forms, createdDate, updatedDate.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.GetEsgScoresResponse
+  - term: 1.0.0_controllers.v1.messages.GetSiteSupplierFlagsResponse
+    definition: 'Object declared by the contract with fields: totalCount, flags.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.GetSiteSupplierFlagsResponse
+  - term: 1.0.0_controllers.v1.messages.getSiteSupplierFlagsResponse.SupplierFlag
+    definition: 'Object declared by the contract with fields: supplierMongoId, supplierName, flagDisplayId, flagMongoId, flagType, calculationDisplayId,
+      calculationMongoId, description, originalColor, newColor, hasVariance, createdDate. (7 more)'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.getSiteSupplierFlagsResponse.SupplierFlag
+  - term: 1.0.0_controllers.v1.messages.GetSupplierFlagsResponse
+    definition: 'Object declared by the contract with fields: totalCount, flags.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.GetSupplierFlagsResponse
+  - term: 1.0.0_controllers.v1.messages.SupplierFlag
+    definition: 'Object declared by the contract with fields: supplierId, supplierName, supplierStatus, siteId, siteName, calculationId, calculationDescription,
+      flagId, flagType, color, isForced, forcedBy. (4 more)'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.SupplierFlag
+  - term: 1.0.0_controllers.v1.messages.CreateVarianceResponse
+    definition: 'Object declared by the contract with fields: flagId.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.CreateVarianceResponse
+  - term: controllers.v1.messages.GetSupplierFormsByWorkflowStatusResponse
+    definition: 'Object declared by the contract with fields: waitingonsupplier, waitingonavetta, variances, completed.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.GetSupplierFormsByWorkflowStatusResponse
+  - term: 1.0.0_controllers.v1.messages.WaitingOnSupplier
+    definition: 'Object declared by the contract with fields: count, forms.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.WaitingOnSupplier
+  - term: 1.0.0_controllers.v1.messages.WaitingOnAvetta
+    definition: 'Object declared by the contract with fields: count, forms.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.WaitingOnAvetta
+  - term: 1.0.0_controllers.v1.messages.Variances
+    definition: 'Object declared by the contract with fields: count, forms.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.Variances
+  - term: 1.0.0_controllers.v1.messages.Completed
+    definition: 'Object declared by the contract with fields: count, forms.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.Completed
+  - term: 1.0.0_controllers.v1.messages.EnrichedSupplierForm
+    definition: 'Object declared by the contract with fields: formName, formId, displayId, formType, formStatus, validStartDate, validEndDate,
+      expirationDate, validDateFormat, statusUpdatedDate.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v1.messages.EnrichedSupplierForm
+  - term: 1.0.0_controllers.v2.messages.GetSupplierFormsAndAnswersResponse
+    definition: 'Object declared by the contract with fields: supplierFormsAndAnswers.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v2.messages.GetSupplierFormsAndAnswersResponse
+  - term: 1.0.0_controllers.v2.messages.SupplierFormsAndAnswers
+    definition: 'Object declared by the contract with fields: supplierId, supplierName, formTypeId, formId, formName, formStatus, formUpdatedDate,
+      formYear, formPeriod, clientSites, isActive, questions.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v2.messages.SupplierFormsAndAnswers
+  - term: 1.0.0_controllers.v2.messages.ClientSiteInfo
+    definition: 'Object declared by the contract with fields: clientId, clientName.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v2.messages.ClientSiteInfo
+  - term: 1.0.0_controllers.v2.messages.SupplierFormQuestion
+    definition: 'Object declared by the contract with fields: questionId, question, questionTitle, categoryId, categoryName, answerDataType, answerDataPointType,
+      answer.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v2.messages.SupplierFormQuestion
+  - term: 1.0.0_controllers.v2.messages.SupplierFormAnswer
+    definition: 'Object declared by the contract with fields: values, answerUpdatedDate, answerComment.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v2.messages.SupplierFormAnswer
+  - term: 1.0.0_controllers.v2.messages.FormAnswerValue
+    definition: 'Object declared by the contract with fields: value, href.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_controllers.v2.messages.FormAnswerValue
+  - term: 1.0.0_GetExternalIdsResponse
+    definition: 'Object declared by the contract with fields: totalCount, externalIds.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_GetExternalIdsResponse
+  - term: 1.0.0_SupplierProfile
+    definition: 'Object declared by the contract with fields: id, name, dbaNames, description, accountStatus, website, primaryContact, billingAddress,
+      location, serviceAreas, createdDate, updatedDate. (7 more)'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_SupplierProfile
+  - term: 1.0.0_GetJobCategoriesResponse
+    definition: 'Object declared by the contract with fields: jobCategories.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_GetJobCategoriesResponse
+  - term: 1.0.0_JobCategory
+    definition: 'Object declared by the contract with fields: id, displayText, jobRoles.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_JobCategory
+  - term: 1.0.0_JobRole
+    definition: 'Object declared by the contract with fields: id, displayText.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_JobRole
+  - term: 1.0.0_GetUserProfileResponse
+    definition: 'Object declared by the contract with fields: id, displayId, firstName, lastName, email, phoneNumber, faxNumber, department, jobCategoryId,
+      jobRoleId, dateFormat, profileImageUrl. (2 more)'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_GetUserProfileResponse
+  - term: 1.0.0_GetClientProfileResponse
+    definition: 'Object declared by the contract with fields: id, name, billingId, accountTypes, hierarchyLevel.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_GetClientProfileResponse
+  - term: 1.0.0_SupplierProfiles
+    definition: 'Object declared by the contract with fields: totalCount, suppliers.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_SupplierProfiles
+  - term: 1.0.0_FullHierarchyResponse
+    definition: 'Object declared by the contract with fields: clientId, clientName, hierarchyLevel, children.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_FullHierarchyResponse
+  - term: 1.0.0_GetClientHierarchyImmediateChildrenResponse
+    definition: 'Object declared by the contract with fields: totalCount, children.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_GetClientHierarchyImmediateChildrenResponse
+  - term: 1.0.0_SearchClientSitesResponse
+    definition: 'Object declared by the contract with fields: totalCount, sites.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_SearchClientSitesResponse
+  - term: 1.0.0_SearchClientSuppliersResponse
+    definition: 'Object declared by the contract with fields: totalCount, suppliers.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_SearchClientSuppliersResponse
+  - term: 1.0.0_UpdateUserProfileResponse
+    definition: 'Object declared by the contract with fields: id, firstName, lastName, email, phoneNumber, faxNumber, jobCategoryId, jobRoleId,
+      department, dateFormat, profileImageUrl.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_UpdateUserProfileResponse
+  - term: 1.0.0_WorkerOpenWorkRequestsSummary
+    definition: 'Object declared by the contract with fields: workerId, openWorkRequestCount, connectUserExists, _links.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_WorkerOpenWorkRequestsSummary
+  - term: 1.0.0_UpdateAssignedUsersRequest
+    definition: 'Object declared by the contract with fields: usersToBeAdded, usersToBeRemoved.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_UpdateAssignedUsersRequest
+  - term: 1.0.0_GatewayErrorResponse
+    definition: 'Object declared by the contract with fields: code, service, message, displayMessage.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_GatewayErrorResponse
+  - term: 1.0.0_SupplierUsersResponse
+    definition: 'Object declared by the contract with fields: totalCount, supplierName, supplierBillingId, users.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_SupplierUsersResponse
+  - term: 1.0.0_SupplierUser
+    definition: 'Object declared by the contract with fields: userId, firstName, lastName, userEmail.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_SupplierUser
+  - term: 1.0.0_GetAssignedUsersResponse
+    definition: 'Object declared by the contract with fields: totalCount, workRequestName, supplierName, supplierBillingId, users.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_GetAssignedUsersResponse
+  - term: 1.0.0_GetWorkRequestQuestionsAnswersResponse
+    definition: Response containing work request questions and answers data
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_GetWorkRequestQuestionsAnswersResponse
+  - term: 1.0.0_FormWithAnswers
+    definition: Form containing categories of questions and answers
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_FormWithAnswers
+  - term: 1.0.0_CategoryWithAnswers
+    definition: 'Category containing questions and their answers. The `allowsMultipleInstances` flag drives the shape of `instances`: - `false`
+      → exactly one element, with no `instanceId`. - `true` → zero or more elements, each carrying a stable `instanceId`.'
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_CategoryWithAnswers
+  - term: 1.0.0_CategoryInstance
+    definition: A single instance of a category's answers. For non-repeatable categories there is exactly one instance and `instanceId` is omitted
+      from the response. For repeatable categories there is one instance per repetition, each carrying a stable `instanceId`.
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_CategoryInstance
+  - term: 1.0.0_QuestionAndAnswerValue
+    definition: Question paired with its answer values
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_QuestionAndAnswerValue
+  - term: 1.0.0_UpsertWorkRequestAnswersRequest
+    definition: Request body for upserting work request answers
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_UpsertWorkRequestAnswersRequest
+  - term: 1.0.0_CategoryAnswers
+    definition: Category containing question answers
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_CategoryAnswers
+  - term: 1.0.0_QuestionAndAnswer
+    definition: Question with its corresponding answer values
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_QuestionAndAnswer
+  - term: 1.0.0_UpsertWorkRequestAnswersResponse
+    definition: Response after successfully upserting work request answers
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_UpsertWorkRequestAnswersResponse
+  - term: 1.0.0_CreateWorkRequestRequest
+    definition: Request body for creating a new work request
+    tags:
+    - Object
+    source: openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_CreateWorkRequestRequest

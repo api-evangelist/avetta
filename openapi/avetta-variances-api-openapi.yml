@@ -1,0 +1,1784 @@
+openapi: 3.2.0
+info:
+  title: Avetta Variances API
+  version: '2026-05-08'
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  description: 'Operations tagged Variances across 2 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+security:
+- ApiKeyAuth: []
+tags:
+- name: Variances
+  description: The Variances API allows you to retrieve variance information or create a variance.
+paths:
+  /variances:
+    get:
+      operationId: getVariances
+      tags:
+      - Variances
+      summary: List of variances
+      description: Returns a list of variances that could be filtered by the given parameters
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/sortParam'
+      - $ref: '#/components/parameters/components-parameters-showAllParam'
+      - $ref: '#/components/parameters/variances_components-parameters-searchParam'
+      - $ref: '#/components/parameters/components-parameters-typeParam'
+      - $ref: '#/components/parameters/components-parameters-accountIDParam'
+      - $ref: '#/components/parameters/statusParam'
+      - $ref: '#/components/parameters/components-parameters-userIDParam'
+      - $ref: '#/components/parameters/parameters-srchIDParam'
+      - $ref: '#/components/parameters/parameters-searchTypeParam'
+      - $ref: '#/components/parameters/searchRoleParam'
+      - $ref: '#/components/parameters/searchSiteParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulVariances'
+        '201':
+          $ref: '#/components/responses/variancesErrors'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    post:
+      operationId: insertVariance
+      tags:
+      - Variances
+      summary: Save a new variance
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/lngIDParam'
+      - $ref: '#/components/parameters/components-parameters-docIDParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/sortParam'
+      - $ref: '#/components/parameters/variances_components-parameters-searchParam'
+      - $ref: '#/components/parameters/components-parameters-typeParam'
+      - $ref: '#/components/parameters/components-parameters-accountIDParam'
+      - $ref: '#/components/parameters/statusParam'
+      - $ref: '#/components/parameters/components-parameters-userIDParam'
+      - $ref: '#/components/parameters/components-parameters-showAllParam'
+      - $ref: '#/components/parameters/parameters-srchIDParam'
+      - $ref: '#/components/parameters/parameters-searchTypeParam'
+      requestBody:
+        $ref: '#/components/requestBodies/varianceData'
+      responses:
+        '200':
+          $ref: '#/components/responses/postMessages'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /variances/{id}:
+    get:
+      operationId: getVarianceID
+      tags:
+      - Variances
+      summary: List data for a variance
+      description: Returns the variance detail by the given id
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/lngIDParam'
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/components-parameters-docIDParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/sortParam'
+      - $ref: '#/components/parameters/variances_components-parameters-searchParam'
+      - $ref: '#/components/parameters/components-parameters-typeParam'
+      - $ref: '#/components/parameters/components-parameters-accountIDParam'
+      - $ref: '#/components/parameters/statusParam'
+      - $ref: '#/components/parameters/components-parameters-userIDParam'
+      - $ref: '#/components/parameters/components-parameters-showAllParam'
+      - $ref: '#/components/parameters/parameters-srchIDParam'
+      - $ref: '#/components/parameters/parameters-searchTypeParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulVariances'
+        '201':
+          $ref: '#/components/responses/variancesErrors'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    post:
+      operationId: postVariancesID
+      tags:
+      - Variances
+      summary: Save changes on a variance
+      description: Update the variance data with the data provided for the given id
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/lngIDParam'
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/components-parameters-docIDParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/sortParam'
+      - $ref: '#/components/parameters/variances_components-parameters-searchParam'
+      - $ref: '#/components/parameters/components-parameters-typeParam'
+      - $ref: '#/components/parameters/components-parameters-accountIDParam'
+      - $ref: '#/components/parameters/statusParam'
+      - $ref: '#/components/parameters/components-parameters-userIDParam'
+      - $ref: '#/components/parameters/components-parameters-showAllParam'
+      requestBody:
+        $ref: '#/components/requestBodies/varianceData'
+      responses:
+        '200':
+          $ref: '#/components/responses/postMessages'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /variances/count:
+    get:
+      operationId: getVariancesCount
+      tags:
+      - Variances
+      summary: Count of variances
+      description: Returns the count of variances.
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Successful - Show count of variances
+          content:
+            application/json:
+              schema:
+                type: object
+                format: object
+                properties:
+                  stats:
+                    $ref: '#/components/schemas/statsSchema'
+                  timecard:
+                    type: object
+                    properties:
+                      count:
+                        type: integer
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /variances/fields:
+    get:
+      operationId: getVariancesFields
+      tags:
+      - Variances
+      summary: List fields in variance - no Data
+      description: Returns a list of the fields in variances not related to any variance
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/lngIDParam'
+      - $ref: '#/components/parameters/variances_components-parameters-searchParam'
+      - $ref: '#/components/parameters/parameters-searchTypeParam'
+      - $ref: '#/components/parameters/components-parameters-accountIDParam'
+      - $ref: '#/components/parameters/components-parameters-typeParam'
+      - $ref: '#/components/parameters/components-parameters-userIDParam'
+      - $ref: '#/components/parameters/statusParam'
+      - $ref: '#/components/parameters/components-parameters-showAllParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/sortParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/fieldsVariances'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /variances/{id}/fields:
+    get:
+      operationId: getVarianceFieldsID
+      tags:
+      - Variances
+      summary: List fields with data for a variance
+      description: Returns a list of the fields in variances and the values for the given variance id
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/variances_components-parameters-searchParam'
+      - $ref: '#/components/parameters/parameters-searchTypeParam'
+      - $ref: '#/components/parameters/components-parameters-accountIDParam'
+      - $ref: '#/components/parameters/components-parameters-typeParam'
+      - $ref: '#/components/parameters/components-parameters-userIDParam'
+      - $ref: '#/components/parameters/statusParam'
+      - $ref: '#/components/parameters/showAllParamVariance'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/sortParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/fieldsVariances'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /variances/docs:
+    post:
+      operationId: postVariancesDocs
+      tags:
+      - Variances
+      summary: Store temp file for a new variance
+      description: Store temp the given file for a new variance
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/components-parameters-userIDParam'
+      - $ref: '#/components/parameters/parameters-srchIDParam'
+      requestBody:
+        $ref: '#/components/requestBodies/docVarianceData'
+      responses:
+        '200':
+          $ref: '#/components/responses/messagesDocVariances'
+        '201':
+          $ref: '#/components/responses/errorFile'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /variances/{id}/docs:
+    post:
+      operationId: postVarianceDocsID
+      tags:
+      - Variances
+      summary: Store temp file or delete for an existing variance
+      description: Store the given file for the variance given by id
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/components-parameters-userIDParam'
+      - $ref: '#/components/parameters/parameters-srchIDParam'
+      requestBody:
+        $ref: '#/components/requestBodies/docVarianceData'
+      responses:
+        '200':
+          $ref: '#/components/responses/messagesDocVariances'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+components:
+  responses:
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+    messagesDocVariances:
+      description: Successful message return after insert or update a variance
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              auth:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            fileUploaded:
+              $ref: '#/components/examples/fileUploaded'
+            fileDeleted:
+              $ref: '#/components/examples/fileDeleted'
+            deleteFile:
+              $ref: '#/components/examples/examples-deleteFile'
+            systemAdminChangeDocuments:
+              $ref: '#/components/examples/systemAdminChangeDocuments'
+            missingSearchID:
+              $ref: '#/components/examples/missingSearchID'
+            missingParameters:
+              $ref: '#/components/examples/examples-missingParameters'
+            invalidCall:
+              $ref: '#/components/examples/examples-invalidCall'
+            failedToUploadFile:
+              $ref: '#/components/examples/examples-failedToUploadFile'
+    variancesErrors:
+      description: Error message returned
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              auth:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            failedFindVariance:
+              $ref: '#/components/examples/failedFindVariances'
+    fieldsVariances:
+      description: Successful - Show fields of variance
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              fields:
+                type: array
+                items:
+                - $ref: '#/components/schemas/fieldVariancesSchema'
+              files:
+                type: array
+                items:
+                - $ref: '#/components/schemas/filesVariancesSchema'
+          examples:
+            fieldsVariancesWithoutID:
+              $ref: '#/components/examples/fieldsVariancesWithoutID'
+            fieldsVariancesWithID:
+              $ref: '#/components/examples/fieldsVariancesWithID'
+    successfulVariances:
+      description: Successful - Show variance information
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              variances:
+                type: array
+                items:
+                - $ref: '#/components/schemas/varianceSchema'
+    errorFile:
+      description: Error while checking files
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    virusName:
+                      type: string
+                      description: Name of the virus found in the file
+                      example: sample virus name
+                    maxSize:
+                      type: integer
+                      description: Maximum size allowed for the file
+                      example: 10
+                    size:
+                      type: number
+                      description: Size of the file checked
+                      example: 10.5390701293945
+                    allowedExtensions:
+                      type: array
+                      description: List of allowed extensions for the file
+                      example:
+                      - t3
+                      - mid
+                      - zip
+                      - rtf
+                      - docx
+                      - tar
+                      - midi
+                      - tif
+                      - m4a
+                      - png
+                      - xps
+                      - xml
+                      - mp3
+                      - htm
+                      - gz
+                      - mp4
+                      - doc
+                      - tiff
+                      - jpeg
+                      - avi
+                      - mpeg
+                      - qst
+                      - txt
+                      - wmv
+                      - msg
+                      - xlsx
+                      - webp
+                      - gif
+                      - html
+                      - bmp
+                      - csv
+                      - pdf
+                      - jpg
+                      - xls
+                      - swf
+                      - mov
+                      - dng
+                      - heic
+                      items:
+                        type: string
+                        enum:
+                        - t3
+                        - mid
+                        - zip
+                        - rtf
+                        - docx
+                        - tar
+                        - midi
+                        - tif
+                        - m4a
+                        - png
+                        - xps
+                        - xml
+                        - mp3
+                        - htm
+                        - gz
+                        - mp4
+                        - doc
+                        - tiff
+                        - jpeg
+                        - avi
+                        - mpeg
+                        - qst
+                        - txt
+                        - wmv
+                        - msg
+                        - xlsx
+                        - webp
+                        - gif
+                        - html
+                        - bmp
+                        - csv
+                        - pdf
+                        - jpg
+                        - xls
+                        - swf
+                        - mov
+                        - dng
+                        - heic
+          examples:
+            virusCheck:
+              $ref: '#/components/examples/virusCheck'
+            sizeCheck:
+              $ref: '#/components/examples/sizeCheck'
+            extensionCheck:
+              $ref: '#/components/examples/extensionCheck'
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+    postMessages:
+      description: Successful message return after insert or update a variance
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              auth:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            savedVariance:
+              $ref: '#/components/examples/savedVariance'
+            failedSaveVariance:
+              $ref: '#/components/examples/failedSaveVariance'
+            endDateBeforeToday:
+              $ref: '#/components/examples/endDateBeforeToday'
+            endDateBeforeStartDate:
+              $ref: '#/components/examples/endDateBeforeStartDate'
+            mustHaveStartDate:
+              $ref: '#/components/examples/mustHaveStartDate'
+            greenVarianceMustHaveEndDate:
+              $ref: '#/components/examples/greenVarianceMustHaveEndDate'
+            failedfindVariance:
+              $ref: '#/components/examples/failedfindVariance'
+  examples:
+    examples-missingParameters:
+      summary: Missing parameters
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        variances:
+          message: Missing parameters
+          status: Bad request
+          success: false
+          code: 400
+          detail: null
+    greenVarianceMustHaveEndDate:
+      summary: Green variance must have end date
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+        variances:
+          message: Green variance must have end date
+          status: Unauthorized
+          success: false
+          code: 400
+          detail: VAR.102
+    fieldsVariancesWithoutID:
+      summary: Fields in variances - no values
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        fields:
+        - key: VrnUsrID
+          label: Worker
+          type: 522
+          value: null
+          order: 1
+          readonly: true
+          help: ''
+          validation:
+            required: true
+            maxlength: null
+        - key: VrnRefTypID
+          values:
+          - value: Requirement
+            id: 2012
+          - value: Role
+            id: 2016
+          - value: Site
+            id: 2011
+          readonly: true
+          order: 2
+          type: 508
+          help: ''
+          label: Type
+          value: null
+          validation:
+            required: true
+            maxlength: null
+        - key: VrnRefID
+          validation:
+            required: true
+            maxlength: null
+          typename: popup
+          type: 503
+          help: ''
+          label: Target
+          value: null
+          readonly: true
+          order: 3
+        - key: VrnGrpID
+          order: 4
+          readonly: true
+          validation:
+            required: false
+            maxlength: null
+          value: null
+          help: ''
+          label: Site
+          type: 513
+        - key: VrnStatusTypID
+          values:
+          - value: Green
+            id: 741
+          - value: Red
+            id: 743
+          order: 5
+          readonly: false
+          value: null
+          label: Status
+          help: ''
+          type: 508
+        - key: VrnBeginDateTime
+          order: 6
+          readonly: false
+          validation:
+            required: true
+            maxlength: null
+          value: null
+          help: ''
+          label: Start Date
+          type: 518
+        - key: VrnEndDateTime
+          order: 7
+          readonly: false
+          validation:
+            required: false
+            minvalue: '2023-10-27'
+            maxlength: null
+          value: null
+          help: ''
+          label: End Date
+          type: 518
+        - key: VrnReason
+          order: 8
+          readonly: false
+          validation:
+            required: true
+            maxlength: 4000
+          value: null
+          help: ''
+          label: Reason
+          type: 502
+        - key: srch_id
+          readonly: true
+          value: 231027000
+          type: 503
+          typename: hidden
+        files: []
+    examples-deleteFile:
+      summary: Delete file - empty temp
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        variances:
+          message: Delete file
+          status: Success
+          success: true
+          code: 200
+          detail: Empty temp
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+    virusCheck:
+      summary: Virus check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.103
+          message: This file might be infected with a virus
+          virusName: sample virus name
+    failedfindVariance:
+      summary: Failed to find variance
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+        variances:
+          message: Failed to find variance
+          status: Unauthorized
+          success: false
+          code: 400
+          detail: VAR.101
+    mustHaveStartDate:
+      summary: Must have start date
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+        variances:
+          message: Must have start date
+          status: Unauthorized
+          success: false
+          code: 400
+          detail: VAR.103
+    fileUploaded:
+      summary: File uploaded
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+        variances:
+          message: File uploaded
+          status: Success
+          success: true
+          code: 200
+          detail: The name of the file uploaded
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+    extensionCheck:
+      summary: Extension check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.101
+          message: The file extension is not allowed
+          allowedExtensions:
+          - t3
+          - mid
+          - zip
+          - rtf
+          - docx
+          - tar
+          - midi
+          - tif
+          - m4a
+          - png
+          - xps
+          - xml
+          - mp3
+          - htm
+          - gz
+          - mp4
+          - doc
+          - tiff
+          - jpeg
+          - avi
+          - mpeg
+          - qst
+          - txt
+          - wmv
+          - msg
+          - xlsx
+          - webp
+          - gif
+          - html
+          - bmp
+          - csv
+          - pdf
+          - jpg
+          - xls
+          - swf
+          - mov
+          - dng
+          - heic
+    examples-failedToUploadFile:
+      summary: Failed to upload file
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        variances:
+          message: Failed to upload file
+          status: Bad request
+          success: false
+          code: 400
+          detail: VAR.109
+    systemAdminChangeDocuments:
+      summary: Only system admin can add or remove documents
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        variances:
+          message: Only system admins can add or remove documents
+          status: Unauthorized
+          success: false
+          code: 403
+          detail: null
+    savedVariance:
+      summary: Saved variance
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+        variances:
+          message: Saved variance
+          status: Success
+          success: true
+          code: 200
+          detail: null
+          id: 69004
+    endDateBeforeToday:
+      summary: End date is before today
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+        variances:
+          message: End date is before today
+          status: Unauthorized
+          success: false
+          code: 400
+          detail: VAR.105
+    fieldsVariancesWithID:
+      summary: Fields in variances with values
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          id: 69004
+          records: 0
+        fields:
+        - key: VrnUsrID
+          label: Worker
+          type: 522
+          value: 3758666
+          order: 1
+          readonly: true
+          help: ''
+          validation:
+            required: true
+            maxlength: null
+        - key: VrnRefTypID
+          values:
+          - value: Requirement
+            id: 2012
+          - value: Role
+            id: 2016
+          - value: Site
+            id: 2011
+          readonly: true
+          order: 2
+          type: 508
+          help: ''
+          label: Type
+          value: 2011
+          validation:
+            required: true
+            maxlength: null
+        - key: VrnRefID
+          validation:
+            required: true
+            maxlength: null
+          typename: popup
+          type: 503
+          help: ''
+          label: Target
+          value: 13595
+          readonly: true
+          order: 3
+        - key: VrnGrpID
+          order: 4
+          readonly: true
+          validation:
+            required: false
+            maxlength: null
+          value: 13595
+          help: ''
+          label: Site
+          type: 513
+        - key: VrnStatusTypID
+          values:
+          - value: Green
+            id: 741
+          - value: Red
+            id: 743
+          order: 5
+          readonly: false
+          value: 741
+          label: Status
+          help: ''
+          type: 508
+        - key: VrnBeginDateTime
+          order: 6
+          readonly: false
+          validation:
+            required: true
+            maxlength: null
+          value: '2023-07-20'
+          help: ''
+          label: Start Date
+          type: 518
+        - key: VrnEndDateTime
+          order: 7
+          readonly: false
+          validation:
+            required: false
+            minvalue: '2023-10-27'
+            maxlength: null
+          value: '2023-11-01'
+          help: ''
+          label: End Date
+          type: 518
+        - key: VrnReason
+          order: 8
+          readonly: false
+          validation:
+            required: true
+            maxlength: 4000
+          value: Site Variance Test
+          help: ''
+          label: Reason
+          type: 502
+        - key: srch_id
+          readonly: true
+          value: 231027001
+          type: 503
+          typename: hidden
+        files:
+        - id: 461528
+          name: MicrosoftTeams-image.png
+          url: https://www.avetta.com/ext/doc/...
+          is_secure: false
+          type: web
+          size: 769968
+    endDateBeforeStartDate:
+      summary: End date is before start date
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+        variances:
+          message: End date is before start date
+          status: Unauthorized
+          success: false
+          code: 400
+          detail: VAR.104
+    sizeCheck:
+      summary: Size check error
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 400
+          status: Bad Request
+          detail: UPLOADERROR.100
+          message: The file size is too large
+          maxSize: 10
+          size: 10.5390701293945
+    missingSearchID:
+      summary: Missing search id
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        variances:
+          message: Missing search id
+          status: Bad request
+          success: false
+          code: 400
+          detail: null
+    failedFindVariances:
+      summary: Invalid request - failed to find variance
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+        variances:
+          message: Failed to find variance(s)
+          status: Unauthorized
+          success: false
+          code: 400
+          detail: VAR.101
+    examples-invalidCall:
+      summary: Invalid call, failed to remove file
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        variances:
+          message: Invalid call, Failed to remove file
+          status: Bad request
+          success: false
+          code: 400
+          detail: VAR.108
+    fileDeleted:
+      summary: File found and removed
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+        variances:
+          message: File deleted
+          status: Success
+          success: true
+          code: 200
+          detail: Found file and removed
+    failedSaveVariance:
+      summary: Failed to save variance
+      value:
+        stats:
+          command: Variances
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+        variances:
+          message: Failed to save variance
+          status: Unauthorized
+          success: false
+          code: 400
+          detail: VAR.106
+  parameters:
+    variances_components-parameters-searchParam:
+      name: search
+      in: query
+      description: Search term - It checks the term in login id, email, first name, last name, mobile phone, company name and company site name.
+      required: false
+      schema:
+        type: string
+    components-parameters-showAllParam:
+      name: showAll
+      in: query
+      description: Return all results available, not only the ones configured
+      required: false
+      schema:
+        type: boolean
+    statusParam:
+      name: status
+      in: query
+      description: Filter the results for a specify rating (Green, Amber, Red)
+      required: false
+      schema:
+        type: string
+        enum:
+        - Green
+        - Amber
+        - Red
+    components-parameters-typeParam:
+      name: type
+      in: query
+      description: Filter down to only show role, site, requirement variances
+      required: false
+      schema:
+        type: integer
+        enum:
+        - 2011
+        - 2012
+        - 2016
+    sortParam:
+      name: sort
+      in: query
+      description: Name of field to sort by
+      required: false
+      schema:
+        type: string
+        enum:
+        - id
+        - code
+        - title
+        - group
+    showAllParamVariance:
+      name: showAll
+      in: query
+      description: Set to true if to show past variances also
+      required: false
+      schema:
+        type: integer
+    lngIDParam:
+      name: lng_id
+      in: query
+      description: Language ID to return the strings in
+      required: false
+      schema:
+        type: integer
+    limitParam:
+      name: limit
+      in: query
+      description: Maximum number of records to return
+      required: false
+      schema:
+        type: integer
+        default: 3000
+    components-parameters-accountIDParam:
+      name: account_id
+      in: query
+      description: Filter down from a group id where user belongs to
+      required: false
+      schema:
+        type: integer
+    components-parameters-docIDParam:
+      name: doc_id
+      in: query
+      description: Document ID to return the strings in
+      required: false
+      schema:
+        type: integer
+    parameters-srchIDParam:
+      name: srch_id
+      in: query
+      description: Return all users regardless if they have training
+      required: false
+      schema:
+        type: integer
+    idParam:
+      name: id
+      in: path
+      description: references an id to reduce list down to 1 item
+      required: false
+      schema:
+        type: integer
+    searchSiteParam:
+      name: site_id
+      in: query
+      description: Site ID to filter results
+      required: false
+      schema:
+        type: integer
+    searchRoleParam:
+      name: role_id
+      in: query
+      description: Role ID to filter results
+      required: false
+      schema:
+        type: integer
+    components-parameters-userIDParam:
+      name: user_id
+      in: query
+      description: Filter list of variances to ones assigned to the user
+      required: false
+      schema:
+        type: integer
+    parameters-searchTypeParam:
+      name: search_type
+      in: query
+      description: Limit search to users fields only
+      required: false
+      schema:
+        type: integer
+    startParam:
+      name: start
+      in: query
+      description: Offset of the first record to return
+      required: false
+      schema:
+        type: integer
+        default: 1
+  schemas:
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    varianceSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: Variance ID
+          example: 69004
+        user:
+          type: object
+          description: User
+          properties:
+            id:
+              type: integer
+              description: User ID
+              example: 265132
+            login:
+              type: string
+              description: User login ID
+              example: CLINETADMIN
+            first_name:
+              type: string
+              description: User first name
+              example: Jhon
+            last_name:
+              type: string
+              description: User last name
+              example: Matts
+            photo:
+              type: object
+              description: User photo
+              properties:
+                data:
+                  type: string
+                  description: User photo data
+                  example: data:image/jpeg;base64,/...
+                size:
+                  type: integer
+                  description: User photo size
+                  example: 12345
+                name:
+                  type: string
+                  description: User photo name
+                  example: ProfilePhoto.jpg
+        files:
+          type: array
+          description: User files
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: File ID
+                example: 12345
+              name:
+                type: string
+                description: File name
+                example: ProfilePhoto.jpg
+              url:
+                type: string
+                description: File URL
+                example: https://www.avetta.com/ext/doc/...
+              is_secure:
+                type: boolean
+                description: File is secure
+                example: false
+              type:
+                type: string
+                description: File type
+                example: web
+              size:
+                type: integer
+                description: File size
+                example: 12345
+        account:
+          type: object
+          properties:
+            id:
+              type: integer
+              description: Account ID
+              example: 18139
+            name:
+              type: string
+              description: Account name
+              example: Avetta
+            con_id:
+              type: integer
+              description: Account code
+              example: 250000000
+        target:
+          type: object
+          description: Target
+          properties:
+            id:
+              type: integer
+              description: Target ID
+              example: 18319
+            code:
+              type: string
+              description: Target code
+              example: 250084848
+            title:
+              type: string
+              description: Target title
+              example: Abc Snackers
+            type:
+              type: string
+              description: Target type
+              example: Group
+        flag:
+          type: string
+          description: Variance flag
+          example: Green
+          enum:
+          - Green
+          - Amber
+          - Red
+        begin_date:
+          type: string
+          format: date-time
+          description: Variance begin date
+          example: '2021-07-20 00:00:00'
+        end_date:
+          type: string
+          format: date-time
+          description: Variance end date
+          example: '2021-07-20 00:00:00'
+        reason:
+          type: string
+          description: Variance reason
+          example: Site Variance Test
+        created_date:
+          type: string
+          format: date-time
+          description: Variance created date
+          example: '2021-07-20 00:00:00'
+        created_by:
+          type: string
+          description: Variance created by
+          example: Adminclient
+    filesVariancesSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: File ID
+          example: 12345
+        name:
+          type: string
+          description: File name
+          example: ProfilePhoto.jpg
+        url:
+          type: string
+          description: File URL
+          example: https://www.avetta.com/ext/doc/...
+        is_secure:
+          type: boolean
+          description: File is secure
+          example: false
+        type:
+          type: string
+          description: File type
+          example: web
+        size:
+          type: integer
+          description: File size
+          example: 12345
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+    fieldVariancesSchema:
+      type: object
+      format: object
+      properties:
+        key:
+          type: string
+          description: Field key
+          example: VrnUsrID
+        label:
+          type: string
+          description: Field label
+          example: Worker
+        type:
+          type: integer
+          description: Field type
+          example: 522
+        value:
+          type: integer
+          description: Field value
+          example: 37966
+        order:
+          type: integer
+          description: Field order
+          example: 1
+        readonly:
+          type: boolean
+          description: Field readonly
+          example: true
+        help:
+          type: string
+          description: Field help
+          example: null
+        validation:
+          type: object
+          description: Field validation
+          properties:
+            required:
+              type: boolean
+              description: Field required
+              example: true
+            maxlength:
+              type: integer
+              description: Field maxlength
+              example: null
+  requestBodies:
+    docVarianceData:
+      description: File data to insert or delete for a variance
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              method:
+                description: Method to use - used to pass a delete method
+                type: string
+                enum:
+                - delete
+              DocID:
+                description: Document ID to be deleted
+                type: integer
+              DocFile:
+                description: Upload the file to be uploaded or to be deleted as a file type of data
+                type: string
+                format: binary
+              DocSecure:
+                description: Flag to indicate if the file is secure
+                type: boolean
+                enum:
+                - true
+                - false
+    varianceData:
+      description: Variance data to insert or update
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              VrnID:
+                description: Variance ID
+                type: integer
+              VrnUsrID:
+                description: User ID
+                type: integer
+              VrnGrpID:
+                description: Group ID
+                type: integer
+              VrnStatusTypID:
+                description: Status Type ID
+                type: integer
+              VrnRefTypID:
+                description: Reference Type ID
+                type: integer
+              VrnRefID:
+                description: Reference ID
+                type: integer
+              VrnBeginDateTime:
+                description: Begin Date Time
+                type: string
+                format: date-time
+              VrnEndDateTime:
+                description: End Date Time
+                type: string
+                format: date-time
+              VrnReason:
+                description: Reason
+                type: string
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v1-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

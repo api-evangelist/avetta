@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/avetta/main/json-schema/avetta-1-0-0-get-work-request-questions-response-schema.json",
+  "title": "1.0.0_GetWorkRequestQuestionsResponse",
+  "description": "Response containing work request questions data",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_GetWorkRequestQuestionsResponse",
+  "type": "object",
+  "properties": {
+    "workRequestId": {
+      "type": "string",
+      "description": "Unique identifier for the work request"
+    },
+    "workRequestName": {
+      "type": "string",
+      "description": "Name of the work request"
+    },
+    "categories": {
+      "type": "array",
+      "description": "Array of question categories",
+      "items": {
+        "$ref": "#/$defs/1.0.0_QuestionCategory"
+      }
+    },
+    "childForms": {
+      "type": "array",
+      "description": "Array of forms added to the work request",
+      "items": {
+        "$ref": "#/$defs/1.0.0_Form"
+      }
+    },
+    "isEditable": {
+      "type": "boolean",
+      "description": "Indicates whether the work request is in a state in which it's questions could be answered."
+    }
+  },
+  "required": [
+    "workRequestId",
+    "categories",
+    "childForms",
+    "isEditable"
+  ],
+  "$defs": {
+    "1.0.0_Form": {
+      "type": "object",
+      "description": "Form containing categories of questions",
+      "properties": {
+        "formId": {
+          "type": "string",
+          "description": "Unique identifier for the form"
+        },
+        "formName": {
+          "type": "string",
+          "description": "Name of the form"
+        },
+        "childCategories": {
+          "type": "array",
+          "description": "Array of categories within this form",
+          "items": {
+            "$ref": "#/$defs/1.0.0_QuestionCategory"
+          }
+        },
+        "isEditable": {
+          "type": "boolean",
+          "description": "Indicates whether the form is in a state in which it can be edited by the user"
+        }
+      },
+      "required": [
+        "formId",
+        "childCategories",
+        "isEditable"
+      ]
+    },
+    "1.0.0_Question": {
+      "type": "object",
+      "description": "Individual question details",
+      "properties": {
+        "questionId": {
+          "type": "string",
+          "description": "Unique identifier for the question"
+        },
+        "question": {
+          "type": "string",
+          "description": "The question text"
+        },
+        "questionType": {
+          "type": "string",
+          "description": "Type of question response expected",
+          "enum": [
+            "longText",
+            "shortText",
+            "multipleChoice",
+            "dateRangeWithZone",
+            "fileUpload"
+          ]
+        },
+        "responseOptions": {
+          "type": "array",
+          "description": "Available response options for multiple choice questions",
+          "items": {
+            "$ref": "#/$defs/1.0.0_ResponseOption"
+          }
+        },
+        "isRequired": {
+          "type": "boolean",
+          "description": "Whether this question is required to be answered"
+        },
+        "isEditable": {
+          "type": "boolean",
+          "description": "Whether this question is able to be answered"
+        }
+      },
+      "required": [
+        "questionId",
+        "question",
+        "questionType",
+        "responseOptions",
+        "isRequired",
+        "isEditable"
+      ]
+    },
+    "1.0.0_QuestionCategory": {
+      "type": "object",
+      "description": "Category containing related questions. Categories can be nested: any `QuestionCategory`\nmay carry its own `childCategories` array containing further `QuestionCategory` entries, and\nthose can in turn carry their own subcategories.\n",
+      "properties": {
+        "categoryId": {
+          "type": "string",
+          "description": "Unique identifier for the category"
+        },
+        "categoryName": {
+          "type": "string",
+          "description": "Name of the category"
+        },
+        "allowsMultipleInstances": {
+          "type": "boolean",
+          "description": "Whether this category can hold multiple independent instances (repeatable)"
+        },
+        "isEditable": {
+          "type": "boolean",
+          "description": "Whether questions in this category are editable by the user"
+        },
+        "questions": {
+          "type": "array",
+          "description": "Array of questions within this category",
+          "items": {
+            "$ref": "#/$defs/1.0.0_Question"
+          }
+        },
+        "childCategories": {
+          "type": "array",
+          "description": "Nested subcategories of this category. Each item is itself a `QuestionCategory`, so\nthe same shape repeats recursively — a subcategory can contain its own questions\nand its own further subcategories. The field is always present; it serialises as `[]`\nwhen the category has no subcategories.\n",
+          "items": {
+            "$ref": "#/$defs/1.0.0_QuestionCategory"
+          }
+        }
+      },
+      "required": [
+        "categoryId",
+        "categoryName",
+        "allowsMultipleInstances",
+        "isEditable",
+        "questions",
+        "childCategories"
+      ]
+    },
+    "1.0.0_ResponseOption": {
+      "type": "object",
+      "description": "Response option for multiple choice questions",
+      "properties": {
+        "displayText": {
+          "type": "string",
+          "description": "Text displayed to the user"
+        },
+        "storageValue": {
+          "type": "string",
+          "description": "Value stored when this option is selected"
+        }
+      },
+      "required": [
+        "displayText",
+        "storageValue"
+      ]
+    }
+  }
+}

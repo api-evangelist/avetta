@@ -1,0 +1,42 @@
+name: Avetta pricing
+generated: '2026-10-20'
+method: searched
+source: https://www.avetta.com/plans
+audience: business-product
+pricing_basis: negotiated
+published: false
+delivery:
+  delivery: managed
+note: No numeric prices are published. The page states "Our pricing is customized to meet any project, environment, client need, and risk." API access is provisioned to client organizations; Pegasus docs state production access "is subject to an API agreement and payment terms."
+plan_count: 5
+plans:
+- name: Directory
+  description: No client connections
+  price_text: Talk to our team
+  price: Contact sales
+  features: [Searchable company profile, Member Value Hub, Find Projects, Avetta University, Company Benchmarks, Safety Advisor]
+  limits: []
+- name: Standard
+  description: Meet foundational client requirements and organize the information needed to demonstrate readiness to work.
+  price_text: Talk to our team
+  price: Contact sales
+  features: [Profile Optimization Support, Essential business verification]
+  limits: []
+- name: Plus
+  description: Manage more involved compliance requirements based on the work you perform and the requirements set by hiring clients.
+  price_text: Talk to our team
+  price: Contact sales
+  features: [Insurance verification, Injury and illness verification]
+  limits: []
+- name: Advanced
+  description: Confidently satisfy requirements regardless of risk or client need with expanded compliance services, support, and discounts.
+  price_text: Talk to our team
+  price: Contact sales
+  features: [Supplier safety compliance audit, Discounted Avetta Summit, Badge]
+  limits: []
+- name: Avetta for Clients
+  description: Customized to your specific needs
+  price_text: Talk to our team
+  price: Contact sales
+  features: [Verify all your suppliers and contractors in one place, Dedicated account management from day one]
+  limits: []

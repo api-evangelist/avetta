@@ -1,0 +1,143 @@
+generated: '2026-10-20'
+method: derived
+generator: derive-problem-types.py
+source:
+- openapi/avetta-connect-openapi.yml
+- openapi/avetta-pegasus-openapi.yml
+- openapi/avetta-worker-v1-openapi.yml
+- openapi/avetta-worker-v2-openapi.yml
+format: custom
+envelope:
+  media_type: '*/*'
+  schema: 3.29.14_ErrorResource
+coverage:
+  operations: 488
+  statuses_declared: 17
+problems:
+- status: 400
+  title: Bad Request
+  description: Bad Request
+  operations: 470
+  media_types:
+  - '*/*'
+  - application/json
+  - application/json; charset=utf-8
+  schema: 3.29.14_FullErrorResource
+- status: 401
+  title: Unauthorized
+  description: Unauthorized
+  operations: 458
+  media_types:
+  - '*/*'
+  - application/json
+  - application/json; charset=utf-8
+  schema: 3.29.14_ErrorResource
+- status: 403
+  title: Forbidden
+  description: Forbidden
+  operations: 330
+  media_types:
+  - '*/*'
+  - application/json
+  - application/json; charset=utf-8
+  schema: 3.29.14_ErrorResource
+- status: 404
+  title: Not Found
+  description: Not Found
+  operations: 309
+  media_types:
+  - '*/*'
+  - application/json
+  schema: 3.29.14_FullErrorResource
+- status: 405
+  title: Method Not Allowed
+  description: Method not allowed
+  operations: 3
+  media_types:
+  - application/json
+  schema: null
+- status: 409
+  title: Conflict
+  description: Conflict
+  operations: 1
+  media_types:
+  - application/json
+  schema: null
+- status: 422
+  title: Unprocessable Content
+  description: Unprocessable Entity
+  operations: 1
+  media_types: []
+  schema: null
+- status: 423
+  title: Locked
+  description: Account locked
+  operations: 3
+  media_types:
+  - application/json
+  schema: null
+- status: 424
+  title: Failed Dependency
+  description: Device provided does not match the device in the token
+  operations: 1
+  media_types:
+  - application/json
+  schema: null
+- status: 425
+  title: Too Early
+  description: trusted=true was sent but no device ID was provided
+  operations: 1
+  media_types:
+  - application/json
+  schema: null
+- status: 429
+  title: Too Many Requests
+  description: Too Many Requests
+  operations: 2
+  media_types:
+  - application/json
+  schema: null
+- status: 430
+  title: null
+  description: User doesn't have MFA enabled
+  operations: 1
+  media_types:
+  - application/json
+  schema: null
+- status: 431
+  title: Request Header Fields Too Large
+  description: User has MFA enabled, but the provided access token is not valid for this operation
+  operations: 1
+  media_types:
+  - application/json
+  schema: null
+- status: 432
+  title: null
+  description: Not supported - disabling MFA is not supported for Connect users
+  operations: 1
+  media_types:
+  - application/json
+  schema: null
+- status: 433
+  title: null
+  description: Attempting to disable MFA for an account that already has it disabled
+  operations: 2
+  media_types:
+  - application/json
+  schema: null
+- status: 434
+  title: null
+  description: Attempting to disable MFA while also providing a new target
+  operations: 1
+  media_types:
+  - application/json
+  schema: null
+- status: 500
+  title: Internal Server Error
+  description: Internal Server Error
+  operations: 351
+  media_types:
+  - '*/*'
+  - application/json
+  - application/json; charset=utf-8
+  schema: 3.29.14_ErrorResource

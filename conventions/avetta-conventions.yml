@@ -1,0 +1,31 @@
+name: Avetta API conventions
+generated: '2026-10-20'
+method: searched
+source: https://docs.connect.avetta.com/
+authentication:
+  connect: Token obtained from POST /auth/v1/token on https://api.avetta.com, sent on subsequent requests.
+  pegasus: OAuth2 authorization code (login.poweredbyonsite.com OIDC) or an api_key header provided by the Account Manager.
+  worker_management: API key (ApiKeyAuth).
+  see: authentication/avetta-authentication.yml
+idempotency:
+  coverage: none
+  note: No Idempotency-Key header or replay protection is documented on any of the three API portals. Register Supplier has duplicate-registration detection (August 13, 2023 release note) which returns an error rather than replaying.
+pagination:
+  style: offset (start + limit query parameters)
+  connect: The maximum number of records returned per individual API call is 500 by default; more requires multiple calls with different start and limit parameters (Connect FAQ).
+  worker_management: Default maximum limit of 3000 results per call; optional start and limit query parameters (maximum 3000) (docs.worker.avetta.com).
+versioning: URL path (/api/v1, /api/v2); dated release notes; see lifecycle/avetta-lifecycle.yml.
+errors:
+  description: HTTP status codes with error payloads; Connect publishes an Error Handling section. Rate limit exhaustion returns 1015.
+  see: errors/
+rate_limit_signaling: HTTP 1015 on exhaustion with a one-hour wait; no headers documented. See rate-limits/avetta-rate-limits.yml.
+reversibility:
+  coverage: documented
+  surfaces:
+  - write: External Ids (client/supplier mappings)
+    reversal: Delete External Ids (Connect, added August 31, 2023)
+    window: not stated
+  - write: Pegasus external company subscription
+    reversal: suspend / unsuspend (operationIds suspend, unsuspend in openapi/avetta-pegasus-openapi.yml)
+    window: not stated
+  note: No reversal window is stated in the docs; Register Supplier and Push Variance document no reversal operation.

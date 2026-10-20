@@ -1,0 +1,820 @@
+openapi: 3.2.0
+info:
+  title: Avetta Status API
+  version: '2026-05-08'
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  description: 'Operations tagged Status across 2 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+security:
+- ApiKeyAuth: []
+tags:
+- name: Status
+  description: The Status API allows you to retrieve status information.
+paths:
+  /status/connections:
+    get:
+      operationId: getStatusConnections
+      tags:
+      - Status
+      summary: Status Connections
+      description: Get the number of users by status for each connection, filter by the parameters provided
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/connections_components-parameters-searchParam'
+      - $ref: '#/components/parameters/parameters-flagParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/parameters-siteIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulStatusConnections'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /status/connections/{id}:
+    get:
+      operationId: getStatusConnectionID
+      tags:
+      - Status
+      summary: Status Connection by ID
+      description: Get the number of users by status for the connection id provided
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/connections_components-parameters-searchParam'
+      - $ref: '#/components/parameters/parameters-flagParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/parameters-siteIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulStatusConnections'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /status/roles:
+    get:
+      operationId: getStatusRoles
+      tags:
+      - Status
+      summary: Status Roles
+      description: Get the number of users by status for each role, filter by the parameters provided
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/roles_components-parameters-searchParam'
+      - $ref: '#/components/parameters/parameters-flagParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/parameters-siteIDParam'
+      - $ref: '#/components/parameters/accountIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulStatusRoles'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /status/roles/{id}:
+    get:
+      operationId: getStatusRoleID
+      tags:
+      - Status
+      summary: Status Roles by ID
+      description: Get the number of users by status for the role id provided
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/roles_components-parameters-searchParam'
+      - $ref: '#/components/parameters/parameters-flagParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/parameters-siteIDParam'
+      - $ref: '#/components/parameters/accountIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulStatusRoles'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /status/sites:
+    get:
+      operationId: getStatusSites
+      tags:
+      - Status
+      summary: Status Sites
+      description: Get the number of users by status for each site, filter by the parameters provided
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/sites_components-parameters-searchParam'
+      - $ref: '#/components/parameters/parameters-flagParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/parameters-siteIDParam'
+      - $ref: '#/components/parameters/accountIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulStatusSites'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /status/sites/{id}:
+    get:
+      operationId: getStatusSiteID
+      tags:
+      - Status
+      summary: Status Sites by ID
+      description: Get the number of users by status for the site id provided
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/sites_components-parameters-searchParam'
+      - $ref: '#/components/parameters/parameters-flagParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/parameters-siteIDParam'
+      - $ref: '#/components/parameters/accountIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulStatusSites'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /status/users:
+    get:
+      operationId: getStatusUsers
+      tags:
+      - Status
+      summary: Status Users
+      description: Get a summary of the total users grouped by status filter by the parameters provided
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/users_components-parameters-searchParam'
+      - $ref: '#/components/parameters/parameters-flagParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/parameters-siteIDParam'
+      - $ref: '#/components/parameters/accountIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulStatusUsers'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+components:
+  responses:
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+    successfulStatusRoles:
+      description: Successful status roles
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              status_roles:
+                $ref: '#/components/schemas/statusRolesSchema'
+          examples:
+            SuccessfulStatusConnection:
+              $ref: '#/components/examples/SuccessfulStatusRole'
+    successfulStatusConnections:
+      description: Successful status connections
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              Status::Connections:
+                $ref: '#/components/schemas/statusConnectionsSchema'
+          examples:
+            SuccessfulStatusConnection:
+              $ref: '#/components/examples/SuccessfulStatusConnection'
+    successfulStatusUsers:
+      description: Successful status users
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              summary:
+                $ref: '#/components/schemas/statusUsersSchema'
+          examples:
+            SuccessfulStatusUsers:
+              $ref: '#/components/examples/SuccessfulStatusUsers'
+    successfulStatusSites:
+      description: Successful status sites
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              status_sites:
+                $ref: '#/components/schemas/statusSitesSchema'
+          examples:
+            SuccessfulStatusSite:
+              $ref: '#/components/examples/SuccessfulStatusSite'
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+  examples:
+    SuccessfulStatusRole:
+      summary: Successful status roles
+      value:
+        stats:
+          command: Status::Roles
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        status_roles:
+          id: 27
+          name: Electrician
+          con_id: 235843
+          status: Active
+          user_flags:
+          - id: 741
+            text: Green
+            count: 0
+          - id: 742
+            text: Yellow
+            count: 0
+          - id: 743
+            text: Red
+            count: 7
+          - id: 0
+            text: Total
+            count: 7
+    SuccessfulStatusSite:
+      summary: Successful status sites
+      value:
+        stats:
+          command: Status::Sites
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        status_roles:
+          id: 26552
+          name: Site Name
+          con_id: 165266
+          status: Active
+          user_flags:
+          - id: 741
+            text: Green
+            count: 0
+          - id: 742
+            text: Yellow
+            count: 0
+          - id: 743
+            text: Red
+            count: 7
+          - id: 0
+            text: Total
+            count: 7
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+    SuccessfulStatusConnection:
+      summary: Successful status connections
+      value:
+        stats:
+          command: Status::Connections
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        status::Connections:
+          id: 27
+          name: Avetta
+          con_id: 235843
+          con_flag: Red
+          status: Active
+          user_flags:
+          - id: 741
+            text: Green
+            count: 0
+          - id: 742
+            text: Yellow
+            count: 0
+          - id: 743
+            text: Red
+            count: 7
+          - id: 0
+            text: Total
+            count: 7
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+    SuccessfulStatusUsers:
+      summary: Successful status users
+      value:
+        stats:
+          command: Status::Users
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        summary:
+        - id: 741
+          text: Green
+          count: 0
+        - id: 742
+          text: Yellow
+          count: 0
+        - id: 743
+          text: Red
+          count: 7
+        - id: 0
+          text: Total
+          count: 7
+  schemas:
+    statusRolesSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: Roles ID
+          example: 27
+        name:
+          type: string
+          description: Roles title
+          example: Electrician
+        con_id:
+          type: integer
+          description: Roles code
+          example: 495134
+        status:
+          type: string
+          description: Status of the group
+          example: Active
+          enum:
+          - Active
+          - Inactive
+        user_flags:
+          type: array
+          description: Number of users in the role grouped by Green, Yellow, Red and Total
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Flag ID
+                example: 741
+              text:
+                type: string
+                description: Flag text
+                example: Green
+              count:
+                type: integer
+                description: Number of users with the flag
+                example: 0
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    statusSitesSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: Site ID
+          example: 15632
+        name:
+          type: string
+          description: Site name
+          example: Site Name
+        con_id:
+          type: integer
+          description: Site code
+          example: 6814651
+        status:
+          type: string
+          description: Status of the role
+          example: Active
+          enum:
+          - Active
+          - Inactive
+        user_flags:
+          type: array
+          description: Number of users in the site grouped by Green, Yellow, Red and Total
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Flag ID
+                example: 741
+              text:
+                type: string
+                description: Flag text
+                example: Green
+              count:
+                type: integer
+                description: Number of users with the flag
+                example: 0
+    statusUsersSchema:
+      type: object
+      format: object
+      description: Number of users in the site grouped by Green, Yellow, Red and Total
+      properties:
+        id:
+          type: integer
+          description: Flag ID
+          example: 741
+        text:
+          type: string
+          description: Flag text
+          example: Green
+        count:
+          type: integer
+          description: Number of users with the flag
+          example: 0
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+    statusConnectionsSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: Group ID
+          example: 27
+        name:
+          type: string
+          description: Group company name
+          example: Avetta
+        con_id:
+          type: integer
+          description: Group code
+          example: 235843
+        con_flag:
+          type: string
+          description: Rating status of the group (Green, Amber, Red)
+          example: Red
+          enum:
+          - Green
+          - Amber
+          - Red
+        status:
+          type: string
+          description: Status of the group
+          example: Active
+          enum:
+          - Active
+          - Inactive
+        user_flags:
+          type: array
+          description: Number of users in the group grouped by Green, Yellow, Red and Total
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Flag ID
+                example: 741
+              text:
+                type: string
+                description: Flag text
+                example: Green
+              count:
+                type: integer
+                description: Number of users with the flag
+                example: 0
+  parameters:
+    connections_components-parameters-searchParam:
+      name: search
+      in: query
+      description: search string
+      required: false
+      schema:
+        type: string
+    roleIDParam:
+      name: rol_id
+      in: query
+      description: role ID
+      required: false
+      schema:
+        type: integer
+    roles_components-parameters-searchParam:
+      name: search
+      in: query
+      description: search string
+      required: false
+      schema:
+        type: string
+    accountIDParam:
+      name: account_id
+      in: query
+      description: account ID
+      required: false
+      schema:
+        type: integer
+    limitParam:
+      name: limit
+      in: query
+      description: Maximum number of records to return
+      required: false
+      schema:
+        type: integer
+        default: 3000
+    users_components-parameters-searchParam:
+      name: search
+      in: query
+      description: search string
+      required: false
+      schema:
+        type: string
+    idParam:
+      name: id
+      in: path
+      description: references an id to reduce list down to 1 item
+      required: false
+      schema:
+        type: integer
+    startParam:
+      name: start
+      in: query
+      description: Offset of the first record to return
+      required: false
+      schema:
+        type: integer
+        default: 1
+    parameters-siteIDParam:
+      name: site_id
+      in: query
+      description: site ID
+      required: false
+      schema:
+        type: integer
+    sites_components-parameters-searchParam:
+      name: search
+      in: query
+      description: search string
+      required: false
+      schema:
+        type: string
+    parameters-flagParam:
+      name: flag
+      in: query
+      description: flag
+      required: false
+      schema:
+        type: string
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v1-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

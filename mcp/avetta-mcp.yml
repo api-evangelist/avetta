@@ -1,0 +1,218 @@
+generated: '2026-10-20'
+method: derived
+generator: derive-mcp-candidate.py
+source:
+- openapi/avetta-connect-openapi.yml
+- openapi/avetta-pegasus-openapi.yml
+- openapi/avetta-worker-v1-openapi.yml
+- openapi/avetta-worker-v2-openapi.yml
+status: candidate
+deployment:
+  mode: none
+  auth: unknown
+  verified: probed
+note: 'No MCP server was found. The pre-flight posted tools/list to /mcp on api.avetta.com, docs.api.avetta.com, help.avetta.com, www.avetta.com;
+  verdict opaque (https://api.avetta.com/api/mcp answered 401: the edge authenticates before it routes, which proves nothing either way). Candidate
+  tools below are derived from the 474 operation(s) in the provider''s own OpenAPI (40 listed); they describe what a server WOULD expose, not
+  one that exists.'
+tools:
+- name: create_v1_token
+  operationId: POST /auth/v1/token
+  method: POST
+  path: /auth/v1/token
+  description: Get Access Token v1
+- name: integrate_employee_1
+  operationId: integrateEmployee_1
+  method: PUT
+  path: /api/v1/scope/{scopeId}/employee/company/{companyId}
+  description: PUT /api/v1/scope/{scopeId}/employee/company/{companyId}
+- name: accounts
+  operationId: accounts
+  method: GET
+  path: /accounts/{id}
+  description: List of accounts to client
+- name: v2_get_users
+  operationId: v2GetUsers
+  method: GET
+  path: /users
+  description: List all users (v2)
+- name: get_suppliers_count
+  operationId: GET /api/v1/suppliers/count
+  method: GET
+  path: /api/v1/suppliers/count
+  description: Get Suppliers Count v1
+- name: integrate_employee
+  operationId: integrateEmployee
+  method: POST
+  path: /api/v1/scope/{scopeId}/employee/company/{companyId}
+  description: POST /api/v1/scope/{scopeId}/employee/company/{companyId}
+- name: get_admin_overview
+  operationId: getAdminOverview
+  method: GET
+  path: /admin/overview
+  description: Administrative Overview
+- name: v2_get_users_id
+  operationId: v2GetUsersID
+  method: GET
+  path: /users/{id}
+  description: Get a single user by ID (v2)
+- name: get_v1_suppliers
+  operationId: GET /api/v1/suppliers/{supplierId}
+  method: GET
+  path: /api/v1/suppliers/{supplierId}
+  description: Get Suppliers v1
+- name: integrate_partial_employee_1
+  operationId: integratePartialEmployee_1
+  method: PUT
+  path: /api/v1/scope/{scopeId}/employee/company/{companyId}/partial
+  description: PUT /api/v1/scope/{scopeId}/employee/company/{companyId}/partial
+- name: authenticate
+  operationId: authenticate
+  method: POST
+  path: /auth/authenticate
+  description: Authentication (Deprecated)
+- name: v2_post_users_idcheckin_group
+  operationId: v2PostUsersIDCheckinGroup
+  method: POST
+  path: /users/{id}/checkin/{group}
+  description: Check a worker in at a group (v2)
+- name: get_v2_suppliers
+  operationId: GET /api/v2/suppliers
+  method: GET
+  path: /api/v2/suppliers
+  description: Get Suppliers v2
+- name: integrate_partial_employee
+  operationId: integratePartialEmployee
+  method: POST
+  path: /api/v1/scope/{scopeId}/employee/company/{companyId}/partial
+  description: POST /api/v1/scope/{scopeId}/employee/company/{companyId}/partial
+- name: token
+  operationId: token
+  method: POST
+  path: /auth/token
+  description: Token generation
+- name: v2_post_users_idcheckout_group
+  operationId: v2PostUsersIDCheckoutGroup
+  method: POST
+  path: /users/{id}/checkout/{group}
+  description: Check a worker out of a group (v2)
+- name: get_v1_flags
+  operationId: GET /api/v1/flags
+  method: GET
+  path: /api/v1/flags
+  description: Get Flags v1
+- name: integrate_single_competency_1
+  operationId: integrateSingleCompetency_1
+  method: PUT
+  path: /api/v1/scope/{scopeId}/competency/integrate
+  description: PUT /api/v1/scope/{scopeId}/competency/integrate
+- name: is_sso
+  operationId: isSSO
+  method: GET
+  path: /auth/issso
+  description: SSO Check
+- name: v2_get_users_credit
+  operationId: v2GetUsersCredit
+  method: GET
+  path: /users/credit
+  description: List creditable users (v2)
+- name: get_flags_count
+  operationId: GET /api/v1/flags/count
+  method: GET
+  path: /api/v1/flags/count
+  description: Get Flag Count v1
+- name: integrate_single_competency
+  operationId: integrateSingleCompetency
+  method: POST
+  path: /api/v1/scope/{scopeId}/competency/integrate
+  description: POST /api/v1/scope/{scopeId}/competency/integrate
+- name: logout
+  operationId: logout
+  method: POST
+  path: /auth/logout
+  description: Logout user
+- name: v2_get_users_credit_id
+  operationId: v2GetUsersCreditID
+  method: GET
+  path: /users/credit/{id}
+  description: Get a single creditable user by ID (v2)
+- name: get_v1_files
+  operationId: GET /api/v1/files/{supplierId}/{fileNameId}
+  method: GET
+  path: /api/v1/files/{supplierId}/{fileNameId}
+  description: Get File v1
+- name: update_subscription_1
+  operationId: updateSubscription_1
+  method: PUT
+  path: /api/v1/scope/{scopeId}/company/{companyId}/subscription
+  description: PUT /api/v1/scope/{scopeId}/company/{companyId}/subscription
+- name: request_password
+  operationId: requestPassword
+  method: POST
+  path: /auth/requestpassword
+  description: Request reset password
+- name: v2_get_users_manage
+  operationId: v2GetUsersManage
+  method: GET
+  path: /users/manage
+  description: List manageable users (v2)
+- name: get_v1_connections
+  operationId: GET /api/v1/connections
+  method: GET
+  path: /api/v1/connections
+  description: Get Connections v1
+- name: update_subscription
+  operationId: updateSubscription
+  method: POST
+  path: /api/v1/scope/{scopeId}/company/{companyId}/subscription
+  description: POST /api/v1/scope/{scopeId}/company/{companyId}/subscription
+- name: switch_user
+  operationId: switchUser
+  method: POST
+  path: /auth/switchuser
+  description: Switch user
+- name: v2_get_users_manage_id
+  operationId: v2GetUsersManageID
+  method: GET
+  path: /users/manage/{id}
+  description: Get a single manageable user by ID (v2)
+- name: get_connections_count
+  operationId: GET /api/v1/connections/count
+  method: GET
+  path: /api/v1/connections/count
+  description: Get Connection Count v1
+- name: get_person
+  operationId: getPerson
+  method: GET
+  path: /api/v1/scope/{scopeId}/person/{personId}
+  description: Get person by id
+- name: update_password
+  operationId: updatePassword
+  method: POST
+  path: /auth/updatepassword
+  description: Update Password
+- name: v2_get_users_variance
+  operationId: v2GetUsersVariance
+  method: GET
+  path: /users/variance
+  description: List variance-eligible users (v2)
+- name: get_connections_with_compliance
+  operationId: get-connections-with-compliance
+  method: GET
+  path: /connect/v1/connections
+  description: Get Connections with Compliance
+- name: edit_worker
+  operationId: editWorker
+  method: PUT
+  path: /api/v1/scope/{scopeId}/person/{personId}
+  description: Edit worker data by person id
+- name: validate_email
+  operationId: ValidateEmail
+  method: POST
+  path: /auth/validateemail
+  description: Validate an email change
+- name: v2_get_users_variance_id
+  operationId: v2GetUsersVarianceID
+  method: GET
+  path: /users/variance/{id}
+  description: Get a single variance-eligible user by ID (v2)

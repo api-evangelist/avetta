@@ -1,0 +1,37 @@
+name: Avetta API lifecycle
+generated: '2026-10-20'
+method: searched
+source: https://docs.connect.avetta.com/#section/Release-Notes
+versioning: URL path versioning (/api/v1, /api/v2 on Connect; /api/v1 and /api/v2 on Worker Management); dated release notes on each docs portal.
+deprecation:
+  policy: Deprecated endpoints are grouped under a "Deprecated Endpoints" tag in the Connect reference and flagged deprecated in the OpenAPI; e.g. Form Endpoint v1 deprecated 2025-02-06 and replaced by
+    Forms V2.
+  docs: https://docs.connect.avetta.com/
+  sunset_headers: not documented
+  deprecated_operations:
+  - method: POST
+    path: /v1/forms/actions
+  - method: GET
+    path: /v1/forms/activities
+  - method: GET
+    path: /v1/forms/count
+  - method: GET
+    path: /v1/forms/statuses
+  - method: GET
+    path: /v2/insurance
+  - method: GET
+    path: /v2/insurance/count
+  - method: GET
+    path: /v1/audits
+  - method: GET
+    path: /v1/audits/count
+  - method: GET
+    path: /v2/audits
+  - method: GET
+    path: /v2/audits/count
+  - method: GET
+    path: /v1/insurance
+  - method: GET
+    path: /v1/forms
+status_page: https://status.avetta.com/
+sla: not published

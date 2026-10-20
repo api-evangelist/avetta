@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/avetta/main/json-schema/avetta-request-wmconnect-schema.json",
+  "title": "requestWMConnect",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/avetta-worker-v1-openapi.yml#/components/schemas/requestWMConnect",
+  "type": "object",
+  "properties": {
+    "wm_access_token": {
+      "description": "Worker Management access token",
+      "type": "string",
+      "format": "string"
+    },
+    "connect_access_token": {
+      "description": "Connect access token",
+      "type": "string",
+      "format": "string"
+    }
+  }
+}

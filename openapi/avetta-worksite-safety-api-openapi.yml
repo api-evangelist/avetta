@@ -1,0 +1,4311 @@
+openapi: 3.2.0
+info:
+  title: Avetta Worksite Safety API
+  version: 1.0.0
+  description: 'Operations tagged Worksite-Safety across 2 of this provider''s published API definitions: avetta-connect-dist.json, avetta-connect-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.avetta.com
+  description: Production (as named in the Client API Service documentation examples)
+tags:
+- name: Worksite-Safety
+  x-displayName: Worksite Safety
+  description: Worksite safety management operations including work requests and project management
+paths:
+  /v1/clients/{clientId}/project/templates:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    get:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: getProjectTemplates
+      summary: Get Project Templates
+      description: 'Retrieves project templates for the specified client. The `clientId` represents either corporate, hub,
+
+        or site level in the hierarchy.
+
+
+        **Note**: If corporate `clientId` used, the user will have access to the entire templates list associated to the client hierarchy.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '315425021'
+      - name: start
+        in: query
+        description: The record to start with for pagination (0-based)
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+        example: 0
+      - name: limit
+        in: query
+        description: The total number of records to return, maximum of 500
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 500
+          default: 100
+        example: 100
+      responses:
+        '200':
+          description: Successfully retrieved project templates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_GetProjectTemplatesResponse'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    totalCount: 1
+                    templates:
+                    - templateId: 68af3d0599450f37bbe9a2fc
+                      accountId: '250410663'
+                      templateName: Caterpillar Project
+                      createdDate: '2025-08-27T17:14:45.744Z'
+                      updatedDate: '2025-08-27T17:14:45.744Z'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+  /v1/clients/{clientId}/projects:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    get:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: getProjects
+      summary: Get Projects
+      description: 'Retrieves projects for the specified client. The `clientId` represents either corporate, hub,
+
+        or site level in the hierarchy.
+
+
+        **Note**: For optimal performance, use the hierarchy level associated with the user account. If corporate `clientId` used, the user will have access to the entire project list associated to the client hierarchy.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '315425021'
+      - name: isArchived
+        in: query
+        description: Filter by archived projects. Defaults to false.
+        schema:
+          type: boolean
+          default: false
+        example: true
+      - name: projectId
+        in: query
+        description: Filter by the unique project identifier. When provided, all other query parameters are ignored.
+        schema:
+          type: string
+        example: '412507'
+      - name: siteId
+        in: query
+        description: Filter by unique client site identifier.
+        schema:
+          type: string
+        example: '250410657'
+      - name: supplierId
+        in: query
+        description: Filter by unique supplier identifier
+        schema:
+          type: string
+        example: '250026886'
+      - name: workRequestStatus
+        in: query
+        description: Filter by work request status. Matches the workflow status name (e.g. "In Progress").
+        schema:
+          type: string
+        example: In Progress
+      - name: name
+        in: query
+        description: Filter by project name
+        schema:
+          type: string
+        example: Maintenance Project
+      - name: start
+        in: query
+        description: The record to start with for pagination (0-based)
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+        example: 0
+      - name: limit
+        in: query
+        description: The total number of records to return, maximum of 500
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 500
+          default: 100
+        example: 100
+      responses:
+        '200':
+          description: Successfully retrieved projects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_GetProjectsResponse'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    totalCount: 151
+                    projects:
+                    - projectId: '412507'
+                      projectName: Test
+                      isArchived: false
+                      status: Open
+                      createdDate: '2025-07-29T20:57:05.213Z'
+                      updatedDate: '2025-07-29T20:57:05.562Z'
+                      _links:
+                        web:
+                          href: https://app.avetta.com/avt-cli/processes/68bae9602342b50861bad961
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+    post:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: createProject
+      summary: Create Project
+      description: 'Creates a new project for the specified client. The clientId represents either corporate, hub,
+
+        or site level in the hierarchy.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '315425021'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/1.0.0_CreateProjectRequest'
+            examples:
+              CreateProjectExample:
+                value:
+                  projectName: Test Project
+                  templateId: 68af3d0599450f37bbe9a2fc
+      responses:
+        '200':
+          description: Successfully created project
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_CreateProjectResponse'
+              examples:
+                SuccessfulCreation:
+                  value:
+                    projectId: '434710'
+                    _links:
+                      web:
+                        href: https://app.avetta.com/avt-cli/processes/68bae9602342b50861bad961
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+  /v1/clients/{clientId}/projects/{projectId}/archive:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    put:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: putArchiveProject
+      summary: Archive Project
+      description: 'Archives a project that has been closed.
+
+
+        **Rules:**
+
+        - The project must be closed.
+
+        - If the project is not closed, the request will be rejected.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '4283746'
+      - name: projectId
+        in: path
+        required: true
+        description: The unique identifier of the project
+        schema:
+          type: string
+        example: '40000'
+      responses:
+        '204':
+          description: Project successfully archived
+        '400':
+          description: Project cannot be archived
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                ProjectNotClosed:
+                  value:
+                    message: 'Cannot archive project 859375: not closed.'
+                    code: PROCESSSERVICE.1
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+        '403':
+          description: Forbidden – The user is not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                ProjectNotClosed:
+                  value:
+                    message: User is not authorized to access projectId 859375.
+                    code: PROCESSSERVICE.1
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: projectId 85937511 not found.
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.1
+                  correlationId:
+                    type: string
+                    example: c1a2b3d4-5678-90ab-cdef-1234567890ab
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: Unexpected error occurred
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.500
+                  correlationId:
+                    type: string
+                    example: e7c9a1b2-3456-7890-abcd-ef1234567890
+  /v1/clients/{clientId}/projects/{projectId}/close:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    put:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: putCloseProject
+      summary: Close Project
+      description: 'Closes a project once all associated work requests have reached their required completion status.
+
+
+        **Rules:**
+
+        - All work requests associated with the project must be in their required completion status before the project can be closed.
+
+        - If any work requests are not yet complete, the request will be rejected.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '4283746'
+      - name: projectId
+        in: path
+        required: true
+        description: The unique identifier of the project
+        schema:
+          type: string
+        example: '40000'
+      responses:
+        '204':
+          description: Project successfully closed and workflow transitioned to terminal state
+        '400':
+          description: Project cannot be closed
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                WorkRequestsNotComplete:
+                  value:
+                    message: 'Cannot close project 859375: work requests are not complete.'
+                    code: PROCESSSERVICE.4
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+                NoTerminalStateReachable:
+                  value:
+                    message: 'Cannot close project 859375: no terminal state is reachable from the current workflow status.'
+                    code: PROCESSSERVICE.1
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+        '403':
+          description: Forbidden – The user is not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                Forbidden:
+                  value:
+                    message: User is not authorized to access projectId 859375.
+                    code: PROCESSSERVICE.3
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: project 85937511 is invalid.
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.2
+                  correlationId:
+                    type: string
+                    example: c1a2b3d4-5678-90ab-cdef-1234567890ab
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: Unexpected error occurred
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.500
+                  correlationId:
+                    type: string
+                    example: e7c9a1b2-3456-7890-abcd-ef1234567890
+  /v1/clients/{clientId}/projects/{projectId}:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    delete:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: deleteProject
+      summary: Delete Project
+      description: Deletes a project.
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client
+        schema:
+          type: string
+        example: '250125517'
+      - name: projectId
+        in: path
+        required: true
+        description: The unique identifier of the project
+        schema:
+          type: string
+        example: '859377'
+      responses:
+        '204':
+          description: Project successfully deleted
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '403':
+          description: Forbidden – The user is not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                ProjectNotClosed:
+                  value:
+                    message: User is not authorized to access projectId 859375.
+                    code: PROCESSSERVICE.1
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: projectId 5434333 not found.
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.404
+                  correlationId:
+                    type: string
+                    example: c1a2b3d4-5678-90ab-cdef-1234567890ab
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: Unexpected error occurred
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.500
+                  correlationId:
+                    type: string
+                    example: e7c9a1b2-3456-7890-abcd-ef1234567890
+  /v1/clients/{clientId}/projects/{projectId}/work-requests:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    get:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: getWorkRequests
+      summary: Get Work Requests
+      description: 'Retrieves all work-requests for the specified project. The clientId represents either corporate, hub,
+
+        or site level in the hierarchy.
+
+
+        **Note**: The user must ensure the clientId used matches the node in the hierarchy in where the project was created, or it''s parents.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '315425021'
+      - name: projectId
+        in: path
+        required: true
+        description: The unique identifier of the client's project.
+        schema:
+          type: string
+        example: '315425021'
+      - name: isArchived
+        in: query
+        description: Filter by archived work request. Defaults to false.
+        schema:
+          type: boolean
+          default: false
+        example: true
+      - name: siteId
+        in: query
+        description: Filter by unique client site identifier.
+        schema:
+          type: string
+        example: '250410657'
+      - name: supplierId
+        in: query
+        description: Filter by unique supplier identifier
+        schema:
+          type: string
+        example: '250026886'
+      - name: workRequestStatus
+        in: query
+        description: Filter by work request status. Matches the workflow status name (e.g. "In Progress").
+        schema:
+          type: string
+        example: In Progress
+      - name: start
+        in: query
+        description: The record to start with for pagination (0-based)
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+        example: 0
+      - name: limit
+        in: query
+        description: The total number of records to return, maximum of 500
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 500
+          default: 100
+        example: 100
+      responses:
+        '200':
+          description: Successfully retrieved work requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_GetWorkRequestsResponse'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    totalCount: 1
+                    workRequests:
+                    - projectId: '427603'
+                      projectName: wmint
+                      siteId: '250410673'
+                      supplierId: '250028423'
+                      workRequestId: '427605'
+                      workRequestName: wmint
+                      workRequestStatus: In Progress
+                      createdDate: '2025-08-26T15:52:03.741Z'
+                      updatedDate: '2025-08-26T16:17:21.694Z'
+                      _links:
+                        web:
+                          href: https://app.avetta.com/avt-cli/processes/688a5808a86cf933395a239c
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+  /v1/clients/{clientId}/work-requests/{workRequestId}/questions:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    get:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: getWorkRequestQuestions
+      summary: Get Work Request Questions
+      description: 'Retrieves questions for a specific work request and its forms. The clientId represents either corporate, hub,
+
+        or site level in the hierarchy, and workRequestId identifies the specific work request.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '315425021'
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the work request
+        schema:
+          type: string
+        example: '177800'
+      responses:
+        '200':
+          description: Successfully retrieved work request questions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_GetWorkRequestQuestionsResponse'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    workRequestId: '17846'
+                    workRequestName: Repair brick walls
+                    categories:
+                    - categoryId: '35178'
+                      categoryName: Work Request Details
+                      allowsMultipleInstances: false
+                      isEditable: true
+                      questions:
+                      - questionId: '177802'
+                        question: 'Work Request Details:'
+                        questionType: longText
+                        responseOptions: []
+                        isRequired: true
+                        isEditable: true
+                      - questionId: '120821'
+                        question: Do you require some form of risk assessment or hazard analysis to be conducted prior to the commencement of work?
+                        questionType: multipleChoice
+                        responseOptions:
+                        - displayText: 'Yes'
+                          storageValue: '1'
+                        - displayText: 'No'
+                          storageValue: '2'
+                        isRequired: true
+                        isEditable: true
+                      childCategories: []
+                    childForms:
+                    - formId: '43760'
+                      formName: Job Hazard Analysis
+                      isEditable: true
+                      childCategories:
+                      - categoryId: '36880'
+                        categoryName: Step
+                        allowsMultipleInstances: true
+                        isEditable: true
+                        questions:
+                        - questionId: '129933'
+                          question: 'Step:'
+                          questionType: shortText
+                          responseOptions: []
+                          isRequired: false
+                          isEditable: true
+                        childCategories:
+                        - categoryId: '36881'
+                          categoryName: Hazard
+                          allowsMultipleInstances: true
+                          isEditable: true
+                          questions:
+                          - questionId: '129934'
+                            question: 'Hazard:'
+                            questionType: shortText
+                            responseOptions: []
+                            isRequired: false
+                            isEditable: true
+                          childCategories:
+                          - categoryId: '36882'
+                            categoryName: Control
+                            allowsMultipleInstances: true
+                            isEditable: true
+                            questions:
+                            - questionId: '129973'
+                              question: 'Control:'
+                              questionType: shortText
+                              responseOptions: []
+                              isRequired: false
+                              isEditable: true
+                            childCategories: []
+                    isEditable: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '404':
+          description: Work request not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+  /v1/clients/{clientId}/work-requests/{workRequestId}/questions-answers:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    get:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: getWorkRequestQuestionsAnswers
+      summary: Get Work Request Questions and Answers
+      description: 'Retrieves questions and their corresponding answers for a specific work request and its forms.
+
+        This endpoint returns the current state of all answers submitted for the work request and its forms.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '250125517'
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the work request
+        schema:
+          type: string
+        example: '445755'
+      responses:
+        '200':
+          description: Successfully retrieved work request questions and answers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_GetWorkRequestQuestionsAnswersResponse'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    workRequestId: '445755'
+                    workRequestName: Test WR
+                    categories:
+                    - categoryId: '45500'
+                      categoryName: Work Request Details
+                      allowsMultipleInstances: false
+                      instances:
+                      - questionsAndAnswers:
+                        - questionId: '168846'
+                          questionDisplayText: 'Work Request Details:'
+                          answerValues:
+                          - WSS demo
+                    - categoryId: '45502'
+                      categoryName: Supporting Document
+                      allowsMultipleInstances: true
+                      instances:
+                      - instanceId: a6aacdfa-316d-4a45-ab07-af640d880bf6
+                        questionsAndAnswers:
+                        - questionId: '168850'
+                          questionDisplayText: Document type
+                          answerValues:
+                          - Safety Data Sheet
+                    childForms:
+                    - formId: '445756'
+                      formName: Risk Assessment
+                      status: In Review
+                      nextAvailableStatuses:
+                      - Approved
+                      - Rejected
+                      childCategories:
+                      - categoryId: '45501'
+                        categoryName: Risk Assessment
+                        allowsMultipleInstances: false
+                        instances:
+                        - questionsAndAnswers:
+                          - questionId: '168847'
+                            questionDisplayText: Risk Level
+                            answerValues:
+                            - Moderate Risk
+                      _links:
+                        web:
+                          href: https://app.avetta.com/avt-cli/processes/process-tree/445755/445756
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+        '404':
+          description: Work request not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+    put:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: upsertWorkRequestAnswers
+      summary: Upsert Work Request Answers
+      description: 'Creates or updates answers for questions in a work request based on the path param for `workRequestId`. This endpoint allows you to submit answers for multiple categories and questions within a work request.
+
+
+        **Note**:
+
+
+        The `workRequestId` must be visible to the `clientId` path param used.
+
+
+        **Workflow**:
+
+        1. First call:
+
+
+        `GET /v1/clients/{clientId}/work-requests/{workRequestId}/questions` to retrieve available questions
+
+        2. Use the returned `categoryId` and `questionId` values to structure your answers
+
+        3. Submit answers using this endpoint with the same category and question identifiers
+
+
+        **Repeatable categories**
+
+
+        Some categories are flagged as `allowsMultipleInstances: true` in the questions response (and in `GET .../questions-answers`). A repeatable category can hold multiple independent instances of the same set of answers (for example, multiple risks under a single "Risk Assessment" category). Each instance is identified by an `instanceId`.
+
+
+        To target a repeatable category:
+
+
+        - **Insert (new instance)** — omit `instanceId`. The server generates a new `instanceId` and creates a brand new instance with the supplied answers. Send the category once per new instance you want to create.
+
+        - **Update (existing instance)** — send the `instanceId` returned by `GET .../questions-answers` for the instance you want to modify. Only the questions you include in `questionsAndAnswers` are updated; other questions in that instance keep their current values.
+
+
+        For non-repeatable categories (`allowsMultipleInstances: false`), `instanceId` is not applicable and should be omitted from insert and update requests.
+
+
+        **Insert example** — adds two new instances to the repeatable "Risk Assessment" category (no `instanceId` provided):
+
+        ```json
+
+        {
+
+        "categories": [
+
+        {
+
+        "categoryId": "46897",
+
+        "questionsAndAnswers": [
+
+        { "questionId": "177803", "answerValues": ["Slippery floor near entrance"] },
+
+        { "questionId": "177804", "answerValues": ["High"] }
+
+        ]
+
+        },
+
+        {
+
+        "categoryId": "46897",
+
+        "questionsAndAnswers": [
+
+        { "questionId": "177803", "answerValues": ["Exposed wiring in panel B"] },
+
+        { "questionId": "177804", "answerValues": ["Critical"] }
+
+        ]
+
+        }
+
+        ]
+
+        }
+
+        ```
+
+
+        **Update example** — updates an existing instance identified by the `instanceId` taken from the GET response:
+
+        ```json
+
+        {
+
+        "categories": [
+
+        {
+
+        "categoryId": "46897",
+
+        "instanceId": "8c7f4d2a-19b3-4e6c-9f10-2b6a5d1a77e0",
+
+        "questionsAndAnswers": [
+
+        { "questionId": "177804", "answerValues": ["Moderate"] }
+
+        ]
+
+        }
+
+        ]
+
+        }
+
+        ```
+
+
+        **Nested repeatable categories**
+
+
+        Repeatable categories can themselves contain repeatable subcategories. Each level identifies its target instance with an `instanceId`, and a child''s `instanceId` is the parent''s `instanceId` joined to its own UUID with a `.` (e.g. `..`). To update existing nested instances, send each `instanceId` exactly as it was returned by `GET .../questions-answers`. See the `UpdateNestedRepeatableInstances` example below for the full shape.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '250125517'
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the work request
+        schema:
+          type: string
+        example: '427605'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/1.0.0_UpsertWorkRequestAnswersRequest'
+            examples:
+              UpsertAnswersExample:
+                summary: Insert/Update Answers for a Non-Repeatable Category
+                value:
+                  categories:
+                  - categoryId: '46896'
+                    questionsAndAnswers:
+                    - questionId: '177802'
+                      answerValues:
+                      - This is for testing purposes
+              InsertRepeatableInstances:
+                summary: Insert a New Answer into a Repeatable Category
+                description: 'Each category entry without an `instanceId` creates a new instance.
+
+                  The server assigns a fresh `instanceId` to each one.
+
+                  '
+                value:
+                  categories:
+                  - categoryId: '46897'
+                    questionsAndAnswers:
+                    - questionId: '177803'
+                      answerValues:
+                      - Slippery floor near entrance
+                    - questionId: '177804'
+                      answerValues:
+                      - High
+                  - categoryId: '46897'
+                    questionsAndAnswers:
+                    - questionId: '177803'
+                      answerValues:
+                      - Exposed wiring in panel B
+                    - questionId: '177804'
+                      answerValues:
+                      - Critical
+              UpdateRepeatableInstance:
+                summary: Update an Existing Answer in a Repeatable Category
+                description: 'Pass the `instanceId` returned by `GET .../questions-answers` to update that specific instance.
+
+                  Only the questions included in `questionsAndAnswers` are updated; other answers in the instance are preserved.
+
+                  '
+                value:
+                  categories:
+                  - categoryId: '46897'
+                    instanceId: 8c7f4d2a-19b3-4e6c-9f10-2b6a5d1a77e0
+                    questionsAndAnswers:
+                    - questionId: '177804'
+                      answerValues:
+                      - Moderate
+              UpdateNestedRepeatableInstances:
+                summary: Update Answers in Nested Repeatable Categories
+                description: 'Repeatable categories can be nested. Each level identifies its target instance with an `instanceId`,
+
+                  and each child''s `instanceId` is the parent''s `instanceId` joined to its own UUID with a `.` —
+
+                  e.g. `<outer>.<middle>.<inner>`. To **update** existing nested instances, send each `instanceId`
+
+                  exactly as it was returned by `GET .../questions-answers`. The outer non-repeatable category
+
+                  that holds the repeatable subtree carries no `instanceId` itself.
+
+                  '
+                value:
+                  categories:
+                  - categoryId: '38923'
+                    childCategories:
+                    - categoryId: '43308'
+                      instanceId: 8298fee9-f76a-4e08-bc77-5c9d41c27a1c
+                      questionsAndAnswers:
+                      - questionId: '159073'
+                        answerValues:
+                        - step 01
+                      childCategories:
+                      - categoryId: '43310'
+                        instanceId: 8298fee9-f76a-4e08-bc77-5c9d41c27a1c.c94f0758-6ca0-41f5-9571-d7e96c1189dc
+                        questionsAndAnswers:
+                        - questionId: '159076'
+                          answerValues:
+                          - haz 02
+                        childCategories:
+                        - categoryId: '43311'
+                          instanceId: 8298fee9-f76a-4e08-bc77-5c9d41c27a1c.c94f0758-6ca0-41f5-9571-d7e96c1189dc.758f9061-016c-4d73-bf22-8b661ce6f36e
+                          questionsAndAnswers:
+                          - questionId: '159077'
+                            answerValues:
+                            - control 01ab
+      responses:
+        '200':
+          description: Successfully updated work request answers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_UpsertWorkRequestAnswersResponse'
+              examples:
+                SuccessfulUpdate:
+                  value:
+                    message: Work Request(s) updated successfully
+                    url: https://app.avetta.com/avt-cli/processes/68add8236383c26ae7658898
+        '400':
+          description: Bad Request – one or more submitted answers are invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                InvalidQuestionAnswers:
+                  value:
+                    message: 'Invalid answer ''99'' for question 177802 in category 46896: not in responseOptions'
+                    code: PROCESSSERVICE.20
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+                NoValidAnswers:
+                  value:
+                    message: No valid question answers found to update
+                    code: PROCESSSERVICE.20
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '404':
+          description: Work request not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+  /v1/clients/{clientId}/work-request:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    post:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: createWorkRequest
+      summary: Create Work Request
+      description: 'Creates a new work request for the specified client. The clientId represents either corporate, hub,
+
+        or site level in the hierarchy.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '4283746'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/1.0.0_CreateWorkRequestRequest'
+            examples:
+              CreateWorkRequestExample:
+                value:
+                  projectId: '1'
+                  supplierId: '250671876'
+                  siteIds:
+                  - '25406719'
+                  workRequestName: Work Request Name
+      responses:
+        '200':
+          description: Successfully created work request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_CreateWorkRequestResponse'
+              examples:
+                SuccessfulCreation:
+                  value:
+                    workRequestId: '427605'
+                    _links:
+                      web:
+                        href: https://app.avetta.com/avt-cli/processes/688a5808a86cf933395a239c
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+  /v1/clients/{clientId}/work-requests/{workRequestId}/archive:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    put:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: putArchiveWorkRequest
+      summary: Archive Work Request
+      description: 'Archives a work request.
+
+
+        **Rules:**
+
+        - If the work request is not in a Completed state, the request will be rejected.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '4283746'
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the work request
+        schema:
+          type: string
+        example: '445755'
+      responses:
+        '204':
+          description: Work request successfully archived
+        '400':
+          description: Work request cannot be archived
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                WorkRequestNotClosed:
+                  value:
+                    message: 'Cannot archive work request 445755: not closed.'
+                    code: PROCESSSERVICE.1
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+        '403':
+          description: Forbidden – The user is not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                UserNotAuthorized:
+                  value:
+                    message: User is not authorized to access workRequestId 445755.
+                    code: PROCESSSERVICE.3
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '404':
+          description: Work request not found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: work request 445755 is invalid.
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.2
+                  correlationId:
+                    type: string
+                    example: c1a2b3d4-5678-90ab-cdef-1234567890ab
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: Unexpected error occurred
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.500
+                  correlationId:
+                    type: string
+                    example: e7c9a1b2-3456-7890-abcd-ef1234567890
+  /v1/clients/{clientId}/work-requests/{workRequestId}/assign:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    put:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: putAssignWorkRequest
+      summary: Assign Work Request
+      description: 'Assigns a work request by advancing its workflow one configured transition forward into its first
+
+        non-terminal status (e.g. "In Progress"). The target status is derived from the workflow, so no
+
+        request body is required.
+
+
+        **Rules:**
+
+        - The work request must exist, be a supplier root, and belong to the caller''s client hierarchy.
+
+        - The parent project must be active (not deleted, inactive, or archived).
+
+        - A non-terminal status must be reachable in one configured transition from the current status, and that
+
+        status must include the client (not strictly supplier or internal).
+
+        - Every dependent form gated for the assign target status must be complete (`processWorkflow`
+
+        calculations). A calculation that gates a different status (such as completion/close) does not
+
+        block the assign.
+
+        - Every required question the client can edit must have at least one non-empty answer, except those
+
+        hidden by a `condition` calculation given the current answers.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '4283746'
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the work request
+        schema:
+          type: string
+        example: '445755'
+      responses:
+        '204':
+          description: Work request successfully assigned and workflow advanced to its next non-terminal status
+        '400':
+          description: Work request cannot be assigned
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                ParentProjectInactive:
+                  value:
+                    message: 'Cannot assign work request 445755: parent project is inactive, archived, or deleted.'
+                    code: PROCESSSERVICE.15
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+                NoAssignableStatusReachable:
+                  value:
+                    message: 'Cannot assign work request 445755. No non-terminal status is reachable from the current workflow statusId: 61f96b4955f484285bf7ab85.'
+                    code: PROCESSSERVICE.16
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+                DependentFormsNotComplete:
+                  value:
+                    message: 'Cannot assign work request 445755: dependent forms are not complete.'
+                    code: PROCESSSERVICE.18
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+                RequiredQuestionsMissing:
+                  value:
+                    message: 'Cannot assign work request 445755: required questions are missing answers: 184067, 184066.'
+                    code: PROCESSSERVICE.19
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+        '403':
+          description: Forbidden – The user is not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                UserNotAuthorized:
+                  value:
+                    message: User is not authorized to access workRequestId 445755.
+                    code: PROCESSSERVICE.3
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+                TargetStatusExcludesClient:
+                  value:
+                    message: 'Cannot assign work request 445755: target status 61f96bb555f484285bf7ab87 is strictly supplier or internal and does not include the client.'
+                    code: PROCESSSERVICE.17
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '404':
+          description: Work request not found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: work request 445755 is invalid.
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.2
+                  correlationId:
+                    type: string
+                    example: c1a2b3d4-5678-90ab-cdef-1234567890ab
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: Unexpected error occurred
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.500
+                  correlationId:
+                    type: string
+                    example: e7c9a1b2-3456-7890-abcd-ef1234567890
+  /v1/clients/{clientId}/work-requests/{workRequestId}/close:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    put:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: putCloseWorkRequest
+      summary: Close Work Request
+      description: 'Marks a work request as closed by transitioning its workflow to a terminal state.
+
+
+        **Rules:**
+
+        - Every dependent form configured on the work request template must reach its required workflow status before the work request can be closed.
+
+        - If any dependent forms are not complete, the request will be rejected.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '4283746'
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the work request
+        schema:
+          type: string
+        example: '445755'
+      responses:
+        '204':
+          description: Work request successfully closed and workflow transitioned to terminal state
+        '400':
+          description: Work request cannot be closed
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                DependentFormsNotComplete:
+                  value:
+                    message: 'Cannot close work request 445755: dependent forms are not complete.'
+                    code: PROCESSSERVICE.5
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+                NoTerminalStateReachable:
+                  value:
+                    message: Cannot close work request 445755. No final state is reachable from the current workflow statusId 61f96b4955f484285bf7ab85.
+                    code: PROCESSSERVICE.6
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+        '403':
+          description: Forbidden – The user is not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                UserNotAuthorized:
+                  value:
+                    message: User is not authorized to access workRequestId 445755.
+                    code: PROCESSSERVICE.3
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '404':
+          description: Work request not found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: work request 445755 is invalid.
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.2
+                  correlationId:
+                    type: string
+                    example: c1a2b3d4-5678-90ab-cdef-1234567890ab
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: Unexpected error occurred
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.500
+                  correlationId:
+                    type: string
+                    example: e7c9a1b2-3456-7890-abcd-ef1234567890
+  /v1/clients/{clientId}/work-requests/{workRequestId}:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    delete:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: deleteWorkRequest
+      summary: Delete Work Request
+      description: 'Deletes a work request. The operation is idempotent on the
+
+        already-deleted case: a 204 response is returned whether the delete
+
+        operation removed rows or the work request was already soft-deleted.
+
+        Requests for unknown work request IDs still return 404.
+
+
+        **Rules:**
+
+        - The work request must have no non-deleted child forms.
+
+        - If the work request has active children, the request will be rejected.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '250125517'
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the work request
+        schema:
+          type: string
+        example: '704662'
+      responses:
+        '204':
+          description: Work request successfully deleted, or was already soft-deleted
+        '400':
+          description: Work request cannot be deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                WorkRequestHasActiveChildren:
+                  value:
+                    message: 'Cannot delete work request 704662: it has non-deleted child forms.'
+                    code: PROCESSSERVICE.4
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '403':
+          description: Forbidden – The user is not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                UserNotAuthorizedForWorkRequest:
+                  value:
+                    message: User is not authorized to access workRequestId 704662.
+                    code: PROCESSSERVICE.3
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '404':
+          description: Work request not found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: work request 704662 is invalid.
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.2
+                  correlationId:
+                    type: string
+                    example: c1a2b3d4-5678-90ab-cdef-1234567890ab
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: Unexpected error occurred
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.500
+                  correlationId:
+                    type: string
+                    example: e7c9a1b2-3456-7890-abcd-ef1234567890
+  /v1/clients/{clientId}/work-requests/{workRequestId}/workflow:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    get:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: getWorkflowTransitions
+      summary: Get Workflow Transitions
+      description: 'Returns the complete workflow transition graph for every form within the specified work request.
+
+
+        Each form in the response contains a `transitions` array. A **transition group** is a single
+
+        entry in that array: it pairs one source state (`from`) with every state that form can legally
+
+        move to from there (`to`). Reading the groups in order gives you the intended
+
+        progression of the workflow from start to finish.
+
+
+        The `transitions` array always represents the **complete workflow state machine** — every valid
+
+        transition defined for that form''s workflow type, regardless of where the form currently sits.
+
+        Use `currentStatus` to know the form''s present position, and use `transitions` to understand
+
+        the full map of where it can go. A form that has already reached the terminal state will still
+
+        return the same complete transition graph as a form that has not yet started.
+
+
+        A workflow has exactly one terminal state — the successful outcome (e.g. "Acknowledged"). All
+
+        other states, including rejection or rework states, are non-terminal: they have their own
+
+        outgoing transitions that route the form back through the workflow so it can eventually reach
+
+        the terminal state.
+
+
+        **Divergent paths** — where a single state can move to more than one destination — occur when
+
+        a review transition can either advance the form (toward the terminal state) or send it back for
+
+        rework (e.g. "Rejected"). Both destinations appear in one transition group. Because the rework
+
+        destination is non-terminal, it will also appear as the `from` state of a subsequent group,
+
+        showing where the form continues after rework. You may therefore see a group whose source state
+
+        was already listed as a destination earlier — this is intentional and represents the form
+
+        re-entering the workflow after a rework transition.
+
+
+        **Key behaviours:**
+
+        - Transition groups are ordered by the first time each source state is encountered in the workflow, reflecting the intended workflow sequence.
+
+        - When a source state has multiple destinations, all are listed in one group — non-terminal (rework/intermediate) states first, then the terminal (final) state last.
+
+        - A rework state (e.g. "Rejected") is non-terminal: it will have its own transition group showing where the form continues, typically looping back toward the divergent transition.
+
+        - The `transitions` array is the same complete graph regardless of `currentStatus` — it never filters transitions based on where the form currently is.
+
+
+        **Note**: The `clientId` must match the hierarchy node where the work request was created, or one of its ancestors.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '315425021'
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the work request
+        schema:
+          type: string
+        example: '445755'
+      responses:
+        '200':
+          description: Successfully retrieved workflow transitions for all forms in the work request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_GetWorkflowResponse'
+              examples:
+                MultipleFormsWithTransitions:
+                  summary: Two forms sharing the same workflow — one mid-workflow, one at the terminal state. Both return the identical complete transition graph.
+                  value:
+                    workRequestId: '445755'
+                    workRequestName: Q1 Safety Inspection
+                    siteId: '250410673'
+                    siteName: Acme Corp - Houston Plant
+                    supplierId: '250028423'
+                    supplierName: Safety Solutions Inc
+                    childForms:
+                    - formId: '445756'
+                      formName: Risk Assessment
+                      currentStatus: Under Review
+                      transitions:
+                      - from:
+                          statusId: 64a1b2c3d4e5f6a7b8c9d0e1
+                          name: Under Review
+                          isFinal: false
+                        to:
+                        - statusId: 64a1b2c3d4e5f6a7b8c9d0e3
+                          name: Rejected
+                          isFinal: false
+                          clientCanTransition: false
+                        - statusId: 64a1b2c3d4e5f6a7b8c9d0e2
+                          name: Acknowledged
+                          isFinal: true
+                          clientCanTransition: false
+                      - from:
+                          statusId: 64a1b2c3d4e5f6a7b8c9d0e3
+                          name: Rejected
+                          isFinal: false
+                        to:
+                        - statusId: 64a1b2c3d4e5f6a7b8c9d0e1
+                          name: Under Review
+                          isFinal: false
+                          clientCanTransition: true
+                    - formId: '445757'
+                      formName: Work Permit
+                      currentStatus: Acknowledged
+                      transitions:
+                      - from:
+                          statusId: 64a1b2c3d4e5f6a7b8c9d0e1
+                          name: Under Review
+                          isFinal: false
+                        to:
+                        - statusId: 64a1b2c3d4e5f6a7b8c9d0e3
+                          name: Rejected
+                          isFinal: false
+                          clientCanTransition: false
+                        - statusId: 64a1b2c3d4e5f6a7b8c9d0e2
+                          name: Acknowledged
+                          isFinal: true
+                          clientCanTransition: false
+                      - from:
+                          statusId: 64a1b2c3d4e5f6a7b8c9d0e3
+                          name: Rejected
+                          isFinal: false
+                        to:
+                        - statusId: 64a1b2c3d4e5f6a7b8c9d0e1
+                          name: Under Review
+                          isFinal: false
+                          clientCanTransition: true
+        '400':
+          description: Bad Request — the specified `workRequestId` does not refer to a work request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '403':
+          description: Forbidden — the authenticated user does not have access to the specified client
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+  /v1/clients/{clientId}/work-requests/{workRequestId}/child-forms/{childFormId}/questions-answers:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    put:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: upsertChildFormAnswers
+      summary: Upsert Child Form Answers
+      description: 'Creates or updates answers for questions on a child form (a form that lives under a work request), based on
+
+        the `workRequestId` and `childFormId` path params. Behaves identically to
+
+        `PUT .../work-requests/{workRequestId}/questions-answers`, but targets a child form rather than the work
+
+        request itself.
+
+
+        **Note**:
+
+
+        The `workRequestId` must be visible to the `clientId` path param used, and the `childFormId` must be a
+
+        non-deleted, active child of that work request.
+
+
+        **Workflow**:
+
+        1. First call:
+
+
+        `GET /v1/clients/{clientId}/work-requests/{workRequestId}/questions` to retrieve available questions; a child
+
+        form''s questions are returned under `childForms[].childCategories`.
+
+        2. Use the returned `categoryId` and `questionId` values to structure your answers
+
+        3. Submit answers using this endpoint with the same category and question identifiers'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '250125517'
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the parent work request
+        schema:
+          type: string
+        example: '445755'
+      - name: childFormId
+        in: path
+        required: true
+        description: The unique identifier of the child form whose answers are being upserted
+        schema:
+          type: string
+        example: '445756'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/1.0.0_UpsertWorkRequestAnswersRequest'
+            examples:
+              UpsertAnswersExample:
+                value:
+                  categories:
+                  - categoryId: '48219'
+                    questionsAndAnswers:
+                    - questionId: '184088'
+                      answerValues:
+                      - '1'
+                    - questionId: '184085'
+                      answerValues:
+                      - '2026-06-10T08:00:00+10:00'
+                      - '2026-06-20T17:00:00+10:00'
+      responses:
+        '200':
+          description: Successfully updated child form answers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_UpsertWorkRequestAnswersResponse'
+              examples:
+                SuccessfulUpdate:
+                  value:
+                    message: Child Form updated successfully
+                    url: https://app.avetta.com/avt-cli/processes/process-tree/445755/445756
+        '400':
+          description: Bad Request – one or more submitted answers are invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                InvalidQuestionAnswers:
+                  value:
+                    message: 'Invalid answer ''99'' for question 184088 in category 48219: not in responseOptions'
+                    code: PROCESSSERVICE.20
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+                NoValidAnswers:
+                  value:
+                    message: No valid question answers found to update
+                    code: PROCESSSERVICE.20
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '403':
+          description: Forbidden – the user is not authorized to edit this work request or child form
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                UserNotAuthorizedForWorkRequest:
+                  value:
+                    message: User is not authorized to access workRequestId 445755.
+                    code: PROCESSSERVICE.3
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '404':
+          description: Work request or child form not found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                InvalidWorkRequest:
+                  value:
+                    message: work request 445755 is invalid.
+                    code: PROCESSSERVICE.2
+                    correlationId: c1a2b3d4-5678-90ab-cdef-1234567890ab
+                ChildFormNotInWorkRequest:
+                  value:
+                    message: 445756 is not a valid child form of work request 445755.
+                    code: PROCESSSERVICE.10
+                    correlationId: c1a2b3d4-5678-90ab-cdef-1234567890ab
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+  /v1/clients/{clientId}/work-requests/{workRequestId}/child-forms/{childFormId}/workflow-transitions:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    put:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: putTransitionChildFormWorkflowStatus
+      summary: Transition Child Form Workflow Status
+      description: 'Transitions a child form (a form that lives under a work request) to a new workflow status.
+
+
+        **Rules:**
+
+        - The work request must exist and belong to the caller''s client hierarchy.
+
+        - The child form must currently be a non-deleted, active child of the named work request.
+
+        - The client must have edit rights to progress the child form''s current workflow status to the next.
+
+        - The target workflow status must be reachable from the current status (not hopping over a required status).
+
+        - Every required question on the child form that the client can edit must have at least one non-empty answer, except those hidden by a `condition` calculation whose formula evaluates to a hide list containing that question given the current answers.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '4283746'
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the parent work request
+        schema:
+          type: string
+        example: '445755'
+      - name: childFormId
+        in: path
+        required: true
+        description: The unique identifier of the child form to transition
+        schema:
+          type: string
+        example: '1001'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - workflowStatusId
+              properties:
+                workflowStatusId:
+                  type: string
+                  description: The id of the workflow status to transition the child form to.
+                  example: 63f9167e4fdc1c657a5e6467
+            examples:
+              TransitionToAcknowledge:
+                value:
+                  workflowStatusId: 63f9167e4fdc1c657a5e6467
+      responses:
+        '200':
+          description: Child form workflow status transitioned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - childFormId
+                - previousStatusId
+                - currentStatusId
+                - isFinal
+                properties:
+                  childFormId:
+                    type: string
+                    description: Display identifier of the child form that was transitioned.
+                    example: '1001'
+                  previousStatusId:
+                    type: string
+                    description: The workflow status the child form was in before the transition.
+                    example: 61f96b4955f484285bf7ab85
+                  previousStatusName:
+                    type:
+                    - string
+                    - 'null'
+                    description: Human-readable name of the previous workflow status, when available.
+                    example: In Review
+                  currentStatusId:
+                    type: string
+                    description: The workflow status the child form is now in.
+                    example: 63f9167e4fdc1c657a5e6467
+                  currentStatusName:
+                    type:
+                    - string
+                    - 'null'
+                    description: Human-readable name of the new workflow status, when available.
+                    example: Acknowledge
+                  isFinal:
+                    type: boolean
+                    description: Whether the new workflow status is a terminal state with no outgoing transitions.
+                    example: false
+        '400':
+          description: Child form workflow status cannot be transitioned
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                InvalidChildFormWorkflowTransition:
+                  value:
+                    message: 'Cannot transition child form 1001: 63f9167e4fdc1c657a5e6467 is not a valid transition from current status 61f96b4955f484285bf7ab85.'
+                    code: PROCESSSERVICE.12
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+                ChildFormRequiredFieldsMissing:
+                  value:
+                    message: 'Cannot transition child form 1001: required questions are missing answers: q-001, q-004.'
+                    code: PROCESSSERVICE.14
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '403':
+          description: Forbidden – The user is not authorized for this transition.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                UserNotAuthorizedForWorkRequest:
+                  value:
+                    message: User is not authorized to access workRequestId 445755.
+                    code: PROCESSSERVICE.3
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+                ClientNotAuthorizedForChildFormTransition:
+                  value:
+                    message: Client does not have edit rights for child form 1001 at its current workflow status.
+                    code: PROCESSSERVICE.11
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+                ChildFormTargetStatusExcludesClient:
+                  value:
+                    message: 'Cannot transition child form 1001: target status 684c68aec7903ebcbf5301ac is strictly supplier or internal and does not include the client.'
+                    code: PROCESSSERVICE.13
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '404':
+          description: Work request or child form not found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                InvalidWorkRequest:
+                  value:
+                    message: work request 445755 is invalid.
+                    code: PROCESSSERVICE.2
+                    correlationId: c1a2b3d4-5678-90ab-cdef-1234567890ab
+                ChildFormNotInWorkRequest:
+                  value:
+                    message: 1001 is not a valid child form of work request 445755.
+                    code: PROCESSSERVICE.10
+                    correlationId: c1a2b3d4-5678-90ab-cdef-1234567890ab
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: Unexpected error occurred
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.500
+                  correlationId:
+                    type: string
+                    example: e7c9a1b2-3456-7890-abcd-ef1234567890
+  /v1/clients/{clientId}/work-requests/{workRequestId}/available-child-forms:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    get:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: getAvailableChildForms
+      summary: Get Available Child Forms
+      description: Returns the list of form templates that can be created for the given work request.
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '4283746'
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the work request
+        schema:
+          type: string
+        example: '40000'
+      responses:
+        '200':
+          description: Successfully retrieved available child forms
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_GetAvailableChildFormsResponse'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    availableChildForms:
+                    - formName: Risk Observation
+                      formTemplateId: 68191fcb858bfe0c34c12206
+                    - formName: Project Evaluation
+                      formTemplateId: 68191fcb858bfe0c34c12208
+                    - formName: General Work Permit
+                      formTemplateId: 68191fcb858bfe0c34c12205
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+              examples:
+                UserNotFound:
+                  value:
+                    message: User 4802531 not found for workRequestId 704662
+                    code: PROCESSSERVICE.0
+                    correlationId: 17f9b297-b912-406e-953c-42e98717b414
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+  /v1/clients/{clientId}/work-requests/{workRequestId}/child-forms:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    post:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: postCreateChildForm
+      summary: Create Child Form
+      description: 'Creates a child form of the given form template under a work request.
+
+
+        **Rules:**
+
+        - The `formTemplateId` must be one of the templates returned by `GET /v1/clients/{clientId}/work-requests/{workRequestId}/available-child-forms`.
+
+        - Per-template restriction calculations attached to the work request template are evaluated against the work request''s current state. If any of them flags the requested `formTemplateId` as currently restricted, the request is rejected.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client (corporate, hub, or site level)
+        schema:
+          type: string
+        example: '4283746'
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the work request
+        schema:
+          type: string
+        example: '40000'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/1.0.0_CreateChildFormRequest'
+            examples:
+              CreateChildForm:
+                value:
+                  formTemplateId: 68191fcb858bfe0c34c12206
+      responses:
+        '200':
+          description: Child form successfully created under the work request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_CreateChildFormResponse'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    message: Form created successfully
+                    formId: '434711'
+                    _links:
+                      web:
+                        href: https://app.avetta.com/avt-cli/processes/process-tree/688a5808a86cf933395a239c/68bae9602342b50861bad961
+        '400':
+          description: Child form cannot be created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                InvalidChildFormTemplate:
+                  value:
+                    message: Form template 68191fcb858bfe0c34c12206 is not available for work request 40000.
+                    code: PROCESSSERVICE.7
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+                ChildFormCreationBlocked:
+                  value:
+                    message: 'Cannot create child form 68191fcb858bfe0c34c12206 under work request 40000: The work request has been closed. Child forms can no longer be added.'
+                    code: PROCESSSERVICE.8
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+                ChildFormNotManuallyCreatable:
+                  value:
+                    message: Form template 68191fcb858bfe0c34c12206 cannot be manually created for work request 40000.
+                    code: PROCESSSERVICE.9
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+        '403':
+          description: Forbidden – The user is not authorized to access this resource.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                  code:
+                    type: string
+                  correlationId:
+                    type: string
+              examples:
+                Forbidden:
+                  value:
+                    message: User is not authorized to access workRequestId 40000.
+                    code: PROCESSSERVICE.3
+                    correlationId: 3fdcadff-7202-4de9-9800-2512a6a114b3
+        '404':
+          description: Work request not found
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: work request 40000 is invalid.
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.2
+                  correlationId:
+                    type: string
+                    example: c1a2b3d4-5678-90ab-cdef-1234567890ab
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - code
+                - correlationId
+                properties:
+                  message:
+                    type: string
+                    example: Unexpected error occurred
+                  code:
+                    type: string
+                    example: PROCESSSERVICE.500
+                  correlationId:
+                    type: string
+                    example: e7c9a1b2-3456-7890-abcd-ef1234567890
+  /v1/clients/{clientId}/work-requests/{workRequestId}/assigned-users:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    get:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: getWorkRequestAssignedUsers
+      summary: Get Work Request Assigned Users
+      description: 'Retrieves all assigned users for the specified work request.
+
+
+        **Note**: The client must ensure the `clientId` used matches the node in the hierarchy where the work request was created.
+
+        Optionally filter by user type using the `userType` query parameter. If not provided, all assigned users are returned.
+
+
+        **Valid userType values**: `connectSupplier`, `workerManagementWorker`, `workforceManagementWorker`'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The client billingId linked to the work request
+        schema:
+          type: string
+        example: '315425021'
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the work request
+        schema:
+          type: string
+        example: '427605'
+      - name: userType
+        in: query
+        required: false
+        description: Filter assigned users by user provider type. If not provided, returns all assigned users.
+        schema:
+          type: string
+          enum:
+          - connectSupplier
+          - workerManagementWorker
+          - workforceManagementWorker
+        example: connectSupplier
+      responses:
+        '200':
+          description: Successfully retrieved assigned users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_GetAssignedUsersResponse'
+              examples:
+                SuccessfulResponse:
+                  value:
+                    totalCount: 2
+                    workRequestName: Safety Inspection Q1
+                    supplierName: ABC Construction
+                    supplierBillingId: '250028423'
+                    users:
+                    - userId: '12345'
+                      firstName: John
+                      lastName: Doe
+                      userType: connectSupplier
+                    - userId: '12346'
+                      firstName: Jane
+                      lastName: Smith
+                      userType: workerManagementWorker
+                FilteredByUserType:
+                  value:
+                    totalCount: 1
+                    workRequestName: Safety Inspection Q1
+                    supplierName: ABC Construction
+                    supplierBillingId: '250028423'
+                    users:
+                    - userId: '12345'
+                      firstName: John
+                      lastName: Doe
+                      userType: connectSupplier
+        '400':
+          description: Bad Request - Invalid userType value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+              examples:
+                InvalidUserType:
+                  value:
+                    message: Invalid userType
+                    details: 'userType must be one of: connectSupplier, workerManagementWorker, workforceManagementWorker'
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '404':
+          description: Work request not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+              examples:
+                WorkRequestNotFound:
+                  value:
+                    message: Work request not found
+                    details: 'No work request found with id: 427605'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+    patch:
+      servers:
+      - url: https://api.avetta.com/worksite-safety-management
+        description: PROD
+      - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+        description: MOCK
+      operationId: updateWorkRequestAssignedUsers
+      summary: Update Work Request Assigned Users
+      description: 'Updates the assigned users for the specified work request.
+
+
+        This endpoint allows adding and removing users from the work request assignment list.
+
+
+        **Note**: The client must ensure the `clientId` used matches the node in the hierarchy where the work request was created.'
+      tags:
+      - Worksite-Safety
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The client billingId linked to the work request
+        schema:
+          type: string
+        example: '250125517'
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the work request
+        schema:
+          type: string
+        example: '704662'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/1.0.0_UpdateAssignedUsersRequest'
+            examples:
+              AddUsers:
+                value:
+                  usersToBeAdded:
+                  - '4802531'
+                  usersToBeRemoved: []
+              RemoveUsers:
+                value:
+                  usersToBeAdded: []
+                  usersToBeRemoved:
+                  - '4802531'
+              AddAndRemoveUsers:
+                value:
+                  usersToBeAdded:
+                  - '4802531'
+                  - '4802532'
+                  usersToBeRemoved:
+                  - '4802500'
+      responses:
+        '200':
+          description: Successfully updated assigned users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                example: []
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+              examples:
+                UserNotFound:
+                  value:
+                    message: User 4802531 not found for workRequestId 704662
+                    code: PROCESSSERVICE.0
+                    correlationId: 17f9b297-b912-406e-953c-42e98717b414
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+  /v1/clients/{clientId}/work-requests/{workRequestId}/supplier-users:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    get:
+      summary: Get Supplier Users by Work Request
+      description: Returns all active connectSupplier users associated with the `workRequestId`.
+      tags:
+      - Worksite-Safety
+      operationId: getWorkRequestSupplierUsers
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client associated to the work-request
+        schema:
+          type: string
+      - name: workRequestId
+        in: path
+        required: true
+        description: The unique identifier of the work request
+        schema:
+          type: string
+      - name: start
+        in: query
+        required: false
+        description: The starting index for pagination
+        schema:
+          type: integer
+          default: 0
+          minimum: 0
+      - name: limit
+        in: query
+        required: false
+        description: The maximum number of users to return
+        schema:
+          type: integer
+          default: 100
+          minimum: 1
+          maximum: 500
+      responses:
+        '200':
+          description: Successfully retrieved supplier users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_SupplierUsersResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+  /v1/workers/{workerId}/open-work-requests/summary:
+    servers:
+    - url: https://api.avetta.com/worksite-safety-management
+      description: PROD
+    - url: https://virtserver.swaggerhub.com/Avet7/WorkSiteSafety/1.0.0
+      description: MOCK
+    get:
+      summary: Get a worker's open Work Requests summary
+      description: 'For Worker Management: how many active Work Requests the worker is assigned to across every account, whether a Connect user exists for the worker, and where in Connect to send them. The link is present only when a Connect user exists and a landing page is configured. Only Avetta''s internal account may call this route.'
+      tags:
+      - Worksite-Safety
+      operationId: getWorkerOpenWorkRequestsSummary
+      parameters:
+      - name: workerId
+        in: path
+        required: true
+        description: 'The worker as Worker Management spells it (for example `01-1251251`) or as Connect stores it on an assignment (24 hexadecimal characters).
+
+          '
+        schema:
+          type: string
+        example: 01-1251251
+      responses:
+        '200':
+          description: Summary for the worker; a worker with no assignments returns a count of 0
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_WorkerOpenWorkRequestsSummary'
+              examples:
+                LinkedWorker:
+                  value:
+                    workerId: 01-1251251
+                    openWorkRequestCount: 2
+                    connectUserExists: true
+                    _links:
+                      web:
+                        href: https://app.avetta.com/avt-sup/process-tasks
+                UnlinkedWorker:
+                  value:
+                    workerId: 01-999
+                    openWorkRequestCount: 0
+                    connectUserExists: false
+        '400':
+          description: Bad Request - the id is not a Worker Management worker
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '401':
+          description: Unauthorized - API key required or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_AuthenticationErrorResponse'
+              examples:
+                AuthenticationFailure:
+                  value:
+                    message: Could not authenticate request.
+                    code: AUTH.102
+        '403':
+          description: Forbidden - the caller is not Avetta's internal account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_ErrorResponse'
+components:
+  schemas:
+    1.0.0_QuestionCategory:
+      type: object
+      description: 'Category containing related questions. Categories can be nested: any `QuestionCategory`
+
+        may carry its own `childCategories` array containing further `QuestionCategory` entries, and
+
+        those can in turn carry their own subcategories.
+
+        '
+      properties:
+        categoryId:
+          type: string
+          description: Unique identifier for the category
+          example: '46896'
+        categoryName:
+          type: string
+          description: Name of the category
+          example: Work Request Details
+        allowsMultipleInstances:
+          type: boolean
+          description: Whether this category can hold multiple independent instances (repeatable)
+          example: false
+        isEditable:
+          type: boolean
+          description: Whether questions in this category are editable by the user
+          example: true
+        questions:
+          type: array
+          description: Array of questions within this category
+          items:
+            $ref: '#/components/schemas/1.0.0_Question'
+        childCategories:
+          type: array
+          description: 'Nested subcategories of this category. Each item is itself a `QuestionCategory`, so
+
+            the same shape repeats recursively — a subcategory can contain its own questions
+
+            and its own further subcategories. The field is always present; it serialises as `[]`
+
+            when the category has no subcategories.
+
+            '
+          items:
+            $ref: '#/components/schemas/1.0.0_QuestionCategory'
+      required:
+      - categoryId
+      - categoryName
+      - allowsMultipleInstances
+      - isEditable
+      - questions
+      - childCategories
+    1.0.0_GetProjectTemplatesResponse:
+      type: object
+      description: Response containing project templates data
+      properties:
+        totalCount:
+          type: integer
+          description: Total number of project templates available
+          example: 1
+        templates:
+          type: array
+          description: Array of project templates
+          items:
+            $ref: '#/components/schemas/1.0.0_ProjectTemplate'
+      required:
+      - totalCount
+      - templates
+    1.0.0_QuestionAndAnswerValue:
+      type: object
+      description: Question paired with its answer values
+      properties:
+        questionId:
+          type: string
+          description: Unique identifier for the question
+          example: '168846'
+        questionDisplayText:
+          type: string
+          description: The question text shown to the user
+          example: 'Work Request Details:'
+        answerValues:
+          type: array
+          description: Values provided as answers (empty array when the question is unanswered)
+          items:
+            type: string
+          example:
+          - WSS demo
+      required:
+      - questionId
+      - questionDisplayText
+      - answerValues
+    1.0.0_WorkerOpenWorkRequestsSummary:
+      type: object
+      required:
+      - workerId
+      - openWorkRequestCount
+      - connectUserExists
+      properties:
+        workerId:
+          type: string
+          description: The worker as Worker Management spells it
+          example: 01-1251251
+        openWorkRequestCount:
+          type: integer
+          format: int64
+          description: Active Work Requests the worker is assigned to, across every account
+          example: 2
+        connectUserExists:
+          type: boolean
+          description: Whether a Connect user stands for this worker; without one there is no link
+          example: true
+        _links:
+          type: object
+          description: Present only when a Connect user exists and a landing page is configured
+          properties:
+            web:
+              type: object
+              properties:
+                href:
+                  type: string
+                  description: Where in Connect to send the worker
+                  example: https://app.avetta.com/avt-sup/process-tasks
+    1.0.0_Project:
+      type: object
+      description: Project details
+      properties:
+        projectId:
+          type: string
+          description: Unique identifier for the project
+          example: '40000'
+        projectName:
+          type: string
+          description: Name of the project
+          example: Test
+        isArchived:
+          type: boolean
+          description: Indicates whether the project is archived. When true, the project is archived; when false, the project is active.
+          example: false
+        status:
+          type: string
+          description: Current workflow status of the project (either "Open", or "Close").
+          example: Open
+        createdDate:
+          type: string
+          format: date-time
+          description: Date and time when the project was created
+          example: '2025-07-29T20:57:05.213Z'
+        updatedDate:
+          type: string
+          format: date-time
+          description: Date and time when the project was last updated
+          example: '2025-07-29T20:57:05.562Z'
+        _links:
+          $ref: '#/components/schemas/1.0.0_WebLinks'
+      required:
+      - projectId
+      - isArchived
+      - status
+      - createdDate
+      - updatedDate
+      - _links
+    1.0.0_AvailableChildForm:
+      type: object
+      required:
+      - formName
+      - formTemplateId
+      properties:
+        formName:
+          type: string
+          description: Display name of the form template.
+          example: Risk Observation
+        formTemplateId:
+          type: string
+          description: Unique identifier of the form template.
+          example: 68191fcb858bfe0c34c12277
+    1.0.0_GetWorkRequestsResponse:
+      type: object
+      description: Response containing work requests data
+      properties:
+        totalCount:
+          type: integer
+          description: Total number of work requests available
+          example: 1
+        workRequests:
+          type: array
+          description: Array of work requests
+          items:
+            $ref: '#/components/schemas/1.0.0_WorkRequest'
+      required:
+      - totalCount
+      - workRequests
+    1.0.0_CreateChildFormResponse:
+      type: object
+      description: Response after successfully creating a child form under a work request
+      required:
+      - message
+      - formId
+      - _links
+      properties:
+        message:
+          type: string
+          description: Human-readable success message
+          example: Form created successfully
+        formId:
+          type: string
+          description: Display identifier of the newly created child form
+          example: '434711'
+        _links:
+          $ref: '#/components/schemas/1.0.0_WebLinks'
+    1.0.0_GetAvailableChildFormsResponse:
+      type: object
+      required:
+      - availableChildForms
+      properties:
+        availableChildForms:
+          type: array
+          description: List of form templates that can be created for the work request.
+          items:
+            $ref: '#/components/schemas/1.0.0_AvailableChildForm'
+    1.0.0_UpsertWorkRequestAnswersResponse:
+      type: object
+      description: Response after successfully upserting work request answers
+      properties:
+        message:
+          type: string
+          description: Success message
+          example: Work Request(s) updated successfully
+        url:
+          type: string
+          format: uri
+          description: URL to access the updated work request
+          example: https://app.avetta.com/avt-cli/processes/68add8236383c26ae7658898
+      required:
+      - message
+      - url
+    1.0.0_Form:
+      type: object
+      description: Form containing categories of questions
+      properties:
+        formId:
+          type: string
+          description: Unique identifier for the form
+          example: '46896'
+        formName:
+          type: string
+          description: Name of the form
+          example: Risk Assessment
+        childCategories:
+          type: array
+          description: Array of categories within this form
+          items:
+            $ref: '#/components/schemas/1.0.0_QuestionCategory'
+        isEditable:
+          type: boolean
+          description: Indicates whether the form is in a state in which it can be edited by the user
+          example: true
+      required:
+      - formId
+      - childCategories
+      - isEditable
+    1.0.0_SupplierUser:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The unique identifier of the user
+          example: '234087'
+        firstName:
+          type: string
+          description: The user's first name
+          example: Nick
+        lastName:
+          type: string
+          description: The user's last name
+          example: Arcifa
+        userEmail:
+          type:
+          - string
+          - 'null'
+          description: The user's email address (may be null)
+          example: arcifa@domain.com
+      required:
+      - userId
+      - firstName
+      - lastName
+      - userEmail
+    1.0.0_ErrorResponse:
+      type: object
+      description: Standard error response format
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: Invalid client ID provided
+        code:
+          type: string
+          description: Error code for programmatic handling
+          example: WSS.400.001
+        details:
+          type: object
+          description: Additional error details
+          additionalProperties: true
+          example:
+            field: clientId
+            reason: Client ID does not exist in hierarchy
+        timestamp:
+          type: string
+          format: date-time
+          description: When the error occurred
+          example: '2025-01-31T10:30:00Z'
+        requestId:
+          type: string
+          description: Unique request identifier for tracking
+          example: req-12345678-abcd-ef90
+      required:
+      - error
+      - code
+      - timestamp
+    1.0.0_User:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The unique identifier of the assigned user
+        firstName:
+          type: string
+          description: The first name of the assigned user
+        lastName:
+          type: string
+          description: The last name of the assigned user
+        userType:
+          type: string
+          enum:
+          - connectSupplier
+          - workerManagementWorker
+          - workforceManagementWorker
+          description: The type of user provider
+    1.0.0_UpdateAssignedUsersRequest:
+      type: object
+      required:
+      - usersToBeAdded
+      - usersToBeRemoved
+      properties:
+        usersToBeAdded:
+          type: array
+          description: List of user IDs to be assigned to the work request
+          items:
+            type: string
+          example:
+          - '4802531'
+        usersToBeRemoved:
+          type: array
+          description: List of user IDs to be removed from the work request
+          items:
+            type: string
+          example: []
+    1.0.0_CreateProjectResponse:
+      type: object
+      description: Response after successfully creating a project
+      properties:
+        projectId:
+          type: string
+          description: Unique identifier for the created project
+          example: '434710'
+        _links:
+          $ref: '#/components/schemas/1.0.0_WebLinks'
+      required:
+      - projectId
+      - _links
+    1.0.0_CreateProjectRequest:
+      type: object
+      description: Request body for creating a new project
+      properties:
+        projectName:
+          type: string
+          description: Name of the project to be created. Leading and trailing whitespace is trimmed before validation, so the length limit applies to the trimmed value.
+          minLength: 1
+          maxLength: 250
+          example: Test Project
+        templateId:
+          type: string
+          description: Unique identifier of the project template to use
+          example: 68af3d0599450f37bbe9a2fc
+      required:
+      - projectName
+      - templateId
+    1.0.0_CategoryInstance:
+      type: object
+      description: 'A single instance of a category''s answers. For non-repeatable categories there is exactly one
+
+        instance and `instanceId` is omitted from the response. For repeatable categories there is one
+
+        instance per repetition, each carrying a stable `instanceId`.
+
+        '
+      properties:
+        instanceId:
+          type: string
+          description: 'Identifier for this repetition. Present only when the parent category has
+
+            `allowsMultipleInstances: true`; omitted for non-repeatable categories. Send this value back
+
+            as `instanceId` when updating an existing instance via `PUT .../questions-answers`.
+
+            '
+          example: a6aacdfa-316d-4a45-ab07-af640d880bf6
+        questionsAndAnswers:
+          type: array
+          description: Question/answer pairs for this instance
+          items:
+            $ref: '#/components/schemas/1.0.0_QuestionAndAnswerValue'
+      required:
+      - questionsAndAnswers
+    1.0.0_WebLinks:
+      type: object
+      description: 'HAL-style links to related resources.
+
+        Project and work-request links use `/avt-cli/processes/{instanceStepId}`.
+
+        Child-form links use `/avt-cli/processes/process-tree/{workRequestInstanceStepId}/{formInstanceStepId}`.
+
+        '
+      properties:
+        web:
+          type: object
+          description: Link to the resource in the Avetta web application
+          properties:
+            href:
+              type: string
+              format: uri
+              description: Absolute or relative URL to the resource in the Avetta web UI
+              example: https://app.avetta.com/avt-cli/processes/688a5808a86cf933395a239c
+          required:
+          - href
+      required:
+      - web
+      example:
+        web:
+          href: https://app.avetta.com/avt-cli/processes/688a5808a86cf933395a239c
+    1.0.0_SupplierUsersResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+          description: Total number of supplier users available
+          example: 1
+        supplierName:
+          type: string
+          description: The name of the assigned supplier
+          example: demoClient^^^Worksite Safety WSS - UT01
+        supplierBillingId:
+          type: string
+          description: The billing ID of the assigned supplier
+          example: '250410673'
+        users:
+          type: array
+          description: List of supplier users
+          items:
+            $ref: '#/components/schemas/1.0.0_SupplierUser'
+      required:
+      - totalCount
+      - supplierName
+      - supplierBillingId
+      - users
+    1.0.0_TransitionTarget:
+      type: object
+      description: A target state that a form can transition to from its current source state.
+      required:
+      - statusId
+      - name
+      - isFinal
+      - clientCanTransition
+      properties:
+        statusId:
+          type: string
+          description: Unique identifier of the target workflow status.
+          example: 64a1b2c3d4e5f6a7b8c9d0e4
+        name:
+          type: string
+          description: Human-readable name of the target workflow status.
+          example: Approved
+        isFinal:
+          type: boolean
+          description: Whether the target state is a terminal (final) state.
+          example: true
+        clientCanTransition:
+          type: boolean
+          description: 'Whether the client (the authenticated API consumer) is permitted to trigger this transition. When `false`, the transition can only be initiated by Avetta or the supplier.
+
+            '
+          example: true
+    1.0.0_GetProjectsResponse:
+      type: object
+      description: Response containing projects data
+      properties:
+        totalCount:
+          type: integer
+          description: Total number of projects available
+          example: 151
+        projects:
+          type: array
+          description: Array of projects
+          items:
+            $ref: '#/components/schemas/1.0.0_Project'
+      required:
+      - totalCount
+      - projects
+    1.0.0_GetWorkflowResponse:
+      type: object
+      description: The complete workflow transition graph for all forms within a work request.
+      required:
+      - workRequestId
+      - siteId
+      - siteName
+      - supplierId
+      - supplierName
+      - childForms
+      properties:
+        workRequestId:
+          type: string
+          description: The unique display identifier of the work request.
+          example: '445755'
+        workRequestName:
+          type:
+          - string
+          - 'null'
+          description: The human-readable name of the work request.
+          example: Q1 Safety Inspection
+        siteId:
+          type: string
+          description: The billing identifier of the site associated with the work request.
+          example: '250410673'
+        siteName:
+          type: string
+          description: The human-readable name of the site associated with the work request.
+          example: Acme Corp - Houston Plant
+        supplierId:
+          type: string
+          description: The billing identifier of the supplier associated with the work request.
+          example: '250028423'
+        supplierName:
+          type: string
+          description: The human-readable name of the supplier associated with the work request.
+          example: Safety Solutions Inc
+        childForms:
+          type: array
+          description: List of forms belonging to the work request, each with its workflow transition graph.
+          items:
+            $ref: '#/components/schemas/1.0.0_FormWorkflow'
+    1.0.0_AuthenticationErrorResponse:
+      type: object
+      description: Authentication error response
+      properties:
+        message:
+          type: string
+          description: Error message describing the authentication failure
+          example: Could not authenticate request.
+        code:
+          type: string
+          description: Specific error code for authentication failures
+          example: AUTH.102
+      required:
+      - message
+      - code
+    1.0.0_QuestionAndAnswer:
+      type: object
+      description: Question with its corresponding answer values
+      properties:
+        questionId:
+          type: string
+          description: Unique identifier for the question
+          example: '177802'
+        answerValues:
+          type: array
+          description: Array of answer values for this question
+          items:
+            type: string
+          example:
+          - This is for testing purposes
+      required:
+      - questionId
+      - answerValues
+    1.0.0_FormWithAnswers:
+      type: object
+      description: Form containing categories of questions and answers
+      properties:
+        formId:
+          type: string
+          description: Unique identifier for the form
+          example: '46896'
+        formName:
+          type: string
+          description: Name of the form
+          example: Risk Assessment
+        status:
+          type: string
+          description: Current workflow status of the form (e.g. "In Review", "Approved").
+          example: In Review
+        nextAvailableStatuses:
+          type: array
+          description: Workflow statuses this form can transition to from its current state. An empty array indicates the form has reached a terminal state (e.g. "Approved", "Completed") with no further transitions available.
+          items:
+            type: string
+          example:
+          - Approved
+          - Rejected
+        childCategories:
+          type: array
+          description: Array of question categories within this form
+          items:
+            $ref: '#/components/schemas/1.0.0_CategoryWithAnswers'
+        _links:
+          $ref: '#/components/schemas/1.0.0_WebLinks'
+      required:
+      - formId
+      - status
+      - nextAvailableStatuses
+      - childCategories
+      - _links
+    1.0.0_GetWorkRequestQuestionsResponse:
+      type: object
+      description: Response containing work request questions data
+      properties:
+        workRequestId:
+          type: string
+          description: Unique identifier for the work request
+          example: '177800'
+        workRequestName:
+          type: string
+          description: Name of the work request
+          example: wmint
+        categories:
+          type: array
+          description: Array of question categories
+          items:
+            $ref: '#/components/schemas/1.0.0_QuestionCategory'
+        childForms:
+          type: array
+          description: Array of forms added to the work request
+          items:
+            $ref: '#/components/schemas/1.0.0_Form'
+        isEditable:
+          type: boolean
+          description: Indicates whether the work request is in a state in which it's questions could be answered.
+          example: true
+      required:
+      - workRequestId
+      - categories
+      - childForms
+      - isEditable
+    1.0.0_ResponseOption:
+      type: object
+      description: Response option for multiple choice questions
+      properties:
+        displayText:
+          type: string
+          description: Text displayed to the user
+          example: 'Yes'
+        storageValue:
+          type: string
+          description: Value stored when this option is selected
+          example: '1'
+      required:
+      - displayText
+      - storageValue
+    1.0.0_WorkflowTransition:
+      type: object
+      description: 'A single transition group: one source state (`from`) and all the states it can move to (`to`). When a source state has multiple destinations (a diverging path), all destinations are listed together in this single entry. Non-terminal destinations are always listed before terminal ones within `to`.
+
+        '
+      required:
+      - from
+      - to
+      properties:
+        from:
+          $ref: '#/components/schemas/1.0.0_WorkflowState'
+        to:
+          type: array
+          description: 'Ordered list of target states reachable from the `from` state. Non-terminal states appear before terminal (final) states.
+
+            '
+          items:
+            $ref: '#/components/schemas/1.0.0_TransitionTarget'
+    1.0.0_WorkRequest:
+      type: object
+      description: Work request details
+      properties:
+        projectId:
+          type: string
+          description: Unique identifier for the project
+          example: '427603'
+        projectName:
+          type: string
+          description: Name of the project
+          example: wmint
+        siteId:
+          type: string
+          description: Site identifier
+          example: '250410673'
+        supplierId:
+          type: string
+          description: Supplier identifier
+          example: '250028423'
+        workRequestId:
+          type: string
+          description: Unique identifier for the work request
+          example: '427605'
+        workRequestName:
+          type: string
+          description: Name of the work request
+          example: wmint
+        workRequestStatus:
+          type: string
+          description: Current status of the work request
+          example: In Progress
+        createdDate:
+          type: string
+          format: date-time
+          description: Date and time when the work request was created
+          example: '2025-08-26T15:52:03.741Z'
+        updatedDate:
+          type: string
+          format: date-time
+          description: Date and time when the work request was last updated
+          example: '2025-08-26T16:17:21.694Z'
+        _links:
+          $ref: '#/components/schemas/1.0.0_WebLinks'
+      required:
+      - projectId
+      - projectName
+      - siteId
+      - supplierId
+      - workRequestId
+      - workRequestName
+      - workRequestStatus
+      - createdDate
+      - updatedDate
+      - _links
+    1.0.0_CreateWorkRequestResponse:
+      type: object
+      description: Response after successfully creating a work request
+      properties:
+        workRequestId:
+          type: string
+          description: Unique identifier for the created work request
+          example: '445755'
+        _links:
+          $ref: '#/components/schemas/1.0.0_WebLinks'
+      required:
+      - workRequestId
+      - _links
+    1.0.0_UpsertWorkRequestAnswersRequest:
+      type: object
+      description: Request body for upserting work request answers
+      properties:
+        categories:
+          type: array
+          description: Array of categories containing question answers
+          items:
+            $ref: '#/components/schemas/1.0.0_CategoryAnswers'
+      required:
+      - categories
+    1.0.0_CreateWorkRequestRequest:
+      type: object
+      description: Request body for creating a new work request
+      properties:
+        projectId:
+          type: string
+          description: Unique project identifier (must be created and active)
+          example: '40000'
+        supplierId:
+          type: string
+          description: Supplier identifier (must have proper connection to hierarchy)
+          example: '250671876'
+        siteIds:
+          type: array
+          description: Array of site identifiers (must belong to the hierarchy associated with clientId)
+          items:
+            type: string
+          example:
+          - '25406719'
+        workRequestName:
+          type: string
+          description: Name of the work request. Leading and trailing whitespace is trimmed before validation, so the length limit applies to the trimmed value.
+          minLength: 1
+          maxLength: 250
+          example: Test WR
+      required:
+      - projectId
+      - supplierId
+      - siteIds
+      - workRequestName
+    1.0.0_GetAssignedUsersResponse:
+      type: object
+      required:
+      - totalCount
+      - supplierName
+      - supplierBillingId
+      - users
+      properties:
+        totalCount:
+          type: integer
+          description: The total number of assigned users
+        workRequestName:
+          type:
+          - string
+          - 'null'
+          description: The name of the work request
+        supplierName:
+          type: string
+          description: The name of the supplier
+        supplierBillingId:
+          type: string
+          description: The billing ID of the supplier
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/1.0.0_User'
+    1.0.0_Question:
+      type: object
+      description: Individual question details
+      properties:
+        questionId:
+          type: string
+          description: Unique identifier for the question
+          example: '177802'
+        question:
+          type: string
+          description: The question text
+          example: 'Work Request Details:'
+        questionType:
+          type: string
+          description: Type of question response expected
+          enum:
+          - longText
+          - shortText
+          - multipleChoice
+          - dateRangeWithZone
+          - fileUpload
+          example: longText
+        responseOptions:
+          type: array
+          description: Available response options for multiple choice questions
+          items:
+            $ref: '#/components/schemas/1.0.0_ResponseOption'
+          example: []
+        isRequired:
+          type: boolean
+          description: Whether this question is required to be answered
+          example: true
+        isEditable:
+          type: boolean
+          description: Whether this question is able to be answered
+          example: true
+      required:
+      - questionId
+      - question
+      - questionType
+      - responseOptions
+      - isRequired
+      - isEditable
+    1.0.0_FormWorkflow:
+      type: object
+      description: 'Workflow transition graph for a single form. Describes the form''s current status and every valid state transition available in its workflow, grouped by source state and ordered by first appearance in the workflow definition.
+
+        '
+      required:
+      - formId
+      - currentStatus
+      - transitions
+      properties:
+        formId:
+          type: string
+          description: Unique display identifier for the form.
+          example: '445756'
+        formName:
+          type:
+          - string
+          - 'null'
+          description: Human-readable name of the form.
+          example: Risk Assessment
+        currentStatus:
+          type: string
+          description: The human-readable name of the workflow status the form is currently in.
+          example: Under Review
+        transitions:
+          type: array
+          description: 'Ordered list of workflow transition groups. Each entry represents a source state and the set of states it can transition to. An empty array means the form is in a terminal state with no further transitions available.
+
+            '
+          items:
+            $ref: '#/components/schemas/1.0.0_WorkflowTransition'
+    1.0.0_CategoryWithAnswers:
+      type: object
+      description: 'Category containing questions and their answers. The `allowsMultipleInstances` flag drives the shape of `instances`:
+
+        - `false` → exactly one element, with no `instanceId`.
+
+        - `true`  → zero or more elements, each carrying a stable `instanceId`.
+
+        '
+      properties:
+        categoryId:
+          type: string
+          description: Unique identifier for the category
+          example: '45500'
+        categoryName:
+          type: string
+          description: Name of the category
+          example: Work Request Details
+        allowsMultipleInstances:
+          type: boolean
+          description: Whether this category can hold multiple independent instances (repeatable)
+          example: false
+        instances:
+          type: array
+          description: 'One entry per instance of this category. Non-repeatable categories always have exactly
+
+            one instance with no `instanceId`. Repeatable categories have zero or more instances,
+
+            each identified by a non-null `instanceId`.
+
+            '
+          items:
+            $ref: '#/components/schemas/1.0.0_CategoryInstance'
+      required:
+      - categoryId
+      - categoryName
+      - allowsMultipleInstances
+      - instances
+    1.0.0_ProjectTemplate:
+      type: object
+      description: Project template details
+      properties:
+        templateId:
+          type: string
+          description: Unique identifier for the project template
+          example: 68af3d0599450f37bbe9a2fc
+        accountId:
+          type: string
+          description: Account identifier associated with the template
+          example: '250410663'
+        templateName:
+          type: string
+          description: Name of the project template
+          example: Caterpillar Project
+        createdDate:
+          type: string
+          format: date-time
+          description: Date and time when the template was created
+          example: '2025-08-27T17:14:45.744Z'
+        updatedDate:
+          type: string
+          format: date-time
+          description: Date and time when the template was last updated
+          example: '2025-08-27T17:14:45.744Z'
+      required:
+      - templateId
+      - accountId
+      - templateName
+      - createdDate
+      - updatedDate
+    1.0.0_CategoryAnswers:
+      type: object
+      description: Category containing question answers
+      properties:
+        categoryId:
+          type: string
+          description: Unique identifier for the category
+          example: '46896'
+        instanceId:
+          type: string
+          description: 'Identifier of a specific instance of a repeatable category.
+
+            - Only used when the category is repeatable (`allowsMultipleInstances: true` in the questions response).
+
+            - Omit (or send `null`) to **insert** a new instance — the server generates a new `instanceId`.
+
+            - Provide the `instanceId` returned by `GET .../questions-answers` to **update** an existing instance.
+
+            - Ignored for non-repeatable categories.
+
+            '
+          example: 8c7f4d2a-19b3-4e6c-9f10-2b6a5d1a77e0
+        questionsAndAnswers:
+          type: array
+          description: Array of question answers within this category
+          items:
+            $ref: '#/components/schemas/1.0.0_QuestionAndAnswer'
+        childCategories:
+          type: array
+          description: Optional nested categories (only present for question groups that contain subcategories)
+          items:
+            $ref: '#/components/schemas/1.0.0_CategoryAnswers'
+      required:
+      - categoryId
+      - questionsAndAnswers
+    1.0.0_WorkflowState:
+      type: object
+      description: Represents a single state in the workflow.
+      required:
+      - statusId
+      - name
+      - isFinal
+      properties:
+        statusId:
+          type: string
+          description: Unique identifier of the workflow status.
+          example: 64a1b2c3d4e5f6a7b8c9d0e1
+        name:
+          type: string
+          description: Human-readable name of the workflow status.
+          example: Under Review
+        isFinal:
+          type: boolean
+          description: 'Whether this is a terminal (final) state. A terminal state has no outgoing transitions — the form cannot move to any further state once it reaches one.
+
+            '
+          example: false
+    1.0.0_CreateChildFormRequest:
+      type: object
+      description: Request body for creating a child form under a work request
+      required:
+      - formTemplateId
+      properties:
+        formTemplateId:
+          type: string
+          description: Unique identifier of the form template to instantiate. Must be one of the templates returned by the available-child-forms endpoint.
+          example: 68191fcb858bfe0c34c12206
+    1.0.0_GetWorkRequestQuestionsAnswersResponse:
+      type: object
+      description: Response containing work request questions and answers data
+      properties:
+        workRequestId:
+          type: string
+          description: Unique identifier for the work request
+          example: '445755'
+        workRequestName:
+          type: string
+          description: Name of the work request
+          example: Test WR
+        categories:
+          type: array
+          description: Array of categories with questions and answers
+          items:
+            $ref: '#/components/schemas/1.0.0_CategoryWithAnswers'
+        childForms:
+          type: array
+          description: Array of forms added for this work request. Empty array when the work request has no child forms.
+          items:
+            $ref: '#/components/schemas/1.0.0_FormWithAnswers'
+      required:
+      - workRequestId
+      - workRequestName
+      - categories
+      - childForms
+x-refined-from:
+- avetta-connect-dist.json
+- avetta-connect-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

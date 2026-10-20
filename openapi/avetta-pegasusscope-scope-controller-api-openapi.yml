@@ -1,0 +1,750 @@
+openapi: 3.2.0
+info:
+  title: Avetta Pegasus Scope Scope Controller API
+  version: APSO-1355
+  x-logo:
+    url: avetta_logo.png
+  description: 'Operations tagged pegasusScope_scope-controller across 2 of this provider''s published API definitions: avetta-pegasus-dist.json, avetta-pegasus-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- description: EPE (Test Environment)
+  url: https://epe-onsitetrackeasy.com.au/onsite-rest
+- description: Production
+  url: https://secure.onsitetrackeasy.com.au/onsite-rest
+tags:
+- name: pegasusScope_scope-controller
+  x-displayName: scope-controller
+paths:
+  /api/v1/scope/{scopeId}:
+    get:
+      tags:
+      - pegasusScope_scope-controller
+      operationId: getScope
+      parameters:
+      - name: scopeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ScopeResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get scope
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/scope/{scopeId}/validation:
+    get:
+      tags:
+      - pegasusScope_scope-controller
+      operationId: getScopeValidationSummary
+      parameters:
+      - name: scopeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ScopeValidationSummaryResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get scope validation summary
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/scope/{scopeId}/portal:
+    get:
+      tags:
+      - pegasusScope_scope-controller
+      operationId: getScopePortal
+      parameters:
+      - name: scopeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_PortalResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get scope portal
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/scope/{scopeId}/details:
+    get:
+      tags:
+      - pegasusScope_scope-controller
+      operationId: getScopeDetails
+      parameters:
+      - name: scopeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ScopeExtraDetailResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get scope details
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/scope/{scopeId}/credentials:
+    get:
+      tags:
+      - pegasusScope_scope-controller
+      operationId: getScopeJasperCredentials
+      parameters:
+      - name: scopeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ReportProviderUserResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get scope jasper credentials
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+components:
+  schemas:
+    3.29.14_ReportProviderUserResource:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    3.29.14_IdCheckConfigurationResource:
+      type: object
+      properties:
+        providerType:
+          type: string
+          enum:
+          - PEGASUS
+          - AUSTRALIA_POST
+          - GREEN_ID
+        name:
+          type: string
+        accountId:
+          type: string
+        webServicesAPIKey:
+          type: string
+        javascriptAPIKey:
+          type: string
+    3.29.14_PortalResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        displayName:
+          type: string
+        portalType:
+          type: string
+        connectClient:
+          type: boolean
+        idCheckRequired:
+          type: boolean
+        assetsEnabled:
+          type: boolean
+        companyComplianceSubscriptionEnabled:
+          type: boolean
+        companyComplianceSubscriptionRequired:
+          type: boolean
+        companyComplianceCompliantSubscriptionRequired:
+          type: boolean
+        active:
+          type: boolean
+        shoppingProvider:
+          $ref: '#/components/schemas/3.29.14_ShoppingProviderResource'
+        scope:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        idCheckConfig:
+          $ref: '#/components/schemas/3.29.14_IdCheckConfigurationResource'
+        allowRoleAndCompetencyAssignments:
+          type: boolean
+        settings:
+          type: object
+          additionalProperties:
+            type: string
+        cardholderComplianceDefinition:
+          $ref: '#/components/schemas/3.29.14_CardholderComplianceDefinitionResource'
+    3.29.14_CardholderComplianceProductResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        productType:
+          type: string
+          enum:
+          - INITIAL_SUPPLY
+          - CARD_ONLY
+          - SUBSCRIPTION
+        cardholderType:
+          type: string
+          enum:
+          - CONTRACTOR
+          - EMPLOYEE
+          - VISITOR
+        salesCode:
+          type: string
+        itemCode:
+          type: string
+        currency:
+          type: string
+          enum:
+          - AUD
+          - EUR
+          - GBP
+          - NZD
+          - USD
+        costAmount:
+          type: number
+        taxAmount:
+          type: number
+    3.29.14_StatusType:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        reasonPhrase:
+          type: string
+    3.29.14_ShoppingProviderResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        eCommerceEnabled:
+          type: boolean
+        paymentMethodMandatory:
+          type: boolean
+        accountMandatoryForAccountPurchase:
+          type: boolean
+        chargeToClient:
+          type: boolean
+        refundAlertEmail:
+          type: string
+        active:
+          type: boolean
+        surcharge:
+          type: number
+    3.29.14_CardholderComplianceDefinitionResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        portalId:
+          type: integer
+          format: int32
+        tmEnrolmentsPendingUntilDocsApproved:
+          type: boolean
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_CardholderComplianceProductResource'
+        subscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_CardholderComplianceDefinitionSubscriptionResource'
+    3.29.14_KeyedIntegerResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    3.29.14_ScopeValidationSummaryResource:
+      type: object
+      properties:
+        scope:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        companyValidationBasis:
+          type: string
+          enum:
+          - none
+          - certKey
+          - companyCompliance
+          - certKeyAndCompanyCompliance
+        employeeValidationBasis:
+          type: string
+          enum:
+          - NONE
+          - ACCESS_KEY
+          - CARDHOLDER_COMPLIANCE
+          - ACCESS_KEY_AND_CARDHOLDER_COMPLIANCE
+        contractorValidationBasis:
+          type: string
+          enum:
+          - NONE
+          - ACCESS_KEY
+          - CARDHOLDER_COMPLIANCE
+          - ACCESS_KEY_AND_CARDHOLDER_COMPLIANCE
+    3.29.14_FullErrorResource:
+      type: object
+      properties:
+        errorType:
+          type: string
+          enum:
+          - GENERAL_ERROR
+          - BAD_REQUEST
+          - FORBIDDEN
+          - UNAUTHORISED
+          - NO_ACCESS_TO_PORTAL
+          - INVALID_PASSWORD
+          - NOT_FOUND
+          - CONSTRAINT_VIOLATION
+          - VALIDATION_ERROR
+          - ALREADY_EXISTS
+          - DATA_MISMATCH
+          - NOT_AN_EMPLOYEE
+          - CANNOT_BE_TERMINATED
+          - TOO_MANY_FAILED_ATTEMPTS
+          - REQUIRED_FIELD_MISSING
+          - VERIFICATION_TOKEN_EXPIRED
+          - PURCHASE_ORDER_EXPIRED
+          - DUPLICATE_PAYMENT
+          - PAYMENT_ERROR
+          - CANNOT_BE_UPDATED
+          - PENDING_CARD_IN_PROGRESS
+          - CANNOT_ASSIGN
+          - INVALID_PERSON_STATE
+        error:
+          type: string
+        field:
+          type: string
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_Problem'
+        errorDetail:
+          type: string
+    3.29.14_ScopeResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        timezone:
+          type: string
+        fatigueLimit:
+          type: integer
+          format: int32
+        siteId:
+          type: integer
+          format: int32
+        realmId:
+          type: integer
+          format: int32
+        concoId:
+          type: integer
+          format: int32
+        type:
+          type: string
+          enum:
+          - SYSTEM
+          - REALM
+          - SITE
+          - LOCATION
+          - CONCO_WEB
+          - EMPLOYEE
+          - UNKNOWN
+        typeDisplayName:
+          type: string
+        ownerName:
+          type: string
+        connectAccountId:
+          type: string
+        connectClient:
+          type: boolean
+        parentId:
+          type: integer
+          format: int32
+    3.29.14_CardholderComplianceDefinitionSubscriptionResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        cardholderType:
+          type: string
+          enum:
+          - CONTRACTOR
+          - EMPLOYEE
+          - VISITOR
+        subscriptionRequired:
+          type: boolean
+        subscriptionMonths:
+          type: integer
+          format: int32
+    3.29.14_ErrorResource:
+      type: object
+      properties:
+        errorType:
+          type: string
+          enum:
+          - GENERAL_ERROR
+          - BAD_REQUEST
+          - FORBIDDEN
+          - UNAUTHORISED
+          - NO_ACCESS_TO_PORTAL
+          - INVALID_PASSWORD
+          - NOT_FOUND
+          - CONSTRAINT_VIOLATION
+          - VALIDATION_ERROR
+          - ALREADY_EXISTS
+          - DATA_MISMATCH
+          - NOT_AN_EMPLOYEE
+          - CANNOT_BE_TERMINATED
+          - TOO_MANY_FAILED_ATTEMPTS
+          - REQUIRED_FIELD_MISSING
+          - VERIFICATION_TOKEN_EXPIRED
+          - PURCHASE_ORDER_EXPIRED
+          - DUPLICATE_PAYMENT
+          - PAYMENT_ERROR
+          - CANNOT_BE_UPDATED
+          - PENDING_CARD_IN_PROGRESS
+          - CANNOT_ASSIGN
+          - INVALID_PERSON_STATE
+        error:
+          type: string
+        field:
+          type: string
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_Problem'
+    3.29.14_ScopeExtraDetailResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        timezone:
+          type: string
+        fatigueLimit:
+          type: integer
+          format: int32
+        siteId:
+          type: integer
+          format: int32
+        realmId:
+          type: integer
+          format: int32
+        concoId:
+          type: integer
+          format: int32
+        type:
+          type: string
+          enum:
+          - SYSTEM
+          - REALM
+          - SITE
+          - LOCATION
+          - CONCO_WEB
+          - EMPLOYEE
+          - UNKNOWN
+        typeDisplayName:
+          type: string
+        ownerName:
+          type: string
+        connectAccountId:
+          type: string
+        connectClient:
+          type: boolean
+        parentId:
+          type: integer
+          format: int32
+        realm:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        site:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        conco:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        topLevel:
+          type: boolean
+        analyticsEnabled:
+          type: boolean
+        assessmentsEnabled:
+          type: boolean
+        broadcastingEnabled:
+          type: boolean
+        hideInviteToWorkerMobileAppInClientPortal:
+          type: boolean
+        displayIndividualTrainingPlanLinkInClientPortal:
+          type: boolean
+        firstNameMandatory:
+          type: boolean
+        lastNameMandatory:
+          type: boolean
+        genderMandatory:
+          type: boolean
+        includeGlobalCompetencyLibrary:
+          type: boolean
+    3.29.14_Problem:
+      type: object
+      properties:
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        detail:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: '#/components/schemas/3.29.14_StatusType'
+  securitySchemes:
+    3.29.14_security_auth:
+      type: oauth2
+      scheme: Bearer
+      flows:
+        authorizationCode:
+          authorizationUrl: https://login.poweredbyonsite.com/cas/oidc/authorize
+          tokenUrl: https://login.poweredbyonsite.com/cas/oidc/accessToken
+          scopes:
+            pegasus: Pegasus Authentication Scope
+    3.29.14_security_apikey:
+      type: apiKey
+      name: api_key
+      in: header
+x-refined-from:
+- avetta-pegasus-dist.json
+- avetta-pegasus-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

@@ -1,0 +1,25 @@
+name: Avetta rate limits
+generated: '2026-10-20'
+method: searched
+source: https://docs.connect.avetta.com/dist.json
+note: Published in the Client API Service (Connect) FAQ, embedded in the provider-hosted OpenAPI https://docs.connect.avetta.com/dist.json (info.description). Exhaustion returns HTTP 1015 per the docs.
+  No rate-limit response headers are documented. Pegasus and Worker Management docs publish no request-rate limits.
+limit_count: 2
+limits:
+- name: Unfiltered supplier/insurance/forms/audits listing
+  limit_text: 20 API calls per minute per IP address
+  limit: 20
+  max: 20
+  window: minute
+  scope: per IP address
+  endpoint: v1/suppliers, v2/suppliers, v1/insurance, v2/insurance, v1/forms, v1/audits, v2/audits
+  status_on_exhaustion: 1015
+  penalty: the client must wait for one hour before making any further API calls
+  condition: when no id or supplierId is provided in the query parameters
+- name: All other Connect API calls
+  limit_text: 60 API calls per minute per IP address
+  limit: 60
+  max: 60
+  window: minute
+  scope: per IP address
+  status_on_exhaustion: 1015

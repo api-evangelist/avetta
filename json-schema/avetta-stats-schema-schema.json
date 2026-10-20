@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/avetta/main/json-schema/avetta-stats-schema-schema.json",
+  "title": "statsSchema",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/avetta-worker-v1-openapi.yml#/components/schemas/statsSchema",
+  "type": "object",
+  "properties": {
+    "command": {
+      "type": "string",
+      "description": "Command"
+    },
+    "version": {
+      "type": "string",
+      "description": "Version"
+    },
+    "type": {
+      "type": "string",
+      "description": "Type"
+    },
+    "msg": {
+      "type": "string",
+      "description": "Message"
+    },
+    "start": {
+      "type": "integer",
+      "description": "Start"
+    },
+    "time": {
+      "type": "number",
+      "description": "Time in seconds to execute the command"
+    },
+    "limit": {
+      "type": "integer",
+      "description": "Limit of records to return"
+    },
+    "owner": {
+      "type": "integer",
+      "description": "Owner"
+    },
+    "count": {
+      "type": "integer",
+      "description": "Count of records returned"
+    },
+    "records": {
+      "type": "integer",
+      "description": "Total records"
+    }
+  },
+  "additionalProperties": true
+}

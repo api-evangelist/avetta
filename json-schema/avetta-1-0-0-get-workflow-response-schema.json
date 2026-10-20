@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/avetta/main/json-schema/avetta-1-0-0-get-workflow-response-schema.json",
+  "title": "1.0.0_GetWorkflowResponse",
+  "description": "The complete workflow transition graph for all forms within a work request.",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_GetWorkflowResponse",
+  "type": "object",
+  "required": [
+    "workRequestId",
+    "siteId",
+    "siteName",
+    "supplierId",
+    "supplierName",
+    "childForms"
+  ],
+  "properties": {
+    "workRequestId": {
+      "type": "string",
+      "description": "The unique display identifier of the work request."
+    },
+    "workRequestName": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "The human-readable name of the work request."
+    },
+    "siteId": {
+      "type": "string",
+      "description": "The billing identifier of the site associated with the work request."
+    },
+    "siteName": {
+      "type": "string",
+      "description": "The human-readable name of the site associated with the work request."
+    },
+    "supplierId": {
+      "type": "string",
+      "description": "The billing identifier of the supplier associated with the work request."
+    },
+    "supplierName": {
+      "type": "string",
+      "description": "The human-readable name of the supplier associated with the work request."
+    },
+    "childForms": {
+      "type": "array",
+      "description": "List of forms belonging to the work request, each with its workflow transition graph.",
+      "items": {
+        "$ref": "#/$defs/1.0.0_FormWorkflow"
+      }
+    }
+  },
+  "$defs": {
+    "1.0.0_FormWorkflow": {
+      "type": "object",
+      "description": "Workflow transition graph for a single form. Describes the form's current status and every valid state transition available in its workflow, grouped by source state and ordered by first appearance in the workflow definition.\n",
+      "required": [
+        "formId",
+        "currentStatus",
+        "transitions"
+      ],
+      "properties": {
+        "formId": {
+          "type": "string",
+          "description": "Unique display identifier for the form."
+        },
+        "formName": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Human-readable name of the form."
+        },
+        "currentStatus": {
+          "type": "string",
+          "description": "The human-readable name of the workflow status the form is currently in."
+        },
+        "transitions": {
+          "type": "array",
+          "description": "Ordered list of workflow transition groups. Each entry represents a source state and the set of states it can transition to. An empty array means the form is in a terminal state with no further transitions available.\n",
+          "items": {
+            "$ref": "#/$defs/1.0.0_WorkflowTransition"
+          }
+        }
+      }
+    },
+    "1.0.0_TransitionTarget": {
+      "type": "object",
+      "description": "A target state that a form can transition to from its current source state.",
+      "required": [
+        "statusId",
+        "name",
+        "isFinal",
+        "clientCanTransition"
+      ],
+      "properties": {
+        "statusId": {
+          "type": "string",
+          "description": "Unique identifier of the target workflow status."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the target workflow status."
+        },
+        "isFinal": {
+          "type": "boolean",
+          "description": "Whether the target state is a terminal (final) state."
+        },
+        "clientCanTransition": {
+          "type": "boolean",
+          "description": "Whether the client (the authenticated API consumer) is permitted to trigger this transition. When `false`, the transition can only be initiated by Avetta or the supplier.\n"
+        }
+      }
+    },
+    "1.0.0_WorkflowState": {
+      "type": "object",
+      "description": "Represents a single state in the workflow.",
+      "required": [
+        "statusId",
+        "name",
+        "isFinal"
+      ],
+      "properties": {
+        "statusId": {
+          "type": "string",
+          "description": "Unique identifier of the workflow status."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the workflow status."
+        },
+        "isFinal": {
+          "type": "boolean",
+          "description": "Whether this is a terminal (final) state. A terminal state has no outgoing transitions — the form cannot move to any further state once it reaches one.\n"
+        }
+      }
+    },
+    "1.0.0_WorkflowTransition": {
+      "type": "object",
+      "description": "A single transition group: one source state (`from`) and all the states it can move to (`to`). When a source state has multiple destinations (a diverging path), all destinations are listed together in this single entry. Non-terminal destinations are always listed before terminal ones within `to`.\n",
+      "required": [
+        "from",
+        "to"
+      ],
+      "properties": {
+        "from": {
+          "$ref": "#/$defs/1.0.0_WorkflowState"
+        },
+        "to": {
+          "type": "array",
+          "description": "Ordered list of target states reachable from the `from` state. Non-terminal states appear before terminal (final) states.\n",
+          "items": {
+            "$ref": "#/$defs/1.0.0_TransitionTarget"
+          }
+        }
+      }
+    }
+  }
+}

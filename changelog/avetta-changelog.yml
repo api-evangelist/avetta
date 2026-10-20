@@ -1,0 +1,18 @@
+name: Avetta API changelog
+generated: '2026-10-20'
+method: searched
+source: https://docs.connect.avetta.com/#section/Release-Notes
+scheme: dated release notes (no version numbers)
+current_version: '1.0.0'
+entries:
+- {version: '2026-07-02', date: '2026-07-02', breaking: true, highlights: [Worksite Safety APIs updated - Get Projects replaced isActive with isArchived; Create Project renamed response field project to projectId; several Work Request fields renamed]}
+- {version: '2025-10-15', date: '2025-10-15', breaking: false, highlights: [New Worksite Safety API suite]}
+- {version: '2025-08-07', date: '2025-08-07', breaking: false, highlights: [New API Get Supplier Scorecard]}
+- {version: '2025-07-23', date: '2025-07-23', breaking: false, highlights: [Forms V2 questionId parameter deprecated in favour of questionIds]}
+- {version: '2025-07-01', date: '2025-07-01', breaking: false, highlights: [Register Supplier ccEmail field added]}
+- {version: '2025-04-17', date: '2025-04-17', breaking: false, highlights: [Get Suppliers ESG scores returns Environment, Social and Governance subcategories]}
+- {version: '2025-02-06', date: '2025-02-06', breaking: false, highlights: [Form Endpoint v1 deprecated and replaced by Form Endpoint v2 (paginated)]}
+- {version: '2024-10-03', date: '2024-10-03', breaking: false, highlights: [Register Supplier billingAddress.country max size 2 to 3]}
+- {version: '2024-04-18', date: '2024-04-18', breaking: false, highlights: [New API Push Variance]}
+- {version: '2024-03-22', date: '2024-03-22', breaking: false, highlights: [New API Get Supplier Flags]}
+- {version: '2024-02-28', date: '2024-02-28', breaking: false, highlights: [Pegasus Scope v2 specification subset added (docs.pegasus.avetta.com release notes)]}

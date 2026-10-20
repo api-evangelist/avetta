@@ -1,0 +1,1329 @@
+openapi: 3.2.0
+info:
+  title: Avetta Registration API
+  version: '2026-05-08'
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  description: 'Operations tagged Registration across 2 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+security:
+- ApiKeyAuth: []
+tags:
+- name: Registration
+  description: The Registration API allows you to register a new account or user.
+paths:
+  /registration/pending-requests:
+    get:
+      operationId: pending-requests
+      tags:
+      - Registration
+      summary: List of pending registration requests
+      description: Returns a list of all workers that have pending registration requests
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/parameters-sortParam'
+      - $ref: '#/components/parameters/searchParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/pendingRequests'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /registration/pending-requests/count:
+    get:
+      operationId: pending-requests/count
+      tags:
+      - Registration
+      summary: Total count of pending registration requests
+      description: Returns the total number of pending requests
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/pendingRequestsCount'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /registration/pending-requests/{id}:
+    get:
+      operationId: pending-requests/Details
+      tags:
+      - Registration
+      summary: Details of the pending registration request, user information, sites and roles
+      description: Returns the details of a pending registration request
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/pendingRequestsDetails'
+        '201':
+          $ref: '#/components/responses/invalidDetailsResponse'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /registration/pending-requests/{id}/approve:
+    post:
+      operationId: pendingRequestsApprove
+      tags:
+      - Registration
+      summary: Approves a registration request
+      description: Approves a pending registration request based on the request ID
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/approveSuccessResponse'
+        '204':
+          $ref: '#/components/responses/approveFailedResponse'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /registration/pending-requests/{id}/deny:
+    post:
+      operationId: pendingRequestsDeny
+      tags:
+      - Registration
+      summary: Denies a registration request
+      description: Denies a pending registration request based on the request ID
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/denySuccessResponse'
+        '204':
+          $ref: '#/components/responses/denyFailedResponse'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /registration/user:
+    post:
+      operationId: registrationUser
+      tags:
+      - Registration
+      summary: The Registration API allows you to register a new user
+      description: This endpoint allows you to register a new user.
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/invitationCodeParam'
+      requestBody:
+        $ref: '#/components/requestBodies/userData'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulRegister'
+        '201':
+          $ref: '#/components/responses/badRequestRegisterUser'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /registration/account:
+    post:
+      operationId: registrationAccount
+      tags:
+      - Registration
+      summary: Given an invite code, provides a company it is associated with
+      description: On user registration, takes the invite code and returns the company it is associated with
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/invitationCodeParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/responses-successfulRegister'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '423':
+          $ref: '#/components/responses/badRequestRegisterAccount'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+components:
+  parameters:
+    invitationCodeParam:
+      name: invitecode
+      in: query
+      description: Invitation code
+      required: true
+      schema:
+        type: string
+        format: string
+    IDParam:
+      name: id
+      in: path
+      description: ID of pending registration request
+      required: true
+      schema:
+        type: integer
+    parameters-sortParam:
+      name: sort
+      in: query
+      description: Name of field to sort by
+      required: false
+      schema:
+        type: string
+        enum:
+        - first
+        - last
+        - date
+    limitParam:
+      name: limit
+      in: query
+      description: Maximum number of records to return
+      required: false
+      schema:
+        type: integer
+        default: 3000
+    searchParam:
+      name: search
+      in: query
+      description: Search term - check for the code and title
+      required: false
+      schema:
+        type: string
+    startParam:
+      name: start
+      in: query
+      description: Offset of the first record to return
+      required: false
+      schema:
+        type: integer
+        default: 1
+  responses:
+    approveSuccessResponse:
+      description: Registration request successfully approved
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              message:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            success:
+              $ref: '#/components/examples/approveSuccess'
+    denySuccessResponse:
+      description: Registration request successfully denied
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              message:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            success:
+              $ref: '#/components/examples/denySuccess'
+    responses-successfulRegister:
+      description: successful registration of the account
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              registration_account:
+                $ref: '#/components/schemas/registrationAccountSchema'
+          examples:
+            fullRegistrationAccount:
+              $ref: '#/components/examples/fullRegistrationAccount'
+    pendingRequests:
+      description: Successful - List of pending registration requests
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              requests:
+                type: array
+                items:
+                  $ref: '#/components/schemas/requestsSchema'
+    denyFailedResponse:
+      description: Registration request couldn't be denied
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              message:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            failed:
+              $ref: '#/components/examples/denyFailed'
+    approveFailedResponse:
+      description: Registration request failed to approve
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              message:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            failed:
+              $ref: '#/components/examples/approveFailed'
+    pendingRequestsDetails:
+      description: Successful - Details of a pending registration for the provided user
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              requests:
+                type: array
+                items:
+                  $ref: '#/components/schemas/requestDetailsSchema'
+    badRequestRegisterUser:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              registration_user:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            missingInvateCode:
+              $ref: '#/components/examples/missingInviteCode'
+            noDataReceived:
+              $ref: '#/components/examples/noDataReceived'
+            loginIDRequired:
+              $ref: '#/components/examples/loginIDRequired'
+            passwordRequired:
+              $ref: '#/components/examples/passwordRequired'
+            passwordLength:
+              $ref: '#/components/examples/passwordLength'
+            firstNameRequired:
+              $ref: '#/components/examples/firstNameRequired'
+            lastNameRequired:
+              $ref: '#/components/examples/lastNameRequired'
+            emailRequired:
+              $ref: '#/components/examples/emailRequired'
+            emailInvalid:
+              $ref: '#/components/examples/emailInvalid'
+            accountIDRequired:
+              $ref: '#/components/examples/accountIDRequired'
+            invalidInviteCode:
+              $ref: '#/components/examples/invalidInviteCode'
+            loginAlready:
+              $ref: '#/components/examples/loginAlready'
+            accountPendingStatus:
+              $ref: '#/components/examples/accountPendingStatus'
+            failedRegistration:
+              $ref: '#/components/examples/failedRegistration'
+    invalidDetailsResponse:
+      description: Invalid detail response
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              message:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            noPermission:
+              $ref: '#/components/examples/noPermission'
+            invalidPendingRegistrationRequestID:
+              $ref: '#/components/examples/invalidPendingRegistrationRequestID'
+            isNotPendingRegistrationRequest:
+              $ref: '#/components/examples/isNotPendingRegistrationRequest'
+    successfulRegister:
+      description: Document marked as complete
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              registration_user:
+                $ref: '#/components/schemas/registrationUserSchema'
+          examples:
+            fullRegistrationUser:
+              $ref: '#/components/examples/fullRegistrationUser'
+    pendingRequestsCount:
+      description: Successful - Total count of pending registration requests
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchemaNoCount'
+              requests:
+                type: integer
+                description: Total count of pending requests
+                example: 5
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+    badRequestRegisterAccount:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              registration_user:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            missingInviteCodeAccount:
+              $ref: '#/components/examples/missingInviteCodeAccount'
+            invalidInviteCodeAccount:
+              $ref: '#/components/examples/invalidInviteCodeAccount'
+            olderInviteCodeAccount:
+              $ref: '#/components/examples/olderInviteCodeAccount'
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+  examples:
+    invalidInviteCodeAccount:
+      summary: 400 - Invalid Invite Code
+      value:
+        stats:
+          command: Registration::Account
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_account:
+          success: false
+          message: Invalid Invite Code
+          code: REG.101
+    emailRequired:
+      summary: 400 - Email is required
+      value:
+        stats:
+          command: Registration::User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_user:
+          success: false
+          message: Email is required
+          code: 400
+          detail: UR.107
+    loginAlready:
+      summary: 400 - Login ID already exists
+      value:
+        stats:
+          command: Registration::User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+          id: 111
+          grpID: 111
+          uid: 111
+        registration_user:
+          success: false
+          message: Login ID in this Company already exists. The User was not saved
+          code: 400
+          detail: UR.111
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+    emailInvalid:
+      summary: 400 - Email is invalid
+      value:
+        stats:
+          command: Registration::User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_user:
+          success: false
+          message: Email is invalid
+          code: 400
+          detail: UR.108
+    denySuccess:
+      summary: 200 - Registration request successfully denied
+      value:
+        stats:
+          start: 1
+          limit: 3000
+          command: Registration
+          owner: 1
+          version: v1
+          time: 0.16315
+          id: 114444
+          msg: Good
+        requests:
+          code: 200
+          success: true
+          message: John Doe denied connection
+    missingInviteCodeAccount:
+      summary: 400 - Missing Invite Code
+      value:
+        stats:
+          command: Registration::Account
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_account:
+          success: false
+          message: Missing invite code
+          code: REG.100
+    invalidPendingRegistrationRequestID:
+      summary: 404 - The ID provided is not a valid pending registration request ID
+      value:
+        stats:
+          command: Registration
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+          id: 5
+          UsrID: 5
+          isAdmin: 1
+        registration:
+          success: false
+          message: Invalid ID provided
+          code: 404
+          detail: REGISTRATION.101
+          status: Not Found
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+    approveFailed:
+      summary: 204 - Registration request couldn't be approved
+      value:
+        stats:
+          start: 1
+          limit: 3000
+          command: Registration
+          owner: 1
+          version: v1
+          time: 0.16315
+          id: 114444
+          msg: Good
+        requests:
+          code: 204
+          success: false
+          message: Failed to approve connection
+    firstNameRequired:
+      summary: 400 - First Name is required
+      value:
+        stats:
+          command: Registration::User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_user:
+          success: false
+          message: First Name is required
+          code: 400
+          detail: UR.105
+    denyFailed:
+      summary: 204 - Registration request couldn't be denied
+      value:
+        stats:
+          start: 1
+          limit: 3000
+          command: Registration
+          owner: 1
+          version: v1
+          time: 0.16315
+          id: 114444
+          msg: Good
+        requests:
+          code: 204
+          success: false
+          message: Failed to deny connection
+    failedRegistration:
+      summary: 400 - Failed registering the user
+      value:
+        stats:
+          command: Registration::User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+          id: 111
+          grpID: 111
+          uid: 111
+        registration_user:
+          success: false
+          message: Failed registering the user
+          code: 400
+          detail: UR.111
+    approveSuccess:
+      summary: 200 - Registration request successfully approved
+      value:
+        stats:
+          start: 1
+          limit: 3000
+          command: Registration
+          owner: 1
+          version: v1
+          time: 0.16315
+          id: 114444
+          msg: Good
+        requests:
+          code: 200
+          success: true
+          message: John Doe approved connection
+    missingInviteCode:
+      summary: 400 - Missing Invite Code
+      value:
+        stats:
+          command: Registration::User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_user:
+          success: false
+          message: Missing invite code
+          code: 400
+          detail: UR.101
+    loginIDRequired:
+      summary: 400 - Login ID is required
+      value:
+        stats:
+          command: Registration::User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_user:
+          success: false
+          message: Login ID is required
+          code: 400
+          detail: UR.102
+    fullRegistrationUser:
+      summary: 200 - Successful registration user
+      value:
+        stats:
+          command: Registration::User
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_user:
+          success: true
+          message: Your Self Registration was successful
+          id: 111
+          code: 200
+          detail: ' '
+    accountPendingStatus:
+      summary: 400 - Account is in Pending status
+      value:
+        stats:
+          command: Registration::User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+          id: 111
+          grpID: 111
+          uid: 111
+        registration_user:
+          success: false
+          message: Account in pending status. Reach out to your training coordinator if you believe this is an error
+          code: 400
+          detail: UR.111
+    accountIDRequired:
+      summary: 400 - Account ID is required
+      value:
+        stats:
+          command: Registration::User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_user:
+          success: false
+          message: Account ID is required
+          code: 400
+          detail: UR.109
+    passwordLength:
+      summary: 400 - Password Length
+      value:
+        stats:
+          command: Registration
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_user:
+          success: false
+          message: Password should be minimum 3 characters
+          code: 400
+          detail: UR.104
+    olderInviteCodeAccount:
+      summary: 400 - Using Older Invite Code
+      value:
+        stats:
+          command: Registration::Account
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_account:
+          success: false
+          message: Invalid Invite Code
+          code: REG.101
+    passwordRequired:
+      summary: 400 - Password is required
+      value:
+        stats:
+          command: Registration::User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_user:
+          success: false
+          message: Password is required
+          code: 400
+          detail: UR.103
+    lastNameRequired:
+      summary: 400 - Last Name is required
+      value:
+        stats:
+          command: Registration::User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_user:
+          success: false
+          message: Last Name is required
+          code: 400
+          detail: UR.106
+    invalidInviteCode:
+      summary: 400 - Invalid Invite Code
+      value:
+        stats:
+          command: Registration
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_user:
+          success: false
+          message: Invalid invite code
+          code: 400
+          detail: UR.110
+    fullRegistrationAccount:
+      summary: 200 - Successful registration account
+      value:
+        stats:
+          command: Registration::Account
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_account:
+          name: ABM Technology & Manufacturing
+          con_id: 147401
+          id: 9306
+    isNotPendingRegistrationRequest:
+      summary: 404 - The registration is not pending
+      value:
+        stats:
+          command: Registration
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+          id: 5
+          UsrID: 5
+          isAdmin: 1
+        registration:
+          success: false
+          message: The registration is not pending
+          code: 404
+          detail: REGISTRATION.102
+          status: Not Found
+    noDataReceived:
+      summary: 400 - No data received to update
+      value:
+        stats:
+          command: Registration::User
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        registration_user:
+          success: false
+          message: No data received to update
+          code: 400
+          detail: UR.100
+    noPermission:
+      summary: 400 - The user does not have permission to see the details of the pending registration request of the user
+      value:
+        stats:
+          command: Registration
+          version: v1
+          type: token
+          msg: Bad
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+          id: 5
+          UsrID: 5
+          isAdmin: 1
+        registration:
+          success: false
+          message: No permission over this request
+          code: 400
+          detail: REGISTRATION.100
+          status: Bad Request
+  schemas:
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    requestsSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID of the request
+          example: 111
+        user:
+          type: object
+          description: User information
+          properties:
+            id:
+              type: integer
+              description: User ID
+              example: 10257
+            login_id:
+              type: string
+              description: Login of the user
+              example: john.doe435
+            first_name:
+              type: string
+              description: First name of the user
+              example: John
+            last_name:
+              type: string
+              description: Last name of the user
+              example: Doe
+            email:
+              type: string
+              description: Email of the user
+              example: john.doe@gmailz.com
+            date:
+              type: string
+              description: Date of the request
+              example: '2021-07-01 12:00:00'
+    requestDetailsSchema:
+      type: object
+      properties:
+        user:
+          type: object
+          description: User information
+          properties:
+            id:
+              type: integer
+              description: User ID
+              example: 10257
+            login_id:
+              type: string
+              description: Login of the user
+              example: john.doe435
+            first_name:
+              type: string
+              description: First name of the user
+              example: John
+            last_name:
+              type: string
+              description: Last name of the user
+              example: Doe
+            email:
+              type: string
+              description: Email of the user
+              example: john.doe@gmailz.com
+            date:
+              type: string
+              description: Date of the request
+              example: '2021-07-01 12:00:00'
+        sites:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Site ID
+                example: 1
+              name:
+                type: string
+                description: Site name
+                example: Site 1
+              con_id:
+                type: string
+                description: Connect ID
+                example: 123456
+        roles:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Role ID
+                example: 1
+              code:
+                type: string
+                description: Role code
+                example: ROLE_PLUMBER
+              title:
+                type: string
+                description: Role title
+                example: Plumber
+    registrationUserSchema:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Number of code of the request
+          example: 200
+        message:
+          type: string
+          description: Message of the request
+          example: Your self-registration was successful
+        id:
+          type: integer
+          description: Number of ID of the user
+          example: 111
+        detail:
+          type: string
+          description: Detail of the request
+          example: ' '
+          enum:
+          - UR.101
+          - UR.102
+          - UR.103
+          - UR.104
+          - UR.105
+          - UR.106
+          - UR.107
+          - UR.108
+          - UR.109
+          - UR.110
+          - UR.111
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+    registrationAccountSchema:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the account, is a GrpTitle
+          example: ABM Technology & Manufacturing
+        con_id:
+          type: integer
+          description: ID of the account connection, is a GrpCode
+          example: 147401
+        id:
+          type: integer
+          description: Number of ID of the account, is a GrpID
+          example: 9306
+    statsSchemaNoCount:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+      additionalProperties: true
+  requestBodies:
+    userData:
+      description: User data to insert with self registration
+      required: true
+      content:
+        text/json:
+          schema:
+            type: object
+            properties:
+              login_id:
+                description: ( Required ) Login ID of the user registering
+                type: string
+              password:
+                description: ( Required ) Password of the user registering
+                type: string
+              first_name:
+                description: ( Required ) First Name of the user registering
+                type: string
+              last_name:
+                description: ( Required ) Last Name of the user registering
+                type: string
+              email:
+                description: Email Address of the user registering
+                type: string
+              account:
+                description: Data of the account registering
+                type: object
+                properties:
+                  id:
+                    description: ( Required ) Number of ID of the account
+                    type: integer
+              locale:
+                description: Locale of the user registering
+                type: string
+                example: en_us
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v1-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

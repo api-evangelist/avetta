@@ -1,0 +1,350 @@
+openapi: 3.2.0
+info:
+  title: Avetta Languages API
+  version: '2026-05-08'
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  description: 'Operations tagged Languages across 2 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+security:
+- ApiKeyAuth: []
+tags:
+- name: Languages
+  description: The Languages API allows you to retrieve language information.
+paths:
+  /languages/{lngCode}:
+    get:
+      operationId: getLanguage
+      tags:
+      - Languages
+      summary: List of languages
+      description: Returns the information of the language with the given language code
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/lngCodeParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulLanguage'
+        '400':
+          $ref: '#/components/responses/components-responses-authenticateErrors'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /languages/{lngCode}/strings/{lngString}:
+    get:
+      operationId: getLanguageStrings
+      tags:
+      - Languages
+      summary: List of language strings by locale
+      description: Returns the list of strings for the given language code filtered by the given string portion if provided
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/lngCodeParam'
+      - $ref: '#/components/parameters/lngStringParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulStrings'
+        '400':
+          $ref: '#/components/responses/components-responses-authenticateErrors'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+components:
+  responses:
+    components-responses-authenticateErrors:
+      description: Error - Not data returned
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              languages:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            badRequest:
+              $ref: '#/components/examples/badRequest'
+            missingLanguage:
+              $ref: '#/components/examples/missingLanguage'
+    successfulLanguage:
+      description: Successful - returns the language details with the given language code
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                allOf:
+                - $ref: '#/components/schemas/statsSchema'
+                - type: object
+                  properties:
+                    locale:
+                      type: string
+                      description: Language code
+                      example: en-us
+              languages:
+                $ref: '#/components/schemas/languageSchema'
+    successfulStrings:
+      description: Successful - returns the list of strings for the given language code
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                allOf:
+                - $ref: '#/components/schemas/statsSchema'
+                - type: object
+                  properties:
+                    locale:
+                      type: string
+                      description: Language code
+                      example: en-us
+              strings:
+                $ref: '#/components/schemas/languageStringSchema'
+          examples:
+            lngString:
+              $ref: '#/components/examples/lngStrings'
+  parameters:
+    lngStringParam:
+      name: lngString
+      in: path
+      description: Language string to filter the results (could be a portion of the string)
+      required: false
+      schema:
+        type: string
+    lngCodeParam:
+      name: lngCode
+      in: path
+      description: Language code to filter the results
+      required: true
+      schema:
+        type: string
+  examples:
+    badRequest:
+      summary: Bad Request
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        languages:
+          message: Bad Request
+          status: Bad Request
+          success: false
+          code: 400
+          details: '{"uri":"/api/v1/languages/...}'
+    missingLanguage:
+      summary: Missing language
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 12
+          records: 12
+        languages:
+          message: Missing language
+          status: Not Found
+          success: false
+          code: 404
+          details: null
+    lngStrings:
+      summary: List of strings
+      value:
+        stats:
+          local: en-us
+          command: Languages
+          start: 1
+          search: Verificado
+          time: 0.04128
+          version: v1
+          msg: Good
+        strings:
+          RPT_TRAININGCOMPLETED_TXT_GRACEPERIOD: Grace Period
+          RPT_ROLESUMMARY_TXT_TOTAL: Total
+          MBTGROUP_GRPCREATEDATE: Created Date
+          CEL_SKILLSTATUSUSER_TXT_STATUS: Status
+  schemas:
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    languageStringSchema:
+      type: object
+      format: object
+      properties:
+        stringValue:
+          type: string
+          description: Pair of String code and String Value translated to the language given
+          example: 'APP_REPORT_TXT_FILTERUSERS: Workers selected: %0'
+    languageSchema:
+      type: object
+      format: object
+      properties:
+        code:
+          type: string
+          description: Language code
+          example: en-us
+        title:
+          type: string
+          description: Language title
+          example: English (United States)
+        translated_title:
+          type: string
+          description: Title for the language in its native form
+          example: null
+        direction:
+          type: string
+          description: Title for the direction a language flows
+          example: LTR
+          enum:
+          - LTR
+          - RTL
+        country_id:
+          type: integer
+          description: ID for the country locale of a language
+          example: 840
+        formats:
+          type: object
+          description: Language format for date and time
+          properties:
+            time:
+              type: string
+              description: Time format for the language
+              example: H:i
+            date:
+              type: string
+              description: Date format for the language
+              example: Y-m-d
+            input_order:
+              type: integer
+              description: It is in international format (0 - No, 1 - Yes)
+              example: 0
+              enum:
+              - 0
+              - 1
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v1-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

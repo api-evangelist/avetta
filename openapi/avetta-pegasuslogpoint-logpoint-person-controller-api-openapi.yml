@@ -1,0 +1,1661 @@
+openapi: 3.2.0
+info:
+  title: Avetta Pegasus Logpoint Logpoint Person Controller API
+  version: APSO-1355
+  x-logo:
+    url: avetta_logo.png
+  description: 'Operations tagged pegasusLogpoint_logpoint-person-controller across 2 of this provider''s published API definitions: avetta-pegasus-dist.json, avetta-pegasus-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- description: EPE (Test Environment)
+  url: https://epe-onsitetrackeasy.com.au/onsite-rest
+- description: Production
+  url: https://secure.onsitetrackeasy.com.au/onsite-rest
+tags:
+- name: pegasusLogpoint_logpoint-person-controller
+  x-displayName: logpoint-person-controller
+paths:
+  /api/v1/logpoint/{logpointId}/person/{personId}/pending-alcolizer-result:
+    post:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      operationId: createPendingAlcolizerResult
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: personId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Create pending alcolizer result
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person/visitor:
+    post:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      operationId: createVisitor
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/3.29.14_VisitorCreateResource'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_LogpointPersonResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Create visitor
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      operationId: searchIndividuals
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: companysearch
+        in: query
+        description: partial company search text
+        required: false
+        schema:
+          type: string
+      - name: firstnamesearch
+        in: query
+        description: partial first name search text
+        required: false
+        schema:
+          type: string
+      - name: lastnamesearch
+        in: query
+        description: partial last name search text
+        required: false
+        schema:
+          type: string
+      - name: phonenumber
+        in: query
+        description: partial phone number search text
+        required: false
+        schema:
+          type: string
+      - name: page.page
+        in: query
+        description: For results more than one page long, the page to load.
+        schema:
+          type: integer
+          default: 0
+      - name: page.size
+        in: query
+        description: The number of results to return per page
+        schema:
+          type: integer
+          default: 20
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/3.29.14_LogpointPersonSummaryResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Search individuals
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person/{personId}:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      operationId: getIndividual
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: personId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: forLogin
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_LogpointPersonResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get individual
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person/{personId}/watermark:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      description: getWatermark
+      operationId: getWatermark
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: personId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get watermark
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person/{personId}/role:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      operationId: getRolesForIndividual
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: personId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/3.29.14_LogpointPersonRoleResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get roles for individual
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person/{personId}/photo:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      description: getPhoto
+      operationId: getPhoto
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: personId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get photo
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person/{personId}/last-log-entry:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      operationId: getLastOnsiteLogEntryForLogpointSite
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: personId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_OnsiteLogResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get last onsite log entry for logpoint site
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person/{personId}/expiring-competency:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      operationId: getExpiringCompetences
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: personId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/3.29.14_CompetencyAssignmentSummaryResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get expiring competences
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person/{personId}/competency:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      operationId: getCompetenciesForIndividual
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: personId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/3.29.14_CompetencyAssignmentSummaryResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get competencies for individual
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person/{personId}/competency/shift-ready:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      operationId: getCompetenciesForShiftReady
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: personId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/3.29.14_CompetencyAssignmentSummaryResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get competencies for shift ready
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person/{personId}/cardholder-label:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      operationId: getCardholderLabels
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: personId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/3.29.14_CardholderLabelResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get cardholder labels
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person/{personId}/access-key:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      operationId: getAccessKeysForIndividual
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: personId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/3.29.14_LogpointPersonAccessKeyResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get access keys for individual
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person/updated:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      operationId: getUpdatedSitePeople
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: lastSync
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: page.page
+        in: query
+        description: For results more than one page long, the page to load.
+        schema:
+          type: integer
+          default: 0
+      - name: page.size
+        in: query
+        description: The number of results to return per page
+        schema:
+          type: integer
+          default: 20
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/3.29.14_LogpointPersonResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get updated site people
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person/device/{identifier}:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      operationId: getIndividualByDevice
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: identifier
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: forLogin
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_LogpointPersonResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get individual by device
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/logpoint/{logpointId}/person/contact:
+    get:
+      tags:
+      - pegasusLogpoint_logpoint-person-controller
+      operationId: getContacts
+      parameters:
+      - name: logpointId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/3.29.14_SiteContactResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Get contacts
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+components:
+  schemas:
+    3.29.14_NaturalKeyResource:
+      type: object
+      properties:
+        extSysKey:
+          type: string
+        idKey:
+          type: string
+    3.29.14_StatusType:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        reasonPhrase:
+          type: string
+    3.29.14_LogpointMoveResource:
+      type: object
+      properties:
+        logpoint:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        scope:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        moveDate:
+          type: string
+    3.29.14_KeyedIntegerResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    3.29.14_LogpointPersonResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        firstName:
+          type: string
+        lastName:
+          type: string
+        companyName:
+          type: string
+        personType:
+          type: string
+          enum:
+          - SITE_CONTACT
+          - PERSONAL_CONTACT
+          - USER
+          - EMPLOYEE
+          - CONTRACTOR
+          - VISITOR
+          - SUPERUSER
+          - UNICORN_USER
+          - INVALID_PERSON
+          - MASTERKEY
+          - CARDHOLDER
+          - PAST_CARDHOLDER
+          - INVISIBLE
+          - IMPOSSIBLE
+        phone:
+          type: string
+        gender:
+          type: string
+          enum:
+          - UNSET
+          - F
+          - M
+          - OTHER
+          - PREFER_NOT_TO_SAY
+        dob:
+          type: string
+        personStatus:
+          type: string
+          enum:
+          - PENDING
+          - APPROVED
+          - ARCHIVED
+        companyId:
+          type: integer
+          format: int32
+        lastViewedInductionId:
+          type: integer
+          format: int32
+        lastViewedInductionTime:
+          type: string
+        canLogin:
+          type: boolean
+        rejectionReason:
+          type: string
+        forceAlcolizerReading:
+          type: boolean
+        canLoginExpiry:
+          type: string
+        lastSiteLogin:
+          type: string
+        lastSiteLogout:
+          type: string
+        loggedIntoOtherSite:
+          type: boolean
+        legacyId:
+          type: string
+        desfireIds:
+          type: array
+          items:
+            type: string
+        proxIds:
+          type: array
+          items:
+            type: string
+        rejectionEventTypeId:
+          type: integer
+          format: int32
+        safeteySelectionId:
+          type: integer
+          format: int32
+        hasExpiringSiteAccess:
+          type: boolean
+        accessKeyValidationSummaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_CardholderAccessKeyValidationSummary'
+        firstLastName:
+          type: string
+        lastFirstName:
+          type: string
+    3.29.14_SiteContactResource:
+      type: object
+      properties:
+        personId:
+          type: integer
+          format: int32
+        firstName:
+          type: string
+        lastName:
+          type: string
+        gender:
+          type: string
+          enum:
+          - UNSET
+          - F
+          - M
+          - OTHER
+          - PREFER_NOT_TO_SAY
+        firstLastName:
+          type: string
+        lastFirstName:
+          type: string
+    3.29.14_CompetencySummaryResource:
+      type: object
+      properties:
+        stubId:
+          type: integer
+          format: int32
+        competencyId:
+          type: integer
+          format: int32
+        name:
+          type: string
+        description:
+          type: string
+        duration:
+          type: integer
+          format: int32
+        durationUnit:
+          type: string
+          enum:
+          - Days
+          - Weeks
+          - Months
+          - Years
+        groupCompetency:
+          type: boolean
+        verifiedDocument:
+          type: boolean
+        allowTrainingBookings:
+          type: boolean
+        external:
+          type: boolean
+        active:
+          type: boolean
+        hideFileUpload:
+          type: boolean
+        externalId:
+          $ref: '#/components/schemas/3.29.14_KeyedStringResource'
+        clientKey:
+          $ref: '#/components/schemas/3.29.14_NaturalKeyResource'
+    3.29.14_LogpointPersonSummaryResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        firstName:
+          type: string
+        lastName:
+          type: string
+        companyName:
+          type: string
+        personType:
+          type: string
+          enum:
+          - SITE_CONTACT
+          - PERSONAL_CONTACT
+          - USER
+          - EMPLOYEE
+          - CONTRACTOR
+          - VISITOR
+          - SUPERUSER
+          - UNICORN_USER
+          - INVALID_PERSON
+          - MASTERKEY
+          - CARDHOLDER
+          - PAST_CARDHOLDER
+          - INVISIBLE
+          - IMPOSSIBLE
+        phone:
+          type: string
+        gender:
+          type: string
+          enum:
+          - UNSET
+          - F
+          - M
+          - OTHER
+          - PREFER_NOT_TO_SAY
+        dob:
+          type: string
+        personStatus:
+          type: string
+          enum:
+          - PENDING
+          - APPROVED
+          - ARCHIVED
+        firstLastName:
+          type: string
+        lastFirstName:
+          type: string
+    3.29.14_CardholderAccessKeyCompetencySummary:
+      type: object
+      properties:
+        competency:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerEntity'
+        expiryDate:
+          type: string
+        type:
+          type: string
+          enum:
+          - EXPIRED
+          - NON_ASSIGNED
+          - PENDING
+    3.29.14_FullErrorResource:
+      type: object
+      properties:
+        errorType:
+          type: string
+          enum:
+          - GENERAL_ERROR
+          - BAD_REQUEST
+          - FORBIDDEN
+          - UNAUTHORISED
+          - NO_ACCESS_TO_PORTAL
+          - INVALID_PASSWORD
+          - NOT_FOUND
+          - CONSTRAINT_VIOLATION
+          - VALIDATION_ERROR
+          - ALREADY_EXISTS
+          - DATA_MISMATCH
+          - NOT_AN_EMPLOYEE
+          - CANNOT_BE_TERMINATED
+          - TOO_MANY_FAILED_ATTEMPTS
+          - REQUIRED_FIELD_MISSING
+          - VERIFICATION_TOKEN_EXPIRED
+          - PURCHASE_ORDER_EXPIRED
+          - DUPLICATE_PAYMENT
+          - PAYMENT_ERROR
+          - CANNOT_BE_UPDATED
+          - PENDING_CARD_IN_PROGRESS
+          - CANNOT_ASSIGN
+          - INVALID_PERSON_STATE
+        error:
+          type: string
+        field:
+          type: string
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_Problem'
+        errorDetail:
+          type: string
+    3.29.14_CompetencyAssignmentSummaryResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        personId:
+          type: integer
+          format: int32
+        competencySummary:
+          $ref: '#/components/schemas/3.29.14_CompetencySummaryResource'
+        timezone:
+          type: string
+        issueDate:
+          type: string
+        expiryDate:
+          type: string
+        expiryNotifiedDate:
+          type: string
+        pending:
+          type: boolean
+        status:
+          type: string
+          enum:
+          - started
+          - submitted
+          - forAssessment
+          - forEndorsement
+          - approved
+          - returned
+          - rejected
+          - terminated
+    3.29.14_KeyedIntegerEntity:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    3.29.14_VisitorCreateResource:
+      required:
+      - companyName
+      - firstName
+      - lastName
+      - phone
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        companyName:
+          maxLength: 100
+          minLength: 0
+          type: string
+        phone:
+          type: string
+    3.29.14_CardholderLabelResource:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum:
+          - COMPETENCY
+          - ROLE
+          - KEY
+    3.29.14_ErrorResource:
+      type: object
+      properties:
+        errorType:
+          type: string
+          enum:
+          - GENERAL_ERROR
+          - BAD_REQUEST
+          - FORBIDDEN
+          - UNAUTHORISED
+          - NO_ACCESS_TO_PORTAL
+          - INVALID_PASSWORD
+          - NOT_FOUND
+          - CONSTRAINT_VIOLATION
+          - VALIDATION_ERROR
+          - ALREADY_EXISTS
+          - DATA_MISMATCH
+          - NOT_AN_EMPLOYEE
+          - CANNOT_BE_TERMINATED
+          - TOO_MANY_FAILED_ATTEMPTS
+          - REQUIRED_FIELD_MISSING
+          - VERIFICATION_TOKEN_EXPIRED
+          - PURCHASE_ORDER_EXPIRED
+          - DUPLICATE_PAYMENT
+          - PAYMENT_ERROR
+          - CANNOT_BE_UPDATED
+          - PENDING_CARD_IN_PROGRESS
+          - CANNOT_ASSIGN
+          - INVALID_PERSON_STATE
+        error:
+          type: string
+        field:
+          type: string
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_Problem'
+    3.29.14_Problem:
+      type: object
+      properties:
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        detail:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: '#/components/schemas/3.29.14_StatusType'
+    3.29.14_PersonResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        clientKey:
+          $ref: '#/components/schemas/3.29.14_NaturalKeyResource'
+        personType:
+          type: string
+          enum:
+          - SITE_CONTACT
+          - PERSONAL_CONTACT
+          - USER
+          - EMPLOYEE
+          - CONTRACTOR
+          - VISITOR
+          - SUPERUSER
+          - UNICORN_USER
+          - INVALID_PERSON
+          - MASTERKEY
+          - CARDHOLDER
+          - PAST_CARDHOLDER
+          - INVISIBLE
+          - IMPOSSIBLE
+        phone1:
+          type: string
+        phone2:
+          type: string
+    3.29.14_LogpointPersonAccessKeyResource:
+      type: object
+      properties:
+        personId:
+          type: integer
+          format: int32
+        keyName:
+          type: string
+        active:
+          type: boolean
+    3.29.14_CardholderAccessKeyValidationSummary:
+      type: object
+      properties:
+        accessKey:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerEntity'
+        competencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_CardholderAccessKeyCompetencySummary'
+    3.29.14_OnsiteLogResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        site:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        loginDate:
+          type: string
+        logoutDate:
+          type: string
+        person:
+          $ref: '#/components/schemas/3.29.14_PersonResource'
+        inLogpoint:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        inScope:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        lastLogpointMove:
+          $ref: '#/components/schemas/3.29.14_LogpointMoveResource'
+        outLogpoint:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        outScope:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        siteContact:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+    3.29.14_LogpointPersonRoleResource:
+      type: object
+      properties:
+        personId:
+          type: integer
+          format: int32
+        roleName:
+          type: string
+    3.29.14_KeyedStringResource:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+  securitySchemes:
+    3.29.14_security_auth:
+      type: oauth2
+      scheme: Bearer
+      flows:
+        authorizationCode:
+          authorizationUrl: https://login.poweredbyonsite.com/cas/oidc/authorize
+          tokenUrl: https://login.poweredbyonsite.com/cas/oidc/accessToken
+          scopes:
+            pegasus: Pegasus Authentication Scope
+    3.29.14_security_apikey:
+      type: apiKey
+      name: api_key
+      in: header
+x-refined-from:
+- avetta-pegasus-dist.json
+- avetta-pegasus-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

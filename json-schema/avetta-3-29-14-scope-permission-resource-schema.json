@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/avetta/main/json-schema/avetta-3-29-14-scope-permission-resource-schema.json",
+  "title": "3.29.14_ScopePermissionResource",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/avetta-pegasus-openapi.yml#/components/schemas/3.29.14_ScopePermissionResource",
+  "type": "object",
+  "properties": {
+    "scope": {
+      "$ref": "#/$defs/3.29.14_ScopeResource"
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "LOG_PERSON_IN_OUT",
+          "PERFORM_CARDHOLDER_ROLE_AUDIT",
+          "SEARCH_BY_PERSON_DETAILS",
+          "MOBILE_ACCESS",
+          "ONSITE_ACCESS",
+          "PERFORM_TOOLBOX_TALKS",
+          "PERFORM_GLOBAL_SEARCH",
+          "ASSETS_LOGIN_LOGOUT",
+          "ASSETS_APPROVE",
+          "MOBILE_ASSETS_ACCESS",
+          "MANAGE_CREWS",
+          "MANAGE_CARDHOLDER_MESSAGES",
+          "MANAGE_CLASSROOM_TRAINING",
+          "MANAGE_ONLINE_TRAINING",
+          "MANAGE_ASSESSMENTS",
+          "MANAGE_USERS",
+          "ACCESS_FINANCIAL_REPORTS",
+          "BLOCK_CARDHOLDERS",
+          "LOGPOINT_MESSAGE_SENDER",
+          "LOGPOINT_MESSAGE_MANAGER",
+          "BROADCAST_MANAGER",
+          "BROADCAST_EMAIL_SENDER",
+          "BROADCAST_SMS_SENDER",
+          "EDIT_CERT",
+          "ASSIGN_CERT",
+          "AUTHORISE_ASSIGNED_CERT",
+          "EDIT_CERT_KEY",
+          "ASSIGN_CERT_KEY",
+          "EDIT_COMPETENCY",
+          "ASSIGN_COMPETENCY",
+          "EDIT_ACESS_KEY",
+          "ASSIGN_ACCESS_KEY",
+          "ASSOCIATE_CONTRACTORS",
+          "ASSOCIATE_EMPLOYEES",
+          "END_EMPLOYMENT",
+          "PRINT_CARDS",
+          "MANAGE_SAFETY_SELECTIONS",
+          "VIEW_ALCOLIZER_RESULTS",
+          "EDIT_SITE_SETTINGS",
+          "ALERT_MANAGER",
+          "LOGPOINT_MANAGER",
+          "VIEW_FOREIGN_DATA",
+          "REPRESENT_EMPLOYERS",
+          "ANALYTICS_REPORT_ROLE",
+          "VIEW_SMS_REVIEW_RESULTS",
+          "EDIT_ADMIN_NOTES",
+          "DOWNLOAD_FILES",
+          "UPLOAD_FILES",
+          "ACCESS_PRIVATE_DATA",
+          "ACCESS_SENSITIVE_DATA",
+          "EDIT_INCOMPLETE_ACTIONS",
+          "PROCESS_ESCALATED_ACTIONS",
+          "CREATE_CORRECTIVE_ACTIONS",
+          "PROCESS_CORRECTIVE_ACTIONS",
+          "ACTION_CORRECTIVE_ACTIONS",
+          "VIEW_CORRECTIVE_ACTIONS",
+          "PROCESS_PENDING_DATA",
+          "PROCESS_PENDING_SMS_REVIEWS",
+          "ENDORSE_PENDING_ASSESSMENTS",
+          "MANAGE_MERGE_TEMPLATES",
+          "PERFORM_ID_CHECKS",
+          "IMPORT_DATA",
+          "APPROVE_SITE_COMPS",
+          "EDIT_REALM_SETTINGS",
+          "REPRESENT_CONCOS_IN_OWN_PORTALS",
+          "ASSIGN_ROLE",
+          "EDIT_ROLE",
+          "ASSIGN_TASK",
+          "EDIT_TASK",
+          "EDIT_CONCO_WEB_SETTINGS",
+          "VIEW_MAINTENANCE_OF_COMPETENCY",
+          "MANAGE_EMERGENCY_EVENTS",
+          "SEND_SMS_FOR_EMERGENCY_EVENTS",
+          "MANAGE_SOCIAL_SECURITY_NUMBER",
+          "CAN_SELECT_GLOBAL_COMPETENCIES"
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "3.29.14_ScopeResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "fatigueLimit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "siteId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "realmId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "concoId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "SYSTEM",
+            "REALM",
+            "SITE",
+            "LOCATION",
+            "CONCO_WEB",
+            "EMPLOYEE",
+            "UNKNOWN"
+          ]
+        },
+        "typeDisplayName": {
+          "type": "string"
+        },
+        "ownerName": {
+          "type": "string"
+        },
+        "connectAccountId": {
+          "type": "string"
+        },
+        "connectClient": {
+          "type": "boolean"
+        },
+        "parentId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  }
+}

@@ -1,22 +1,22 @@
-generated: '2026-07-18'
+generated: '2026-10-20'
 method: probed
 source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
 hosts:
 - host: avetta.com
   https: true
   tls_version: TLSv1.3
-  cert_expires: Sep 11 12:34:33 2026 GMT
+  cert_expires: Jan  7 19:56:35 2027 GMT
   hsts: true
   hsts_max_age: 31536000
 - host: docs.api.avetta.com
   https: true
   tls_version: TLSv1.3
-  cert_expires: Sep 18 00:58:18 2026 GMT
+  cert_expires: Jan 17 01:49:17 2027 GMT
   hsts: false
 - host: api.avetta.com
   https: true
   tls_version: TLSv1.3
-  cert_expires: Oct  6 14:54:02 2026 GMT
+  cert_expires: Dec  4 18:51:51 2026 GMT
   hsts: null
 domains:
 - domain: avetta.com

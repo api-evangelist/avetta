@@ -1,0 +1,314 @@
+openapi: 3.2.0
+info:
+  title: Avetta Admin API
+  version: '2026-05-08'
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  description: 'Operations tagged Admin across 2 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+security:
+- ApiKeyAuth: []
+tags:
+- name: Admin
+  description: The Admin API provides administrative endpoints for system overview and management data. Access requires appropriate security permissions.
+paths:
+  /admin/overview:
+    get:
+      operationId: getAdminOverview
+      tags:
+      - Admin
+      summary: Administrative Overview
+      description: Returns administrative overview with counts of various system components that the admin can see based on their security permissions
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulAdminOverview'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+components:
+  responses:
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+    successfulAdminOverview:
+      description: Successfully retrieved administrative overview data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+                description: Indicates successful API response
+              overview:
+                $ref: '#/components/schemas/overviewSchema'
+              stats:
+                $ref: '#/components/schemas/schemas-statsSchema'
+          examples:
+            fullAccess:
+              summary: User with full administrative access
+              value:
+                overview:
+                  reviews: 5
+                  time_card: 23
+                  variances: 2
+                stats:
+                  records: 3
+                  count: 3
+                  time: 0.125
+                  params: {}
+                  command: overview
+                  user: 12345
+            limitedAccess:
+              summary: User with limited administrative access
+              value:
+                success: true
+                overview:
+                  time_card: 23
+                stats:
+                  records: 1
+                  count: 1
+                  time: 0.089
+                  params: {}
+                  command: overview
+                  user: 12346
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+  schemas:
+    schemas-statsSchema:
+      type: object
+      description: Metadata about the API request and response
+      properties:
+        records:
+          type: integer
+          description: Total number of data items available
+          example: 3
+          minimum: 0
+        count:
+          type: integer
+          description: Number of items returned in this response
+          example: 3
+          minimum: 0
+        time:
+          type: number
+          format: float
+          description: Time taken to process the request in seconds
+          example: 0.125
+          minimum: 0
+        params:
+          type: object
+          description: Parameters used in the request (excluding sensitive data like apikey)
+          additionalProperties: true
+          example: {}
+        command:
+          type: string
+          description: The command or operation that was executed
+          example: overview
+        user:
+          type: integer
+          description: ID of the user making the request
+          example: 12345
+          minimum: 1
+      required:
+      - records
+      - count
+      - time
+      - params
+      - command
+      - user
+      additionalProperties: false
+    overviewSchema:
+      type: object
+      description: Administrative overview counts for various system components
+      properties:
+        reviews:
+          type: integer
+          description: Count of pending document reviews (only included if user has ST_CREDIT security)
+          example: 5
+          minimum: 0
+        time_card:
+          type: integer
+          description: Count of workers currently on site
+          example: 23
+          minimum: 0
+        variances:
+          type: integer
+          description: Count of open variances (only included if user has ST_VARIANCE security)
+          example: 2
+          minimum: 0
+      required:
+      - time_card
+      additionalProperties: false
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+  examples:
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v1-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

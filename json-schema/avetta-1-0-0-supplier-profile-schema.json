@@ -1,0 +1,419 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/avetta/main/json-schema/avetta-1-0-0-supplier-profile-schema.json",
+  "title": "1.0.0_SupplierProfile",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_SupplierProfile",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "number"
+    },
+    "name": {
+      "type": "string"
+    },
+    "dbaNames": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "description": {
+      "type": "string"
+    },
+    "accountStatus": {
+      "type": "string",
+      "enum": [
+        "active",
+        "pending",
+        "deactivated"
+      ]
+    },
+    "website": {
+      "type": "string"
+    },
+    "primaryContact": {
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fax": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "language": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "firstName",
+        "lastName",
+        "email",
+        "language"
+      ]
+    },
+    "billingAddress": {
+      "properties": {
+        "addressLine1": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "city": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "state": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "postalCode": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "country": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "country"
+      ]
+    },
+    "location": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "addressLine1": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "city": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "state": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "postalCode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "country": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "serviceAreas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "addressLine1": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "city": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "state": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "postalCode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "country": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "createdDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "diversity": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "externalId": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "value": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "businessNumbers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "value"
+        ]
+      }
+    },
+    "authorizations": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "authorizationCategory": {
+            "type": "string"
+          },
+          "authorizationType": {
+            "type": "string"
+          },
+          "issuingAuthority": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "licenseNumber": {
+            "type": "string"
+          },
+          "expirationDate": {
+            "type": "string"
+          },
+          "files": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "clientTags": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "displayId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "appliedDate": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "appliedByUserId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "appliedByFirstName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "appliedByLastName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "internal": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "createdByClientId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "createdByClientName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "visibleToContractor": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "supplierSettings": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "string"
+      }
+    },
+    "trades": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "tradeId": {
+            "type": "string"
+          },
+          "primary": {
+            "type": "boolean"
+          },
+          "selfPerformed": {
+            "type": "boolean"
+          },
+          "manufacture": {
+            "type": "boolean"
+          },
+          "activityPercent": {
+            "type": "string"
+          },
+          "displayText": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "taxonomyName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "tradeCode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "dbaNames",
+    "description",
+    "accountStatus",
+    "website",
+    "primaryContact",
+    "billingAddress",
+    "createdDate",
+    "updatedDate",
+    "diversity",
+    "externalId",
+    "businessNumbers"
+  ]
+}

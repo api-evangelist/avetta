@@ -1,0 +1,774 @@
+openapi: 3.2.0
+info:
+  title: Avetta Accounts API
+  version: '2026-05-08'
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  description: 'Operations tagged Accounts across 2 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+security:
+- ApiKeyAuth: []
+tags:
+- name: Accounts
+  description: The Accounts API allows you to retrieve account information.
+paths:
+  /accounts/{id}:
+    get:
+      operationId: accounts
+      tags:
+      - Accounts
+      summary: List of accounts to client
+      description: Returns a list of accounts to client
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/searchParam'
+      - $ref: '#/components/parameters/sortParam'
+      - $ref: '#/components/parameters/typeParam'
+      - $ref: '#/components/parameters/modifiedAfterParam'
+      - $ref: '#/components/parameters/extraParam'
+      - $ref: '#/components/parameters/role_idParam'
+      - $ref: '#/components/parameters/showInactiveParam'
+      - $ref: '#/components/parameters/flagParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulAccounts'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+components:
+  schemas:
+    propertiesSchema:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Number of ID of the account
+          example: 24041
+        con_id:
+          type: integer
+          description: ID of the Group Code
+          example: 9711
+        name:
+          type: string
+          description: Name of the account
+          example: Avetta Admin
+        type:
+          type: string
+          description: Show type of the account when the type parameter is used
+          enum:
+          - client
+          - supplier
+          - supplierSubcontractor
+        status:
+          type: string
+          description: Status of the account
+          enum:
+          - active
+          - inactive
+        con_flag:
+          type: string
+          description: Flag of the account
+          enum:
+          - Green
+          - Amber
+          - Red
+        external_id:
+          description: This field could be empty or contain one or more external_id fields
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: object
+              additionalProperties:
+                type: string
+        user_count:
+          type: integer
+          description: Number of users of the account
+          example: 113
+        created_date:
+          type: string
+          description: Date of creation of the account
+          example: '2020-05-20 17:54:00'
+        updated_date:
+          type: string
+          description: Date of update of the account
+          example: '2022-09-06 18:42:00'
+        invite_url:
+          type: string
+          description: URL of the account
+          example: https://www.avetta.com
+        users:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Number of ID of the account
+                example: 328035
+              con_id:
+                type:
+                - string
+                - 'null'
+                description: ID of the root account
+                example: null
+              login_id:
+                type: string
+                description: Login ID of the account
+                example: DANIEL L. FLORES
+              email:
+                type:
+                - string
+                - 'null'
+                description: Email of the account
+                example: null
+              first_name:
+                type: string
+                description: First name of the account
+                example: Daniel
+              last_name:
+                type: string
+                description: Last name of the account
+                example: Flores
+              title:
+                type: string
+                description: Title of the account
+                example: Assistant
+              phone:
+                type:
+                - string
+                - 'null'
+                description: Phone of the account
+                example: ''
+              status:
+                type: string
+                description: Status of the account
+                enum:
+                - Active
+                - Inactive
+              flag:
+                type: string
+                description: Flag of the account
+                enum:
+                - Green
+                - Yellow
+                - Red
+              flag_forced:
+                type: boolean
+                description: Flag forced of the account
+                example: false
+              external_id:
+                description: This field could be empty or contain one or more external_id fields
+                type: array
+                items:
+                  type: object
+                  additionalProperties:
+                    type: object
+                    additionalProperties:
+                      type: string
+        connections:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Number of ID of the account
+                example: 18322
+              con_id:
+                type: string
+                description: ID of the root account
+                example: '250084932'
+              name:
+                type: string
+                description: Name of the account
+                example: Rio Tinto Corporate
+              status:
+                type: string
+                description: Status of the account
+                enum:
+                - Active
+                - Inactive
+              con_flag:
+                type: string
+                description: Flag of the account
+                enum:
+                - Green
+                - Yellow
+                - Red
+              flag_forced:
+                type:
+                - string
+                - 'null'
+                description: Flag forced status of the connection
+              external_id:
+                description: This field could be empty or contain one or more external_id fields
+                type: array
+                items:
+                  type: object
+                  additionalProperties:
+                    type: object
+                    additionalProperties:
+                      type: string
+        admins:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Number of ID of the account
+                example: 197925
+              con_id:
+                type:
+                - string
+                - 'null'
+                description: ID of the Group Code
+                example: null
+              login_id:
+                type: string
+                description: Login ID of the account
+                example: 1 A RTK ADMIN
+              email:
+                type:
+                - string
+                - 'null'
+                description: Email of the account
+                example: null
+              first_name:
+                type: string
+                description: First name of the account
+                example: RTK
+              last_name:
+                type: string
+                description: Last name of the account
+                example: Admin
+              title:
+                type: string
+                description: Title of the account
+                example: N/A
+              phone:
+                type:
+                - string
+                - 'null'
+                description: Phone of the account
+                example: ''
+              status:
+                type: string
+                description: Status of the account
+                enum:
+                - Active
+                - Inactive
+              permissions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Number of ID of the account
+                      example: 3002
+                    name:
+                      type: string
+                      description: Name of the account
+                      example: Workers
+              external_id:
+                description: This field could be empty or contain one or more external_id fields
+                type: array
+                items:
+                  type: object
+                  additionalProperties:
+                    type: object
+                    additionalProperties:
+                      type: string
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+  parameters:
+    extraParam:
+      name: extra
+      in: query
+      description: Extra??
+      required: false
+      schema:
+        type: string
+        enum:
+        - users
+        - connections
+        - admins
+    typeParam:
+      name: type
+      in: query
+      description: Type of the account
+      required: false
+      schema:
+        type: string
+        enum:
+        - client
+        - supplier
+        - supplierSubcontractor
+    sortParam:
+      name: sort
+      in: query
+      description: Name of field to sort by
+      required: false
+      schema:
+        type: string
+        enum:
+        - id
+        - code
+        - title
+        - group
+    limitParam:
+      name: limit
+      in: query
+      description: Maximum number of records to return
+      required: false
+      schema:
+        type: integer
+        default: 3000
+    searchParam:
+      name: search
+      in: query
+      description: Search term - check for the code and title
+      required: false
+      schema:
+        type: string
+    showInactiveParam:
+      name: showInactive
+      in: query
+      description: Show inactive
+      required: false
+      schema:
+        type: boolean
+        enum:
+        - true
+        - false
+    idParam:
+      name: id
+      in: path
+      description: references an id to reduce list down to 1 item
+      required: false
+      schema:
+        type: integer
+    flagParam:
+      name: flag
+      in: query
+      description: Flag
+      required: false
+      schema:
+        type: string
+        enum:
+        - Green
+        - Amber
+        - Red
+    role_idParam:
+      name: role_id
+      in: query
+      description: Show the users with the specified role ID
+      required: false
+      schema:
+        type: integer
+    startParam:
+      name: start
+      in: query
+      description: Offset of the first record to return
+      required: false
+      schema:
+        type: integer
+        default: 1
+    modifiedAfterParam:
+      name: modifiedAfter
+      in: query
+      description: Modified after
+      required: false
+      schema:
+        type: string
+        format: date-time
+  examples:
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+    successfulResponseExtraAdmin:
+      summary: 200 - Extra, extra=admins
+      value:
+        stats:
+          command: Accounts
+          version: v1
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 756
+          records: 756
+        accounts:
+        - con_id: 250089912
+          id: 19745
+          status: active
+          user_count: 21
+          name: 1 A RTK Company
+          created_date: '2020-12-11 19:09:00'
+          con_flag: Green
+          external_id:
+          - Connect:
+              TAG: '["Kennecott Category 1","Kennecott Delivery","Communication"]'
+          type: supplier
+          invite_url: ''
+          admins:
+          - external_id: []
+            first_name: RTK
+            permissions:
+            - id: 3002
+              name: Workers
+            phone: null
+            login_id: 1 A RTK ADMIN
+            title: N/A
+            email: null
+            id: 197925
+            con_id: null
+            status: Active
+            last_name: Admin
+          updated_date: '2022-09-06 18:42:00'
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+    successfulResponseExtraUser:
+      summary: 200 - Extra, extra=users
+      value:
+        stats:
+          command: Accounts
+          version: v1
+          msg: Good
+          start: 1
+          time: 27.98206
+          limit: 3000
+          owner: 1234567890
+          count: 756
+          records: 756
+        accounts:
+        - name: Yellow Jacket Drilling Services, LLC
+          created_date: '2020-05-20 17:54:00'
+          con_id: 11325
+          type: supplier
+          external_id:
+          - Connect:
+              SAP: '11035178'
+          users:
+          - login_id: DANIEL L. FLORES
+            title: Assistant
+            email: null
+            first_name: Daniel
+            external_id: []
+            last_name: Flores
+            flag: Red
+            con_id: null
+            id: 328035
+            status: Active
+            flag_forced: false
+            phone: ''
+          status: active
+          id: 6896
+          invite_url: ''
+          con_flag: Green
+          user_count: 12
+          updated_date: '2022-09-06 18:41:00'
+    successfulResponse:
+      summary: 200 - Client/Supplier/Subcontractor
+      value:
+        stats:
+          command: Accounts
+          version: v1
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        accounts:
+        - id: 24041
+          con_id: 9711
+          name: Metro Group inc
+          type: supplier
+          status: active
+          con_flag: Green
+          external_id:
+          - Connect:
+              SAP: '11035178'
+              TAG: '["Kennecott Category 1","Kennecott Delivery","Communication"]'
+          user_count: 113
+          created_date: '2020-05-20 17:54:00'
+          updated_date: '2022-09-06 18:42:00'
+          invite_url: https://www.avetta.com
+          users:
+          - login_id: DANIEL L. FLORES
+            title: Assistant
+            email: null
+            first_name: Daniel
+            external_id: []
+            last_name: Flores
+            flag: Red
+            con_id: null
+            id: 328035
+            status: Active
+            flag_forced: false
+            phone: ''
+          connections:
+          - id: 18322
+            con_id: '250084941'
+            name: Rio Tinto Corporate
+            status: Active
+            flag_forced: Green
+            external_id: []
+          admins:
+          - external_id: []
+            first_name: RTK
+            permissions:
+            - id: 3002
+              name: Workers
+            phone: null
+            login_id: 1 A RTK ADMIN
+            title: N/A
+            email: null
+            id: 197925
+            con_id: null
+            status: Active
+            last_name: Admin
+    successfulResponseExtraConnection:
+      summary: 200 - Extra, extra=connections
+      value:
+        stats:
+          command: Accounts
+          version: v1
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 756
+          records: 756
+        accounts:
+        - connections:
+          - id: 18322
+            con_id: '250084941'
+            name: Rio Tinto Corporate
+            status: Active
+            flag_forced: Green
+            external_id: []
+          user_count: 113
+          status: active
+          invite_url: https://www.avetta.com
+          con_id: 9711
+          created_date: '2020-05-20 17:54:00'
+          id: 24041
+          updated_date: '2022-09-06 18:42:00'
+          name: Yellow Jacket Drilling Services, LLC
+          external_id:
+          - Connect:
+              SAP: '11035178'
+          con_flag: Green
+          type: supplier
+  responses:
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+    successfulAccounts:
+      description: Successful
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                allOf:
+                - $ref: '#/components/schemas/statsSchema'
+                - type: object
+                  properties:
+                    type:
+                      type: string
+                      description: Show type of the account when the type parameter is used
+                      enum:
+                      - client
+                      - supplier
+                      - supplierSubcontractor
+              accounts:
+                type: array
+                items:
+                  $ref: '#/components/schemas/propertiesSchema'
+          examples:
+            successfulResponse:
+              $ref: '#/components/examples/successfulResponse'
+            successfulResponseExtraUser:
+              $ref: '#/components/examples/successfulResponseExtraUser'
+            successfulResponseExtraConnection:
+              $ref: '#/components/examples/successfulResponseExtraConnection'
+            successfulResponseExtraAdmin:
+              $ref: '#/components/examples/successfulResponseExtraAdmin'
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v1-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

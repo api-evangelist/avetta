@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/avetta/main/json-schema/avetta-request-structure-refresh-schema.json",
+  "title": "requestStructureRefresh",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/avetta-worker-v1-openapi.yml#/components/schemas/requestStructureRefresh",
+  "type": "object",
+  "properties": {
+    "grant_type": {
+      "description": "Type of access requested. To refresh the tokens, use \"refresh_token\"",
+      "type": "string",
+      "enum": [
+        "refresh_token"
+      ]
+    },
+    "device": {
+      "description": "ID of the device.",
+      "type": "string",
+      "format": "string"
+    },
+    "wm_refresh_token": {
+      "description": "Worker Management Refresh token to be refreshed. Can be blank if the Connect token is provided.",
+      "type": "string",
+      "format": "string"
+    },
+    "connect_refresh_token": {
+      "description": "Connect Refresh token to be refreshed. Can be blank if the WM token is provided.",
+      "type": "string",
+      "format": "string"
+    },
+    "user": {
+      "description": "User ID linked to the refresh token. Required if a WM Token is provided",
+      "type": "number",
+      "format": "int32"
+    }
+  },
+  "required": [
+    "grant_type",
+    "device"
+  ]
+}

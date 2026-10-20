@@ -1,0 +1,751 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/avetta/main/json-schema/avetta-3-29-14-worker-resource-schema.json",
+  "title": "3.29.14_WorkerResource",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/avetta-pegasus-openapi.yml#/components/schemas/3.29.14_WorkerResource",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "photoLink": {
+      "type": "string"
+    },
+    "companies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/3.29.14_KeyedIntegerClientResource"
+      }
+    },
+    "email1": {
+      "type": "string"
+    },
+    "email2": {
+      "type": "string"
+    },
+    "uniqueEmail": {
+      "type": "string"
+    },
+    "phone1": {
+      "type": "string"
+    },
+    "phone2": {
+      "type": "string"
+    },
+    "address": {
+      "$ref": "#/$defs/3.29.14_AddressResource"
+    },
+    "nextOfKin": {
+      "$ref": "#/$defs/3.29.14_NextOfKinResource"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "APPROVED",
+        "ARCHIVED"
+      ]
+    },
+    "locale": {
+      "type": "string"
+    },
+    "mergedToPersonId": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "createTime": {
+      "type": "string"
+    },
+    "updateTime": {
+      "type": "string"
+    },
+    "personTypes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "SITE_CONTACT",
+          "PERSONAL_CONTACT",
+          "USER",
+          "EMPLOYEE",
+          "CONTRACTOR",
+          "VISITOR",
+          "SUPERUSER",
+          "UNICORN_USER",
+          "INVALID_PERSON",
+          "MASTERKEY",
+          "CARDHOLDER",
+          "PAST_CARDHOLDER",
+          "INVISIBLE",
+          "IMPOSSIBLE"
+        ]
+      }
+    },
+    "email": {
+      "type": "string"
+    },
+    "blocked": {
+      "type": "boolean"
+    },
+    "blockRecursive": {
+      "type": "boolean"
+    },
+    "defaultCompanies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/3.29.14_ScopeDefaultCompanyResource"
+      }
+    },
+    "siteLegacyIds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/3.29.14_SiteLegacyIdResource"
+      }
+    },
+    "externalIds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/3.29.14_KeyedStringResource"
+      }
+    },
+    "clientKey": {
+      "$ref": "#/$defs/3.29.14_NaturalKeyResource"
+    },
+    "middleName": {
+      "type": "string"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "UNSET",
+        "F",
+        "M",
+        "OTHER",
+        "PREFER_NOT_TO_SAY"
+      ]
+    },
+    "dateOfBirth": {
+      "type": "string"
+    },
+    "placeOfBirth": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "driversLicense": {
+      "$ref": "#/$defs/3.29.14_DriversLicenseResource"
+    },
+    "universalStudentIdentifier": {
+      "type": "string"
+    },
+    "idCheckPass": {
+      "type": "boolean"
+    },
+    "idCheckPendingNonExpired": {
+      "type": "boolean"
+    },
+    "siteAssociations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/3.29.14_SiteAssociationPersonResource"
+      }
+    },
+    "realmAssociations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/3.29.14_RealmAssociationPersonResource"
+      }
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/3.29.14_BlockResource"
+      }
+    },
+    "canEditAction": {
+      "$ref": "#/$defs/3.29.14_ActionResource"
+    }
+  },
+  "$defs": {
+    "3.29.14_ActionResource": {
+      "type": "object",
+      "properties": {
+        "actionType": {
+          "type": "string",
+          "enum": [
+            "EDIT_WORKER",
+            "ASSOCIATE_EMPLOYEE",
+            "END_EMPLOYMENT",
+            "MANAGE_WORK_LOCATIONS",
+            "MODIFY_REMOVE_GROUP_REQUIREMENTS",
+            "EDIT_EMPLOYEE"
+          ]
+        },
+        "actionDescription": {
+          "type": "string"
+        },
+        "actionAllowed": {
+          "type": "boolean"
+        },
+        "actionDeniedType": {
+          "type": "string",
+          "enum": [
+            "ACTION_NOT_IMPLEMENTED",
+            "ARCHIVED_WORKER",
+            "PENDING_WORKER",
+            "ASSESSMENT_REQUIREMENT",
+            "RULE_REQUIREMENT",
+            "USER_MISSING_PERMISSION",
+            "USER_CANNOT_EDIT",
+            "USER_CANNOT_EDIT_ON_EMPLOYEE_HOME_SITE",
+            "INCORRECT_USER_TYPE",
+            "CONCO_WEB_CONTACT",
+            "REALM_COMPETENCY_APPROVER",
+            "INCOMPLETE_TRAINING",
+            "USER_NOT_COMPANY_REPRESENTATIVE",
+            "MISSING_CARD",
+            "NOT_COMPANY_EMPLOYEE",
+            "INVALID_SCOPE",
+            "EMPLOYEE_NOT_VISIBLE",
+            "UNKNOWN"
+          ]
+        },
+        "actionDeniedDescription": {
+          "type": "string"
+        },
+        "actionDeniedDetails": {
+          "type": "string"
+        }
+      }
+    },
+    "3.29.14_AddressResource": {
+      "required": [
+        "country"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "address": {
+          "maxLength": 200,
+          "minLength": 0,
+          "type": "string"
+        },
+        "town": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "state": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "postcode": {
+          "maxLength": 15,
+          "minLength": 0,
+          "type": "string"
+        },
+        "country": {
+          "maxLength": 2,
+          "minLength": 0,
+          "type": "string"
+        }
+      }
+    },
+    "3.29.14_AdminNoteResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "action": {
+          "type": "string"
+        },
+        "noteDateTime": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "sysInfo": {
+          "type": "string"
+        },
+        "scope": {
+          "$ref": "#/$defs/3.29.14_ScopeDetailResource"
+        },
+        "user": {
+          "$ref": "#/$defs/3.29.14_KeyedIntegerResource"
+        },
+        "authoriser": {
+          "type": "string"
+        },
+        "restricted": {
+          "type": "boolean"
+        },
+        "current": {
+          "type": "boolean"
+        },
+        "active": {
+          "type": "boolean"
+        }
+      }
+    },
+    "3.29.14_BlockResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "blockType": {
+          "type": "string",
+          "enum": [
+            "GENERAL",
+            "SAFETY_SELECTION",
+            "BAC",
+            "SITE_FAMILIARITY"
+          ]
+        },
+        "scope": {
+          "$ref": "#/$defs/3.29.14_ScopeDetailResource"
+        },
+        "recursive": {
+          "type": "boolean"
+        },
+        "safetySelectionRunning": {
+          "type": "boolean"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "contextBlock": {
+          "type": "boolean"
+        },
+        "adminNote": {
+          "$ref": "#/$defs/3.29.14_AdminNoteResource"
+        }
+      }
+    },
+    "3.29.14_DriversLicenseResource": {
+      "required": [
+        "driversLicenseClass",
+        "driversLicenseNumber",
+        "driversLicenseState"
+      ],
+      "type": "object",
+      "properties": {
+        "driversLicenseNumber": {
+          "maxLength": 20,
+          "minLength": 0,
+          "type": "string"
+        },
+        "driversLicenseState": {
+          "maxLength": 20,
+          "minLength": 0,
+          "type": "string"
+        },
+        "driversLicenseClass": {
+          "maxLength": 40,
+          "minLength": 0,
+          "type": "string"
+        },
+        "driversLicenseExpiry": {
+          "type": "string"
+        }
+      }
+    },
+    "3.29.14_KeyedIntegerClientResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "clientKey": {
+          "$ref": "#/$defs/3.29.14_NaturalKeyResource"
+        }
+      }
+    },
+    "3.29.14_KeyedIntegerResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "3.29.14_KeyedStringResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "3.29.14_NaturalKeyResource": {
+      "type": "object",
+      "properties": {
+        "extSysKey": {
+          "type": "string"
+        },
+        "idKey": {
+          "type": "string"
+        }
+      }
+    },
+    "3.29.14_NextOfKinResource": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "maxLength": 35,
+          "minLength": 0,
+          "type": "string"
+        },
+        "lastName": {
+          "maxLength": 45,
+          "minLength": 0,
+          "type": "string"
+        },
+        "phone": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "email": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        },
+        "relationship": {
+          "type": "string",
+          "enum": [
+            "SPOUSE",
+            "PARTNER",
+            "MOTHER",
+            "FATHER",
+            "BROTHER",
+            "SISTER",
+            "SON",
+            "DAUGHTER",
+            "BOYFRIEND",
+            "GIRLFRIEND",
+            "SON_IN_LAW",
+            "DAUGHTER_IN_LAW",
+            "MOTHER_IN_LAW",
+            "FATHER_IN_LAW",
+            "OTHER",
+            "DOCTOR"
+          ]
+        },
+        "updateTime": {
+          "type": "string"
+        }
+      }
+    },
+    "3.29.14_RealmAssociationPersonResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "realm": {
+          "$ref": "#/$defs/3.29.14_RealmResource"
+        },
+        "personId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "companyId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pending": {
+          "type": "boolean"
+        },
+        "associationDate": {
+          "type": "string"
+        },
+        "associatedBy": {
+          "type": "string"
+        },
+        "createTime": {
+          "type": "string"
+        }
+      }
+    },
+    "3.29.14_RealmResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "scope": {
+          "$ref": "#/$defs/3.29.14_ScopeResource"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "connectClient": {
+          "type": "boolean"
+        }
+      }
+    },
+    "3.29.14_ScopeDefaultCompanyResource": {
+      "type": "object",
+      "properties": {
+        "scope": {
+          "$ref": "#/$defs/3.29.14_ScopeDetailResource"
+        },
+        "company": {
+          "$ref": "#/$defs/3.29.14_KeyedIntegerResource"
+        }
+      }
+    },
+    "3.29.14_ScopeDetailResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "fatigueLimit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "siteId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "realmId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "concoId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "SYSTEM",
+            "REALM",
+            "SITE",
+            "LOCATION",
+            "CONCO_WEB",
+            "EMPLOYEE",
+            "UNKNOWN"
+          ]
+        },
+        "typeDisplayName": {
+          "type": "string"
+        },
+        "ownerName": {
+          "type": "string"
+        },
+        "connectAccountId": {
+          "type": "string"
+        },
+        "connectClient": {
+          "type": "boolean"
+        },
+        "parentId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "realm": {
+          "$ref": "#/$defs/3.29.14_KeyedIntegerResource"
+        },
+        "site": {
+          "$ref": "#/$defs/3.29.14_KeyedIntegerResource"
+        },
+        "conco": {
+          "$ref": "#/$defs/3.29.14_KeyedIntegerResource"
+        },
+        "topLevel": {
+          "type": "boolean"
+        }
+      }
+    },
+    "3.29.14_ScopeResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "fatigueLimit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "siteId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "realmId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "concoId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "SYSTEM",
+            "REALM",
+            "SITE",
+            "LOCATION",
+            "CONCO_WEB",
+            "EMPLOYEE",
+            "UNKNOWN"
+          ]
+        },
+        "typeDisplayName": {
+          "type": "string"
+        },
+        "ownerName": {
+          "type": "string"
+        },
+        "connectAccountId": {
+          "type": "string"
+        },
+        "connectClient": {
+          "type": "boolean"
+        },
+        "parentId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "3.29.14_SiteAssociationPersonResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "site": {
+          "$ref": "#/$defs/3.29.14_SiteResource"
+        },
+        "personType": {
+          "type": "string",
+          "enum": [
+            "SITE_CONTACT",
+            "PERSONAL_CONTACT",
+            "USER",
+            "EMPLOYEE",
+            "CONTRACTOR",
+            "VISITOR",
+            "SUPERUSER",
+            "UNICORN_USER",
+            "INVALID_PERSON",
+            "MASTERKEY",
+            "CARDHOLDER",
+            "PAST_CARDHOLDER",
+            "INVISIBLE",
+            "IMPOSSIBLE"
+          ]
+        },
+        "personId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "companyId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pending": {
+          "type": "boolean"
+        },
+        "associationDate": {
+          "type": "string"
+        },
+        "associatedBy": {
+          "type": "string"
+        },
+        "createTime": {
+          "type": "string"
+        }
+      }
+    },
+    "3.29.14_SiteLegacyIdResource": {
+      "type": "object",
+      "properties": {
+        "site": {
+          "$ref": "#/$defs/3.29.14_KeyedIntegerResource"
+        },
+        "legacyIdName": {
+          "type": "string"
+        },
+        "legacyId": {
+          "type": "string"
+        }
+      }
+    },
+    "3.29.14_SiteResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "scope": {
+          "$ref": "#/$defs/3.29.14_ScopeResource"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "genderCompulsory": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

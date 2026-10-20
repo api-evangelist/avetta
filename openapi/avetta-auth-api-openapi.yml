@@ -1,0 +1,2508 @@
+openapi: 3.2.0
+info:
+  title: Avetta Auth API
+  version: '2026-05-08'
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  description: 'Operations tagged Auth across 2 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+security:
+- ApiKeyAuth: []
+tags:
+- name: Auth
+  description: The Auth API allows you to authenticate into Worker Management. Handles multi-factor authentication, password reset, and single sign-on.
+paths:
+  /auth/authenticate:
+    post:
+      operationId: authenticate
+      tags:
+      - Auth
+      summary: Authentication (Deprecated)
+      deprecated: true
+      description: 'Deprecated. Do not use for new integrations - use /auth/token instead.
+
+        Get the token for the user.'
+      security: []
+      parameters:
+      - $ref: '#/components/parameters/usernameParam'
+      - $ref: '#/components/parameters/passwordParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/authenticateToken'
+        '201':
+          $ref: '#/components/responses/authenticateErrors'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /auth/token:
+    post:
+      operationId: token
+      tags:
+      - Auth
+      summary: Token generation
+      description: Generate or refresh security tokens (Access and Refresh) for the user, for both Connect and WM.
+      security: []
+      requestBody:
+        content:
+          multipart/form-data (Password):
+            schema:
+              $ref: '#/components/schemas/requestStructurePassword'
+          multipart/form-data (Token Refresh):
+            schema:
+              $ref: '#/components/schemas/requestStructureRefresh'
+      responses:
+        '200':
+          $ref: '#/components/responses/tokens'
+        '201':
+          $ref: '#/components/responses/responses-authenticateErrors'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /auth/issso:
+    get:
+      operationId: isSSO
+      tags:
+      - Auth
+      summary: SSO Check
+      description: Get if the Credentials is a SSO user
+      security: []
+      parameters:
+      - $ref: '#/components/parameters/parameters-usernameParam'
+      - $ref: '#/components/parameters/isMobileParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulIsSSO'
+        '201':
+          $ref: '#/components/responses/isSSOErrors'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /auth/logout:
+    post:
+      operationId: logout
+      tags:
+      - Auth
+      summary: Logout user
+      security:
+      - ApiKeyAuth: []
+      - {}
+      description: Logout the user. This endpoint is public - the token to invalidate can be provided either via the `Authorization` header (`apikey `) or in the request body (`wm_access_token` / `connect_access_token`). If a Worker Management token is provided in the header the request body is optional and the call can be a normal GET.
+      requestBody:
+        content:
+          multipart/form-data (WM & Connect):
+            schema:
+              $ref: '#/components/schemas/requestWMConnect'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulLogout'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /auth/requestpassword:
+    post:
+      operationId: requestPassword
+      tags:
+      - Auth
+      summary: Request reset password
+      description: Send an email to the user with a link to reset the password. Works for both Connect and Worker Management users
+      security: []
+      parameters:
+      - $ref: '#/components/parameters/parameters-usernameParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulRequestPassword'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /auth/switchuser:
+    post:
+      operationId: switchUser
+      tags:
+      - Auth
+      summary: Switch user
+      description: Switch the user to the given user when the user has permission to do it
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/components-parameters-usernameParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/switchUser'
+        '201':
+          $ref: '#/components/responses/errorSwitchUser'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /auth/updatepassword:
+    post:
+      operationId: updatePassword
+      tags:
+      - Auth
+      summary: Update Password
+      description: Update the password of a user, either in Worker Management or in Connect
+      security: []
+      parameters:
+      - $ref: '#/components/parameters/newPasswordParam'
+      - $ref: '#/components/parameters/passwordHintParam'
+      - $ref: '#/components/parameters/keyParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulChangePassword'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /auth/validateemail:
+    post:
+      operationId: ValidateEmail
+      tags:
+      - Auth
+      summary: Validate an email change
+      description: Perform a validation of a change to the user's email address based on a code sent to the email address
+      security: []
+      parameters:
+      - $ref: '#/components/parameters/bnm'
+      - $ref: '#/components/parameters/password'
+      responses:
+        '200':
+          $ref: '#/components/responses/emailUpdated'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /auth/mfa/generate:
+    post:
+      operationId: generate
+      tags:
+      - Auth
+      summary: Generate MFA code
+      description: Generate an MFA code and send it via email or phone. For users who already have MFA enabled, providing target to add or update a method requires an MFA-verified WM token. Passing disable=true generates a code that, once validated, disables MFA for the account; this also requires an MFA-verified WM token and is not supported for Connect users. disable=true and target cannot be provided together.
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/methodParam'
+      - $ref: '#/components/parameters/wmJwtParam'
+      - $ref: '#/components/parameters/connectJwtParam'
+      - $ref: '#/components/parameters/targetParam'
+      - $ref: '#/components/parameters/disableParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/GenerateMFASuccess'
+        '400':
+          $ref: '#/components/responses/GenerateMFABadReq'
+        '401':
+          $ref: '#/components/responses/GenerateMFANotAuth'
+        '405':
+          $ref: '#/components/responses/GenerateMFABadMethod'
+        '423':
+          $ref: '#/components/responses/GenerateMFALocked'
+        '429':
+          $ref: '#/components/responses/GenerateMFATooMany'
+        '430':
+          $ref: '#/components/responses/GenerateMFANotEnabled'
+        '431':
+          $ref: '#/components/responses/GenerateMFAAlreadyEnabled'
+        '432':
+          $ref: '#/components/responses/GenerateMFANotSupported'
+        '433':
+          $ref: '#/components/responses/GenerateMFAAlreadyDisabled'
+        '434':
+          $ref: '#/components/responses/GenerateMFADisableWithTarget'
+        '500':
+          $ref: '#/components/responses/GenerateMFAConnectError'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /auth/mfa/validate:
+    post:
+      operationId: validate
+      tags:
+      - Auth
+      summary: Validate MFA code
+      description: Validate the MFA code. When confirming an MFA contact setup/update for an already-enabled user, the success response does not include new tokens. Validating a code generated via /auth/mfa/generate with disable=true disables MFA for the account.
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/codeParam'
+      - $ref: '#/components/parameters/parameters-methodParam'
+      - $ref: '#/components/parameters/wmJwtParam'
+      - $ref: '#/components/parameters/connectJwtParam'
+      - $ref: '#/components/parameters/deviceParam'
+      - $ref: '#/components/parameters/trustedParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulValidateMFA'
+        '400':
+          $ref: '#/components/responses/ValidateMFABadReq'
+        '401':
+          $ref: '#/components/responses/ValidateMFANotAuth'
+        '405':
+          $ref: '#/components/responses/ValidateMFANotAllowed'
+        '423':
+          $ref: '#/components/responses/ValidateMFALocked'
+        '424':
+          $ref: '#/components/responses/ValidateMFADeviceMismatch'
+        '425':
+          $ref: '#/components/responses/ValidateMFATrustedWithoutDevice'
+        '433':
+          $ref: '#/components/responses/ValidateMFAAlreadyDisabled'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /auth/mfa/info:
+    post:
+      operationId: info
+      tags:
+      - Auth
+      summary: Get MFA info
+      description: Returns masked contact info (phone/email) where an MFA code can be sent, along with the user's name. Phone and email are only included when MFA is already enabled. Supports both WM and Connect JWT tokens.
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/parameters-wmJwtParam'
+      - $ref: '#/components/parameters/parameters-connectJwtParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulInfoMFA'
+        '401':
+          $ref: '#/components/responses/InvalidToken'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '500':
+          $ref: '#/components/responses/ConnectSettingsError'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+components:
+  examples:
+    missedDevice:
+      summary: Missing device ID
+      value:
+        stats:
+          command: Auth::MFA::Validate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 400
+          status: Bad Request
+          success: false
+          message: Missing device ID
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+    InvalidTokenForRefresh:
+      summary: Invalid Security Token
+      value:
+        stats:
+          command: Auth::Token
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 403
+          status: Forbidden
+          success: false
+          message: Invalid security token
+    missedToken:
+      summary: Missing Token
+      value:
+        stats:
+          command: Auth::MFA::Generate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 401
+          status: Unauthorized
+          success: false
+          message: Missing Token
+    successfulInfoMFA:
+      summary: Successful MFA info
+      value:
+        stats:
+          command: Auth::MFA::Info
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          success: true
+          status: null
+          info:
+            first_name: John
+            last_name: McKenzie
+            phone: '*** *** 1234'
+            email: j******g@gmail.com
+    invalidMethodForConnect:
+      summary: Invalid method for Connect validation
+      value:
+        stats:
+          command: Auth::MFA::Validate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 400
+          status: Bad Request
+          success: false
+          message: Invalid method for Connect validation. Expected email or phone
+    notSupportedMFA:
+      summary: Disabling MFA not supported for Connect users
+      value:
+        stats:
+          command: Auth::MFA::Generate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 432
+          status: Not Supported
+          success: false
+          message: Disabling MFA is not supported for Connect users
+    NeedChangePassword:
+      summary: User needs to change their password.
+      value:
+        stats:
+          command: Auth::Authenticate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth_authenticate:
+          detail: AUTH.111
+          code: 403
+          status: Forbidden
+          success: false
+          message: The password for this account needs to be changed
+    invalidToken:
+      summary: Invalid token
+      value:
+        stats:
+          command: Auth::Logout
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth:
+          detail: AUTH.115
+          code: 404
+          status: Successful
+          success: false
+          message: Invalid token
+    invalidRequest:
+      summary: Invalid Request
+      value:
+        stats:
+          command: Auth::Authenticate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth_authenticate:
+          detail: AUTH.101
+          code: 400
+          status: Bad Request
+          success: false
+          message: Invalid authentication request
+    connectSettingsError:
+      summary: Failed to retrieve or save Connect MFA settings
+      value:
+        stats:
+          command: Auth::MFA::Generate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 500
+          status: Internal Server Error
+          success: false
+          message: Failed to retrieve user's Connect MFA settings
+    mfaAlreadyDisabledValidate:
+      summary: Attempt to disable MFA for an account that already has it disabled
+      value:
+        stats:
+          command: Auth::MFA::Validate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 433
+          status: Bad Request
+          success: false
+          message: Attempt to disable MFA for an account that has it already disabled
+    missedMethodForConnect:
+      summary: Missing method for Connect validation
+      value:
+        stats:
+          command: Auth::MFA::Validate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 400
+          status: Bad Request
+          success: false
+          message: Parameter method is required to validate Connect Tokens
+    passwordChanged:
+      summary: Successful password changed
+      value:
+        stats:
+          command: Auth::UpdatePassword
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth:
+          detail: null
+          code: 200
+          status: Successful
+          success: true
+          message: Password changed
+    badSwitchUser:
+      summary: invalid username
+      value:
+        stats:
+          command: Auth::SwitchUser
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth_authenticate:
+          detail: AUTH.100
+          code: 401
+          status: Unauthorized
+          success: false
+          message: Invalid username
+    notEnabledMFA:
+      summary: MFA not enabled
+      value:
+        stats:
+          command: Auth::MFA::Generate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 430
+          status: Bad Request
+          success: false
+          message: User doesn't have MFA enabled
+    userInactive:
+      summary: User is inactive
+      value:
+        stats:
+          command: Auth::Authenticate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth_authenticate:
+          detail: AUTH.114
+          code: 403
+          status: Forbidden
+          success: false
+          message: User is inactive
+    mfaAlreadyDisabled:
+      summary: Attempt to disable MFA for an account that already has it disabled
+      value:
+        stats:
+          command: Auth::MFA::Generate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 433
+          status: Bad Request
+          success: false
+          message: Attempt to disable MFA for an account that has it already disabled
+    tokenValidated:
+      summary: Successful Token Validated (WM)
+      value:
+        stats:
+          command: Auth::MFA::Validate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 200
+          status: Successful
+          success: true
+          message: MFA Token validated
+          access_token: '...'
+          refresh_token: '...'
+    invalidMethod:
+      summary: Not a POST
+      value:
+        stats:
+          command: Auth::MFA::Generate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 405
+          status: Method Not Allowed
+          success: false
+          message: Invalid Method
+    loggedOut:
+      summary: Successful logged out
+      value:
+        stats:
+          command: Auth::Logout
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        logout:
+          detail: null
+          code: 200
+          status: Successful
+          success: true
+          message: Logged out
+    tooManyAttemptsMFA:
+      summary: Too many attempts
+      value:
+        stats:
+          command: Auth::MFA::Generate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 429
+          status: Too Many Requests
+          success: false
+          message: Too many attempts - please wait a minute
+    accountLocked:
+      summary: Account locked
+      value:
+        stats:
+          command: Auth::MFA::Generate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 423
+          status: Locked
+          success: false
+          minutes_left: 22
+          message: Account is locked - Please try again later
+    notValid:
+      summary: No longer valid token
+      value:
+        stats:
+          command: Auth::Logout
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth:
+          detail: null
+          code: 200
+          status: Successful
+          success: true
+          message: Invalid token
+    deviceMismatch:
+      summary: Device mismatch
+      value:
+        stats:
+          command: Auth::MFA::Validate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 424
+          status: Device Mismatch
+          success: false
+          message: Device provided doesn't match the one in the token
+    mfaAlreadyEnabled:
+      summary: User already has MFA enabled
+      value:
+        stats:
+          command: Auth::MFA::Generate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 431
+          status: MFA Already Enabled
+          success: false
+          message: User already has MFA enabled.
+    tokenPassword:
+      summary: Generate security Tokens via username and password
+      value:
+        stats:
+          msg: Good
+          limit: 3000
+          command: Auth::Token
+          start: 1
+          version: v1
+          time: 0.24127
+        tokens:
+          success: true,
+          worker:
+            first_name: John
+            locale: en-us
+            is_admin: true
+            enroll:
+              roles: false
+              sites: false
+            refresh: eyJhbGciOiJIUzI1NiJ9.ey...
+            is_supplier: false
+            access: eyJhbGciOiJIUzI1NiJ9.eyJleHA...
+            last_name: Doe
+            is_time_attendance: false
+            last_login: '2024-04-19 13:49:52'
+            is_client: false
+          connect:
+            access: 6MTcxMzUzNDcxNywiaXNzIjoiV29ya2VyIE1hbmFnZW1lbnQiLCJqdGki...
+            refresh: 6MTcxMzUzNDcxNywiaXNzIjoiV29ya2VyIE1hbmFnZW1lbnQiLCJqdGki...
+          enc_key: IOw7y9og4280gBLxBeKxMAF2Tb8J7TTh+Q1mjtVnz37coJ5+Z3eiUwnJm4L9Cy/jVVlgCyS7hHXuJeo/5npehQ
+    awaitingApproval:
+      summary: Awaiting Approval
+      value:
+        stats:
+          command: Auth::Authenticate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth_authenticate:
+          detail: AUTH.105
+          code: 471
+          status: null
+          success: false
+          message: Awaiting approval. Contact your Supervisor
+    invalidBnmCode:
+      summary: Invalid bnm Code
+      value:
+        stats:
+          command: Auth::ValidateEmail
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth_validateemail:
+          message: Invalid/Missing Code
+          code: 400
+          success: false
+          status: Bad Request
+          detail: AUTH.112
+    failedPasswordReset:
+      summary: Fail to reset password
+      value:
+        stats:
+          command: Auth::requestPassword
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth:
+          detail: AUTH.103
+          code: 500
+          status: Internal Server Error
+          success: false
+          message: Failed to set reset password
+    passwordFlaggedForReset:
+      summary: Successful flag password for reset
+      value:
+        stats:
+          command: Auth::requestPassword
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth:
+          detail: null
+          code: 200
+          status: Successful
+          success: true
+          message: Password flagged for reset
+    successfulTokenSend:
+      summary: Successful MFA token sent
+      value:
+        stats:
+          command: Auth::MFA::Generate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 200
+          status: Successful
+          success: true
+          message: MFA Token sent
+    isSSOExternal:
+      summary: External - SSO
+      value:
+        stats:
+          command: Auth::Authenticate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth:
+          url: https://www.avetta.com
+          code: 200 OK
+          type: external
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+    failedPasswordChange:
+      summary: Failed to change password
+      value:
+        stats:
+          command: Auth::UpdatePassword
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth:
+          detail: AUTH.104
+          code: 500
+          status: Internal Server Error
+          success: false
+          message: Failed to change password
+    notSendCode:
+      summary: Could not send code
+      value:
+        stats:
+          command: Auth::MFA::Generate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 400
+          status: Bad Request
+          success: false
+          message: Could not send code
+    missedMethod:
+      summary: Missing or invalid method
+      value:
+        stats:
+          command: Auth::MFA::Generate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 400
+          status: Bad Request
+          success: false
+          message: Missing or invalid method for generation. Expected email or phone
+    samePassword:
+      summary: Same password
+      value:
+        stats:
+          command: Auth::UpdatePassword
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth:
+          detail: AUTH.107
+          code: 400
+          status: Bad Request
+          success: false
+          message: The new password cannot be the same as the old password
+    notValidateCode:
+      summary: Could not validate code
+      value:
+        stats:
+          command: Auth::MFA::Validate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 401
+          status: Unauthorized
+          success: false
+          message: Could not validate code
+    invalidCredentials:
+      summary: Invalid Credentials
+      value:
+        stats:
+          command: Auth::Authenticate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth_authenticate:
+          detail: AUTH.100
+          code: 401
+          status: Unauthorized
+          success: false
+          message: Invalid username or password
+    trustedWithoutDevice:
+      summary: trusted=true but no device provided
+      value:
+        stats:
+          command: Auth::MFA::Validate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 425
+          status: Missing Parameter
+          success: false
+          message: trusted is true, but no device was provided
+    forbiddenTokenRequired:
+      summary: Missing or invalid token
+      value:
+        stats:
+          command: Auth::MFA::Info
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          code: 401
+          status: Unauthorized
+          success: false
+          message: Invalid call - Missing token(s)
+    loggedOutWmConnect:
+      summary: Successful logged out WM & Connect
+      value:
+        stats:
+          command: Auth::Logout
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        logout:
+          worker:
+            detail: null
+            code: 200
+            status: Successful
+            success: true
+            message: Logged out
+          connect:
+            detail: null
+            code: 200
+            status: Successful
+            success: true
+            message: Logged out
+    missingEmailAddress:
+      summary: Missing email address
+      value:
+        stats:
+          command: Auth::requestPassword
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth:
+          detail: AUTH.102
+          code: 400
+          status: Bad Request
+          success: false
+          message: Login account does not have email address
+    failedToUpdateEmail:
+      summary: Failed to Update Email
+      value:
+        stats:
+          command: Auth::ValidateEmail
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth_validateemail:
+          message: Failed to update email
+          code: 400
+          success: false
+          status: Bad Request
+          detail: AUTH.113
+    mfaDisabled:
+      summary: Successful MFA disabled
+      value:
+        stats:
+          command: Auth::MFA::Validate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 200
+          status: Successful
+          success: true
+          message: MFA has been disabled
+    tokenValidatedWithConnect:
+      summary: Successful Token Validated (WM + Connect)
+      value:
+        stats:
+          command: Auth::MFA::Validate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 200
+          status: Successful
+          success: true
+          message: MFA Token validated
+          worker_access_token: '...'
+          worker_refresh_token: '...'
+          connect_access_token: '...'
+          connect_refresh_token: '...'
+    missingSecurity:
+      summary: Missing security
+      value:
+        stats:
+          command: Auth::SwitchUser
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth_authenticate:
+          detail: AUTH.100
+          code: 401
+          status: Unauthorized
+          success: false
+          message: Missing security
+    emailUpdated:
+      summary: Email updated
+      value:
+        stats:
+          command: Auth::ValidateEmail
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth_validateemail:
+          success: true
+          status: Good
+          message: Email address updated
+          code: 200
+    tooManyAttempts:
+      summary: Too Many attempts
+      value:
+        stats:
+          command: Auth::Authenticate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth_authenticate:
+          detail: AUTH.109
+          code: 403
+          status: Forbidden
+          success: false
+          message: Too many attempts
+    isSSOInternal:
+      summary: Internal - Not SSO
+      value:
+        stats:
+          command: Auth::Authenticate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth:
+          url: https://www.avetta.com
+          code: 200 OK
+          type: internal
+    passwordNotComplex:
+      summary: Password does not meet security requirements
+      value:
+        stats:
+          command: Auth::UpdatePassword
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        auth:
+          detail: AUTH.106
+          code: 400
+          status: Bad Request
+          success: false
+          message: Password does not meet security requirements
+    missingCode:
+      summary: Missing code
+      value:
+        stats:
+          command: Auth::MFA::Validate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 400
+          status: Bad Request
+          success: false
+          message: Missing code to validate
+    methodNotAllowed:
+      summary: Method Not Allowed
+      value:
+        stats:
+          command: Auth::MFA::Info
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          code: 405
+          status: Method not allowed
+          success: false
+          message: Invalid method
+    mfaDisableWithTarget:
+      summary: Attempt to disable MFA while also providing a new target
+      value:
+        stats:
+          command: Auth::MFA::Generate
+          limit: 3000
+          msg: Good
+          version: v1
+          time: 0.35235
+          start: 1
+        mfa:
+          detail: null
+          code: 434
+          status: Bad Request
+          success: false
+          message: Cannot disable MFA while providing a new target
+    tokenRefresh:
+      summary: Refresh a security token
+      value:
+        stats:
+          msg: Good
+          limit: 3000
+          command: Auth::Token
+          start: 1
+          version: v1
+          time: 0.14713
+        tokens:
+          success: true,
+          worker:
+            refresh: eyJhbGciOiJIUzI1NiJ9.ey...
+            access: eyJhbGciOiJIUzI1NiJ9.eyJleHA...
+          connect:
+            access: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2N...
+            refresh: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI2NjI2Njk4YTR...
+  responses:
+    GenerateMFANotSupported:
+      description: Not supported - disabling MFA is not supported for Connect users
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            notSupportedMFA:
+              $ref: '#/components/examples/notSupportedMFA'
+    ValidateMFAAlreadyDisabled:
+      description: Attempting to disable MFA for an account that already has it disabled
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            mfaAlreadyDisabledValidate:
+              $ref: '#/components/examples/mfaAlreadyDisabledValidate'
+    switchUser:
+      description: Successful return the token of the user switched
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              switch_user:
+                $ref: '#/components/schemas/switchUserSchema'
+    GenerateMFAAlreadyEnabled:
+      description: User has MFA enabled, but the provided access token is not valid for this operation
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            mfaAlreadyEnabled:
+              $ref: '#/components/examples/mfaAlreadyEnabled'
+    MethodNotAllowed:
+      description: Method not allowed.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            methodNotAllowed:
+              $ref: '#/components/examples/methodNotAllowed'
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+    ValidateMFABadReq:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            missedDevice:
+              $ref: '#/components/examples/missedDevice'
+            missedMethodForConnect:
+              $ref: '#/components/examples/missedMethodForConnect'
+            invalidMethodForConnect:
+              $ref: '#/components/examples/invalidMethodForConnect'
+            missingCode:
+              $ref: '#/components/examples/missingCode'
+    tokens:
+      description: Credentials are valid - security tokens are generated
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              tokens:
+                $ref: '#/components/schemas/tokensSchema'
+          examples:
+            password:
+              $ref: '#/components/examples/tokenPassword'
+            refresh:
+              $ref: '#/components/examples/tokenRefresh'
+    authenticateErrors:
+      description: Not autenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              auth:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            NotValid:
+              $ref: '#/components/examples/invalidCredentials'
+            AwaitApproval:
+              $ref: '#/components/examples/awaitingApproval'
+            InvalidRequest:
+              $ref: '#/components/examples/invalidRequest'
+            InvalidToken:
+              $ref: '#/components/examples/tooManyAttempts'
+    responses-authenticateErrors:
+      description: Not autenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              auth:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            NotValid:
+              $ref: '#/components/examples/invalidCredentials'
+            AwaitApproval:
+              $ref: '#/components/examples/awaitingApproval'
+            InvalidRequest:
+              $ref: '#/components/examples/invalidRequest'
+            TooManyAttempts:
+              $ref: '#/components/examples/tooManyAttempts'
+            UserIsInactive:
+              $ref: '#/components/examples/userInactive'
+            NeedChangePassword:
+              $ref: '#/components/examples/NeedChangePassword'
+            InvalidTokenForRefresh:
+              $ref: '#/components/examples/InvalidTokenForRefresh'
+    ValidateMFADeviceMismatch:
+      description: Device provided does not match the device in the token
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            deviceMismatch:
+              $ref: '#/components/examples/deviceMismatch'
+    emailUpdated:
+      description: Successful return if email address was updated
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              auth:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            passwordChanged:
+              $ref: '#/components/examples/emailUpdated'
+            invalidBnmCode:
+              $ref: '#/components/examples/invalidBnmCode'
+            invalidPassword:
+              $ref: '#/components/examples/invalidCredentials'
+            failedUpdateEmail:
+              $ref: '#/components/examples/failedToUpdateEmail'
+    GenerateMFABadReq:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            missedMethod:
+              $ref: '#/components/examples/missedMethod'
+            notSendCode:
+              $ref: '#/components/examples/notSendCode'
+    isSSOErrors:
+      description: Errors while getting if the user is SSO
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              auth:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            invalidCredentials:
+              $ref: '#/components/examples/invalidCredentials'
+            invalidRequest:
+              $ref: '#/components/examples/awaitingApproval'
+            tooManyAttempts:
+              $ref: '#/components/examples/invalidRequest'
+    GenerateMFANotEnabled:
+      description: User doesn't have MFA enabled
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            notEnabledMFA:
+              $ref: '#/components/examples/notEnabledMFA'
+    ValidateMFALocked:
+      description: Account locked
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            accountLocked:
+              $ref: '#/components/examples/accountLocked'
+    authenticateToken:
+      description: Successful assignment or unassignment
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              auth:
+                $ref: '#/components/schemas/authenticateSchema'
+    successfulInfoMFA:
+      description: Successful response with MFA information.
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    info:
+                      type: object
+                      properties:
+                        first_name:
+                          type: string
+                          description: The first name of the user.
+                          example: John
+                        last_name:
+                          type: string
+                          description: The last name of the user.
+                          example: McKenzie
+                        phone:
+                          type: string
+                          description: The phone number of the user with masked characters.
+                          example: '*** *** 1234'
+                        email:
+                          type: string
+                          description: The email address of the user with masked characters.
+                          example: j*******e@gmail.com
+          examples:
+            successfulInfoMFA:
+              $ref: '#/components/examples/successfulInfoMFA'
+    GenerateMFAAlreadyDisabled:
+      description: Attempting to disable MFA for an account that already has it disabled
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            mfaAlreadyDisabled:
+              $ref: '#/components/examples/mfaAlreadyDisabled'
+    GenerateMFADisableWithTarget:
+      description: Attempting to disable MFA while also providing a new target
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            mfaDisableWithTarget:
+              $ref: '#/components/examples/mfaDisableWithTarget'
+    InvalidToken:
+      description: Unauthorized - missing or invalid token.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            forbiddenTokenRequired:
+              $ref: '#/components/examples/forbiddenTokenRequired'
+    GenerateMFAConnectError:
+      description: Internal error retrieving or saving Connect MFA settings
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            connectSettingsError:
+              $ref: '#/components/examples/connectSettingsError'
+    ValidateMFATrustedWithoutDevice:
+      description: trusted=true was sent but no device ID was provided
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            trustedWithoutDevice:
+              $ref: '#/components/examples/trustedWithoutDevice'
+    successfulIsSSO:
+      description: Successful return if the user is SSO
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              auth:
+                $ref: '#/components/schemas/isSSOSchema'
+          examples:
+            isSSOInternal:
+              $ref: '#/components/examples/isSSOInternal'
+            isSSOExternal:
+              $ref: '#/components/examples/isSSOExternal'
+    ConnectSettingsError:
+      description: Internal error retrieving Connect MFA settings.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            connectSettingsError:
+              $ref: '#/components/examples/connectSettingsError'
+    successfulRequestPassword:
+      description: Successful result if the email to reset password was sent to the user
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              auth:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            passwordFlaggedForReset:
+              $ref: '#/components/examples/passwordFlaggedForReset'
+            missingEmailAddress:
+              $ref: '#/components/examples/missingEmailAddress'
+            invalidCredentials:
+              $ref: '#/components/examples/invalidCredentials'
+            invalidRequest:
+              $ref: '#/components/examples/invalidRequest'
+            failedReset:
+              $ref: '#/components/examples/failedPasswordReset'
+    ValidateMFANotAuth:
+      description: Unauthorized - missing or invalid token, or invalid code
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            missedToken:
+              $ref: '#/components/examples/missedToken'
+            notValidateCode:
+              $ref: '#/components/examples/notValidateCode'
+    errorSwitchUser:
+      description: Errors while switching user
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              auth:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            badSwitchUser:
+              $ref: '#/components/examples/badSwitchUser'
+            missingSecurity:
+              $ref: '#/components/examples/missingSecurity'
+            invalidRequest:
+              $ref: '#/components/examples/invalidRequest'
+            invalidToken:
+              $ref: '#/components/examples/awaitingApproval'
+    GenerateMFABadMethod:
+      description: Method not allowed
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            invalidMethod:
+              $ref: '#/components/examples/invalidMethod'
+    successfulValidateMFA:
+      description: Successful return when the code validation is correct. Token fields are returned for MFA login/initial setup flows; contact-update confirmation returns only the standard success message.
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    access_token:
+                      type: string
+                      description: WM access token (returned when validating a WM token)
+                      example: '...'
+                    refresh_token:
+                      type: string
+                      description: WM refresh token (returned when validating a WM token)
+                      example: '...'
+                    worker_access_token:
+                      type: string
+                      description: WM access token (returned when both WM and Connect tokens are validated)
+                      example: '...'
+                    worker_refresh_token:
+                      type: string
+                      description: WM refresh token (returned when both WM and Connect tokens are validated)
+                      example: '...'
+                    connect_access_token:
+                      type: string
+                      description: Connect access token (returned when a Connect token is validated)
+                      example: '...'
+                    connect_refresh_token:
+                      type: string
+                      description: Connect refresh token (returned when a Connect token is validated)
+                      example: '...'
+          examples:
+            tokenValidated:
+              $ref: '#/components/examples/tokenValidated'
+            tokenValidatedWithConnect:
+              $ref: '#/components/examples/tokenValidatedWithConnect'
+            mfaDisabled:
+              $ref: '#/components/examples/mfaDisabled'
+    GenerateMFASuccess:
+      description: MFA code sent successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            successfulTokenSend:
+              $ref: '#/components/examples/successfulTokenSend'
+    successfulLogout:
+      description: Successful return if the user logged out
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              auth:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            NotValid:
+              $ref: '#/components/examples/notValid'
+            LoggedOut:
+              $ref: '#/components/examples/loggedOut'
+            LoggedOutWmConnect:
+              $ref: '#/components/examples/loggedOutWmConnect'
+            InvalidCredentials:
+              $ref: '#/components/examples/invalidCredentials'
+            InvalidRequest:
+              $ref: '#/components/examples/invalidRequest'
+            InvalidToken:
+              $ref: '#/components/examples/invalidToken'
+    GenerateMFANotAuth:
+      description: Unauthorized - missing or invalid token
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            missedToken:
+              $ref: '#/components/examples/missedToken'
+    GenerateMFALocked:
+      description: Account locked
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            accountLocked:
+              $ref: '#/components/examples/accountLocked'
+    GenerateMFATooMany:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            tooManyAttemptsMFA:
+              $ref: '#/components/examples/tooManyAttemptsMFA'
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+    successfulChangePassword:
+      description: Successful return if the password was updated
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              auth:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            passwordChanged:
+              $ref: '#/components/examples/passwordChanged'
+            passwordNotComplex:
+              $ref: '#/components/examples/passwordNotComplex'
+            samePassword:
+              $ref: '#/components/examples/samePassword'
+            invalidRequest:
+              $ref: '#/components/examples/invalidRequest'
+            invalidToken:
+              $ref: '#/components/examples/failedPasswordChange'
+    ValidateMFANotAllowed:
+      description: Method not allowed
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              mfa:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            invalidMethod:
+              $ref: '#/components/examples/invalidMethod'
+  schemas:
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    tokensSchema:
+      type: object
+      format: object
+      properties:
+        worker:
+          type: object
+          description: Worker Management tokens
+          properties:
+            access:
+              type: string
+              description: Access token generated for the user
+              example: eyJhbGciOiJIUzI1NiJ9.eyJleH...
+            refresh:
+              type: string
+              description: Refresh token generated for the user
+              example: eyJhbGciOiJIUzI1NiJ9.eyJleH...
+            last_login:
+              type: string
+              description: Date of the last login for this user
+              example: 2024-01-13 15:33
+            first_name:
+              type: string
+              description: First name of the user
+              example: John
+            last_name:
+              type: string
+              description: Last name of the user
+              example: Doe
+            con_display_id:
+              type: string
+              description: Connect linked display ID for the worker
+              example: con-id-123
+            isClient:
+              type: boolean
+              description: If the user belongs to a client company
+              example: false
+            isSupplier:
+              type: boolean
+              description: If the user belongs to a supplier company
+              example: true
+            isAdmin:
+              type: boolean
+              description: If the user has admin privileges
+              example: false
+            isTimeAttendance:
+              type: boolean
+              description: If the user has Time and Attendance privileges
+              example: true
+            locale:
+              type: string
+              description: Locale (language) of the user
+              example: en-us
+            enroll:
+              type: object
+              description: if the user has permission to set their own roles and/or site assignments
+              properties:
+                roles:
+                  type: boolean
+                  description: If the user has permission to set their own roles
+                  example: true
+                sites:
+                  type: boolean
+                  description: If the user has permission to set their own site assignments
+                  example: true
+        connect:
+          type: object
+          description: Connect tokens
+          properties:
+            access:
+              type: string
+              description: Access token generated for the user
+              example: eyJhbGciOiJIUzI1NiJ9.eyJleH...
+            refresh:
+              type: string
+              description: Access token generated for the user
+              example: eyJhbGciOiJIUzI1NiJ9.eyJleH...
+            instance:
+              type: string
+              description: Instance used for the connection
+              example: int-api.avetta.com
+        enc_key:
+          type: string
+          description: Encryption key generated for the session
+          example: IOw7y9og4280gBLxBeKxMAF2Tb8J7TTh+Q1mjtVnz37coJ5+Z3eiUwnJm4L9Cy/jVVlgCyS7hHXuJeo/5npehQ
+    switchUserSchema:
+      type: object
+      format: object
+      description: Switch user response
+      properties:
+        worker:
+          type: object
+          description: Worker Management tokens
+          properties:
+            access:
+              type: string
+              description: Access token generated for the user
+              example: eyJhbGciOiJIUzI1NiJ9.eyJleH...
+            refresh:
+              type: string
+              description: Refresh token generated for the user
+              example: eyJhbGciOiJIUzI1NiJ9.eyJleH...
+            last_login:
+              type: string
+              description: Date of the last login for this user
+              example: 2024-01-13 15:33
+            first_name:
+              type: string
+              description: First name of the user
+              example: John
+            last_name:
+              type: string
+              description: Last name of the user
+              example: Doe
+            isClient:
+              type: boolean
+              description: If the user belongs to a client company
+              example: false
+            isSupplier:
+              type: boolean
+              description: If the user belongs to a supplier company
+              example: true
+            isAdmin:
+              type: boolean
+              description: If the user has admin privileges
+              example: false
+            isTimeAttendance:
+              type: boolean
+              description: If the user has Time and Attendance privileges
+              example: true
+            locale:
+              type: string
+              description: Locale (language) of the user
+              example: en-us
+            enroll:
+              type: object
+              description: if the user has permission to set their own roles and/or site assignments
+              properties:
+                roles:
+                  type: boolean
+                  description: If the user has permission to set their own roles
+                  example: true
+                sites:
+                  type: boolean
+                  description: If the user has permission to set their own site assignments
+                  example: true
+    requestStructurePassword:
+      type: object
+      properties:
+        grant_type:
+          description: Type of access requested. For new tokens, use 'password'.
+          type: string
+          enum:
+          - password
+        username:
+          description: Username of the user.
+          type: string
+          format: string
+        password:
+          description: Password of the user.
+          type: string
+          format: string
+        device:
+          description: ID of the device.
+          type: string
+          format: string
+      required:
+      - grant_type
+      - device
+      - username
+      - password
+    isSSOSchema:
+      type: object
+      format: object
+      properties:
+        type:
+          type: string
+          description: Type of the user base on the SSO comprobation
+          example: internal
+          enum:
+          - internal
+          - external
+        code:
+          type: integer
+          description: Code of the response
+          example: 200 OK
+        url:
+          type: string
+          description: URL of the server where the user is located
+          example: http://www.avetta.com
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+    requestWMConnect:
+      type: object
+      properties:
+        wm_access_token:
+          description: Worker Management access token
+          type: string
+          format: string
+        connect_access_token:
+          description: Connect access token
+          type: string
+          format: string
+    authenticateSchema:
+      type: object
+      format: object
+      properties:
+        code:
+          type: integer
+          description: Code of the response
+          example: 200
+        expires_in:
+          type: integer
+          description: Time in seconds to expire the token
+          example: 28800
+        url:
+          type: string
+          description: URL of the server
+          example: http://www.avetta.com
+        token_type:
+          type: string
+          description: Type of the token
+          example: Bearer
+        access_token:
+          type: string
+          description: Access token generated for the user
+          example: '...'
+        first_login:
+          type: boolean
+          description: If it is first time for user to log in to application
+    requestStructureRefresh:
+      type: object
+      properties:
+        grant_type:
+          description: Type of access requested. To refresh the tokens, use "refresh_token"
+          type: string
+          enum:
+          - refresh_token
+        device:
+          description: ID of the device.
+          type: string
+          format: string
+        wm_refresh_token:
+          description: Worker Management Refresh token to be refreshed. Can be blank if the Connect token is provided.
+          type: string
+          format: string
+        connect_refresh_token:
+          description: Connect Refresh token to be refreshed. Can be blank if the WM token is provided.
+          type: string
+          format: string
+        user:
+          description: User ID linked to the refresh token. Required if a WM Token is provided
+          type: number
+          format: int32
+      required:
+      - grant_type
+      - device
+  parameters:
+    deviceParam:
+      name: device
+      in: query
+      description: Device ID; used for trusted device registration and to verify against the device in the WM token
+      required: false
+      schema:
+        type: string
+    parameters-usernameParam:
+      name: username
+      in: query
+      description: Username of the user
+      required: true
+      schema:
+        type: string
+        format: string
+    keyParam:
+      name: key
+      in: query
+      description: Token that was sent by email to perform the password change
+      required: true
+      schema:
+        type: string
+        format: string
+    connectJwtParam:
+      name: connect_jwt
+      in: query
+      description: Connect JWT token (required when validating a Connect MFA token)
+      required: false
+      schema:
+        type: string
+        format: string
+    disableParam:
+      name: disable
+      in: query
+      description: Set to true to disable MFA for the account once the generated code is validated. Requires an MFA-verified WM token and is not supported for Connect users.
+      required: false
+      schema:
+        type: string
+        enum:
+        - 'true'
+        - 'false'
+        default: 'false'
+    wmJwtParam:
+      name: wm_jwt
+      in: query
+      description: Worker Management JWT token
+      required: false
+      schema:
+        type: string
+        format: string
+    parameters-wmJwtParam:
+      name: wm_jwt
+      in: query
+      description: Worker Management JWT token
+      required: false
+      schema:
+        type: string
+    parameters-connectJwtParam:
+      name: connect_jwt
+      in: query
+      description: Connect JWT token
+      required: false
+      schema:
+        type: string
+    codeParam:
+      name: code
+      in: query
+      description: Code to validate the user received in email or phone
+      required: true
+      schema:
+        type: integer
+        format: integer
+    passwordHintParam:
+      name: passwordhint
+      in: query
+      description: Password hint to associate with the new password. Not used for Connect passwords.
+      required: false
+      schema:
+        type: string
+        format: string
+    trustedParam:
+      name: trusted
+      in: query
+      description: Mark this device as trusted so future logins skip MFA on it
+      required: false
+      schema:
+        type: string
+        enum:
+        - 'true'
+        - 'false'
+        default: 'false'
+    bnm:
+      name: bnm
+      in: query
+      description: Security code for the email change. This code is sent to the new email address set by the user.
+      required: true
+      schema:
+        type: string
+        format: string
+    passwordParam:
+      name: newpassword
+      in: query
+      description: Password of the user to authenticate with
+      required: true
+      schema:
+        type: string
+        format: string
+    methodParam:
+      name: method
+      in: query
+      description: method to validate the user (email or phone)
+      required: false
+      schema:
+        type: string
+        pattern: ^[a-zA-Z]+$
+        enum:
+        - email
+        - phone
+    isMobileParam:
+      name: isMobile
+      in: query
+      description: Is mobile device
+      required: false
+      schema:
+        type: integer
+        format: int64
+        enum:
+        - 0
+        - 1
+    newPasswordParam:
+      name: newpassword
+      in: query
+      description: New password for the user
+      required: true
+      schema:
+        type: string
+        format: string
+    usernameParam:
+      name: username
+      in: query
+      description: Username of the user to authenticate with
+      required: true
+      schema:
+        type: string
+        format: string
+    targetParam:
+      name: target
+      in: query
+      description: Phone number or email address to register or update for MFA
+      required: false
+      schema:
+        type: string
+        format: string
+    components-parameters-usernameParam:
+      name: username
+      in: query
+      description: Username of the user to switch
+      required: true
+      schema:
+        type: string
+        format: string
+    password:
+      name: password
+      in: query
+      description: Password of the account that is getting its email address updated
+      required: true
+      schema:
+        type: string
+        format: string
+    parameters-methodParam:
+      name: method
+      in: query
+      description: Delivery method used (required when validating a Connect token). Expected email or phone
+      required: false
+      schema:
+        type: string
+        enum:
+        - email
+        - phone
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v1-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

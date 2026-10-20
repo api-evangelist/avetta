@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/avetta/main/json-schema/avetta-sites-message-response-schema.json",
+  "title": "sitesMessageResponse",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/avetta-worker-v1-openapi.yml#/components/schemas/sitesMessageResponse",
+  "type": "object",
+  "properties": {
+    "stats": {
+      "$ref": "#/$defs/statsSchema"
+    },
+    "sites": {
+      "$ref": "#/$defs/messageSchema"
+    }
+  },
+  "$defs": {
+    "messageSchema": {
+      "type": "object",
+      "format": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "Message of the response"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the response"
+        },
+        "success": {
+          "type": "boolean",
+          "description": "Flag to show if the transaccion was successful",
+          "enum": [
+            true,
+            false
+          ]
+        },
+        "code": {
+          "type": "integer",
+          "description": "Code of the response"
+        },
+        "detail": {
+          "type": "string",
+          "description": "Detail of the response"
+        }
+      }
+    },
+    "statsSchema": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "type": "string",
+          "description": "Command"
+        },
+        "version": {
+          "type": "string",
+          "description": "Version"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type"
+        },
+        "msg": {
+          "type": "string",
+          "description": "Message"
+        },
+        "start": {
+          "type": "integer",
+          "description": "Start"
+        },
+        "time": {
+          "type": "number",
+          "description": "Time in seconds to execute the command"
+        },
+        "limit": {
+          "type": "integer",
+          "description": "Limit of records to return"
+        },
+        "owner": {
+          "type": "integer",
+          "description": "Owner"
+        },
+        "count": {
+          "type": "integer",
+          "description": "Count of records returned"
+        },
+        "records": {
+          "type": "integer",
+          "description": "Total records"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

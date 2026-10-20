@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/avetta/main/json-schema/avetta-1-0-0-supplier-profiles-schema.json",
+  "title": "1.0.0_SupplierProfiles",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_SupplierProfiles",
+  "properties": {
+    "totalCount": {
+      "type": "integer"
+    },
+    "suppliers": {
+      "type": "array",
+      "items": {
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "dbaNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "website": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "primaryContact": {
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "phoneNumber": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "faxNumber": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "isPrimary": {
+                "type": "boolean"
+              },
+              "type": {
+                "type": "string"
+              }
+            }
+          },
+          "billingAddress": {
+            "properties": {
+              "addressLine1": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "city": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "state": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "postalCode": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "country": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "poBox": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "suiteNumber": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "numberOfEmployees": {
+            "type": "number"
+          },
+          "accountStatus": {
+            "type": "string",
+            "enum": [
+              "active",
+              "pending",
+              "deactivated"
+            ]
+          },
+          "updatedDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "dbaNames",
+          "description",
+          "accountStatus",
+          "website",
+          "primaryContact",
+          "billingAddress",
+          "createdDate",
+          "updatedDate",
+          "diversity",
+          "externalId",
+          "businessNumbers"
+        ]
+      }
+    }
+  }
+}

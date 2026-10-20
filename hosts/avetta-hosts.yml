@@ -1,0 +1,192 @@
+generated: '2026-10-20'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 14
+  own: 12
+  other_domain: 1
+  platform: 1
+  roles:
+  - api
+  - docs
+  - identity
+  - marketing
+  - other
+  - portal
+  - source
+  - status
+  - support
+  - website
+hosts:
+- host: api.avetta.com
+  found_by:
+  - apis[]
+  - probed
+  - contract-discovery
+  - well-known
+  types: []
+  serves:
+  - api
+  registrable_domain: avetta.com
+  role: api
+  relation: own
+- host: app.avetta.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - well-known
+  types:
+  - Login
+  serves: []
+  registrable_domain: avetta.com
+  role: identity
+  relation: own
+- host: avetta.com
+  found_by:
+  - pointer
+  - probed
+  - well-known
+  - vendor-detect
+  types:
+  - Website
+  serves:
+  - cdn
+  vendor: cloudflare
+  registrable_domain: avetta.com
+  role: website
+  relation: own
+- host: docs.api.avetta.com
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - site-links
+  - docs-index
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - DeveloperPortal
+  - Documentation
+  serves:
+  - docs
+  - cdn
+  - hosting
+  vendor: fastly
+  registrable_domain: avetta.com
+  role: portal
+  relation: own
+- host: docs.connect.avetta.com
+  found_by:
+  - pointer
+  - apis[]
+  types:
+  - Deprecation
+  serves:
+  - docs
+  registrable_domain: avetta.com
+  role: docs
+  relation: own
+- host: docs.pegasus.avetta.com
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - docs
+  registrable_domain: avetta.com
+  role: docs
+  relation: own
+- host: docs.worker.avetta.com
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - docs
+  registrable_domain: avetta.com
+  role: docs
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - GitHubOrganization
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: help.avetta.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - contract-discovery
+  - well-known
+  types:
+  - HelpCenter
+  - Support
+  serves: []
+  registrable_domain: avetta.com
+  role: support
+  relation: own
+- host: secure.onsitetrackeasy.com.au
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: onsitetrackeasy.com.au
+  role: other
+  relation: other-domain
+- host: status.avetta.com
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - well-known
+  types:
+  - StatusPage
+  serves: []
+  registrable_domain: avetta.com
+  role: status
+  relation: own
+- host: trust.avetta.com
+  found_by:
+  - pointer
+  - probed
+  - contract-discovery
+  - well-known
+  types:
+  - Compliance
+  - TrustCenter
+  serves: []
+  registrable_domain: avetta.com
+  role: other
+  relation: own
+- host: worker.avetta.com
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: avetta.com
+  role: other
+  relation: own
+- host: www.avetta.com
+  found_by:
+  - pointer
+  - probed
+  - contract-discovery
+  - well-known
+  types:
+  - Leadership
+  - Integrations
+  - Blog
+  - PrivacyPolicy
+  - TermsOfService
+  - Pricing
+  serves: []
+  registrable_domain: avetta.com
+  role: marketing
+  relation: own

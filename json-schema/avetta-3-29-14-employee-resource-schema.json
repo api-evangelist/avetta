@@ -1,0 +1,502 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/avetta/main/json-schema/avetta-3-29-14-employee-resource-schema.json",
+  "title": "3.29.14_EmployeeResource",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/avetta-pegasus-openapi.yml#/components/schemas/3.29.14_EmployeeResource",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "middleName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "phone": {
+      "maxLength": 50,
+      "minLength": 0,
+      "type": "string"
+    },
+    "gender": {
+      "type": "string",
+      "enum": [
+        "UNSET",
+        "F",
+        "M",
+        "OTHER",
+        "PREFER_NOT_TO_SAY"
+      ]
+    },
+    "dob": {
+      "type": "string"
+    },
+    "companyId": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "pendingStatus": {
+      "type": "string",
+      "enum": [
+        "started",
+        "submitted",
+        "forAssessment",
+        "forEndorsement",
+        "approved",
+        "returned",
+        "rejected",
+        "terminated"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "APPROVED",
+        "ARCHIVED"
+      ]
+    },
+    "thumbnailPhotoId": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "personTypes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "SITE_CONTACT",
+          "PERSONAL_CONTACT",
+          "USER",
+          "EMPLOYEE",
+          "CONTRACTOR",
+          "VISITOR",
+          "SUPERUSER",
+          "UNICORN_USER",
+          "INVALID_PERSON",
+          "MASTERKEY",
+          "CARDHOLDER",
+          "PAST_CARDHOLDER",
+          "INVISIBLE",
+          "IMPOSSIBLE"
+        ]
+      }
+    },
+    "blocked": {
+      "type": "boolean"
+    },
+    "locale": {
+      "type": "string"
+    },
+    "fullSizePhotoLink": {
+      "type": "string"
+    },
+    "subscription": {
+      "$ref": "#/$defs/3.29.14_CardSubscriptionSummaryResource"
+    },
+    "address": {
+      "$ref": "#/$defs/3.29.14_AddressResource"
+    },
+    "phone2": {
+      "type": "string"
+    },
+    "email": {
+      "maxLength": 255,
+      "minLength": 0,
+      "type": "string"
+    },
+    "licenseResource": {
+      "$ref": "#/$defs/3.29.14_DriversLicenseResource"
+    },
+    "nextOfKin": {
+      "$ref": "#/$defs/3.29.14_NextOfKinResource"
+    },
+    "previousAddress": {
+      "$ref": "#/$defs/3.29.14_PreviousAddressResource"
+    },
+    "previousPhone": {
+      "maxLength": 50,
+      "minLength": 0,
+      "type": "string"
+    },
+    "previousEmail": {
+      "maxLength": 255,
+      "minLength": 0,
+      "type": "string"
+    },
+    "alternativeEmail": {
+      "maxLength": 255,
+      "minLength": 0,
+      "type": "string"
+    },
+    "uniqueEmail": {
+      "maxLength": 255,
+      "minLength": 0,
+      "type": "string"
+    },
+    "universalStudentIdentifier": {
+      "maxLength": 50,
+      "minLength": 0,
+      "type": "string"
+    },
+    "trainingEmail": {
+      "maxLength": 255,
+      "minLength": 0,
+      "type": "string"
+    },
+    "employeeNumber": {
+      "maxLength": 30,
+      "minLength": 0,
+      "type": "string"
+    },
+    "department": {
+      "maxLength": 20,
+      "minLength": 0,
+      "type": "string"
+    },
+    "employmentStatus": {
+      "maxLength": 30,
+      "minLength": 0,
+      "type": "string"
+    },
+    "businessUnit": {
+      "maxLength": 30,
+      "minLength": 0,
+      "type": "string"
+    },
+    "division": {
+      "maxLength": 30,
+      "minLength": 0,
+      "type": "string"
+    },
+    "position": {
+      "maxLength": 128,
+      "minLength": 0,
+      "type": "string"
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "authoriser": {
+      "maxLength": 40,
+      "minLength": 0,
+      "type": "string"
+    },
+    "comment": {
+      "type": "string"
+    },
+    "firstLastName": {
+      "type": "string"
+    },
+    "lastFirstName": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "3.29.14_AddressResource": {
+      "required": [
+        "country"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "address": {
+          "maxLength": 200,
+          "minLength": 0,
+          "type": "string"
+        },
+        "town": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "state": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "postcode": {
+          "maxLength": 15,
+          "minLength": 0,
+          "type": "string"
+        },
+        "country": {
+          "maxLength": 2,
+          "minLength": 0,
+          "type": "string"
+        }
+      }
+    },
+    "3.29.14_CardSubscriptionSummaryResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fromDate": {
+          "type": "string"
+        },
+        "toDate": {
+          "type": "string"
+        },
+        "paymentDate": {
+          "type": "string"
+        },
+        "paymentId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "willNotRenew": {
+          "type": "boolean"
+        },
+        "willNotRenewSetBy": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "renewable": {
+          "type": "boolean"
+        },
+        "companyId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "createTime": {
+          "type": "string"
+        },
+        "updateTime": {
+          "type": "string"
+        },
+        "cardholderComplianceDefinitionResource": {
+          "$ref": "#/$defs/3.29.14_CardholderComplianceDefinitionResource"
+        }
+      }
+    },
+    "3.29.14_CardholderComplianceDefinitionResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "portalId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "tmEnrolmentsPendingUntilDocsApproved": {
+          "type": "boolean"
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/3.29.14_CardholderComplianceProductResource"
+          }
+        },
+        "subscriptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/3.29.14_CardholderComplianceDefinitionSubscriptionResource"
+          }
+        }
+      }
+    },
+    "3.29.14_CardholderComplianceDefinitionSubscriptionResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "cardholderType": {
+          "type": "string",
+          "enum": [
+            "CONTRACTOR",
+            "EMPLOYEE",
+            "VISITOR"
+          ]
+        },
+        "subscriptionRequired": {
+          "type": "boolean"
+        },
+        "subscriptionMonths": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "3.29.14_CardholderComplianceProductResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "productType": {
+          "type": "string",
+          "enum": [
+            "INITIAL_SUPPLY",
+            "CARD_ONLY",
+            "SUBSCRIPTION"
+          ]
+        },
+        "cardholderType": {
+          "type": "string",
+          "enum": [
+            "CONTRACTOR",
+            "EMPLOYEE",
+            "VISITOR"
+          ]
+        },
+        "salesCode": {
+          "type": "string"
+        },
+        "itemCode": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string",
+          "enum": [
+            "AUD",
+            "EUR",
+            "GBP",
+            "NZD",
+            "USD"
+          ]
+        },
+        "costAmount": {
+          "type": "number"
+        },
+        "taxAmount": {
+          "type": "number"
+        }
+      }
+    },
+    "3.29.14_DriversLicenseResource": {
+      "required": [
+        "driversLicenseClass",
+        "driversLicenseNumber",
+        "driversLicenseState"
+      ],
+      "type": "object",
+      "properties": {
+        "driversLicenseNumber": {
+          "maxLength": 20,
+          "minLength": 0,
+          "type": "string"
+        },
+        "driversLicenseState": {
+          "maxLength": 20,
+          "minLength": 0,
+          "type": "string"
+        },
+        "driversLicenseClass": {
+          "maxLength": 40,
+          "minLength": 0,
+          "type": "string"
+        },
+        "driversLicenseExpiry": {
+          "type": "string"
+        }
+      }
+    },
+    "3.29.14_NextOfKinResource": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "maxLength": 35,
+          "minLength": 0,
+          "type": "string"
+        },
+        "lastName": {
+          "maxLength": 45,
+          "minLength": 0,
+          "type": "string"
+        },
+        "phone": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "email": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        },
+        "relationship": {
+          "type": "string",
+          "enum": [
+            "SPOUSE",
+            "PARTNER",
+            "MOTHER",
+            "FATHER",
+            "BROTHER",
+            "SISTER",
+            "SON",
+            "DAUGHTER",
+            "BOYFRIEND",
+            "GIRLFRIEND",
+            "SON_IN_LAW",
+            "DAUGHTER_IN_LAW",
+            "MOTHER_IN_LAW",
+            "FATHER_IN_LAW",
+            "OTHER",
+            "DOCTOR"
+          ]
+        },
+        "updateTime": {
+          "type": "string"
+        }
+      }
+    },
+    "3.29.14_PreviousAddressResource": {
+      "required": [
+        "country"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "address": {
+          "maxLength": 200,
+          "minLength": 0,
+          "type": "string"
+        },
+        "town": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "state": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "postcode": {
+          "maxLength": 15,
+          "minLength": 0,
+          "type": "string"
+        },
+        "country": {
+          "maxLength": 2,
+          "minLength": 0,
+          "type": "string"
+        }
+      }
+    }
+  }
+}

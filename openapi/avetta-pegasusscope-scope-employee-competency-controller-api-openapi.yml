@@ -1,0 +1,855 @@
+openapi: 3.2.0
+info:
+  title: Avetta Pegasus Scope Scope Employee Competency Controller…
+  version: APSO-1355
+  x-logo:
+    url: avetta_logo.png
+  description: 'Operations tagged pegasusScope_scope-employee-competency-controller across 2 of this provider''s published API definitions: avetta-pegasus-dist.json, avetta-pegasus-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- description: EPE (Test Environment)
+  url: https://epe-onsitetrackeasy.com.au/onsite-rest
+- description: Production
+  url: https://secure.onsitetrackeasy.com.au/onsite-rest
+tags:
+- name: pegasusScope_scope-employee-competency-controller
+  x-displayName: scope-employee-competency-controller
+paths:
+  /api/v1/scope/{scopeId}/employee/externalKey/{extSysKey}/idKey/{idKey}/competency:
+    post:
+      tags:
+      - pegasusScope_scope-employee-competency-controller
+      operationId: assignCompetency_1
+      parameters:
+      - name: scopeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: extSysKey
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: idKey
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/3.29.14_AssignCompetencyResource'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_CompetencyAssignmentResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Assign competency 1
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+  /api/v1/scope/{scopeId}/employee/externalKey/{extSysKey}/idKey/{idKey}/competency-detailed:
+    post:
+      tags:
+      - pegasusScope_scope-employee-competency-controller
+      operationId: assignCompetencyDetailed_1
+      parameters:
+      - name: scopeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: extSysKey
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: idKey
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/3.29.14_AssignCompetencyDetailedResource'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_CompetencyAssignmentResource'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+        '404':
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_FullErrorResource'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/3.29.14_ErrorResource'
+      security:
+      - 3.29.14_security_auth: []
+        3.29.14_security_apikey: []
+      summary: Assign competency detailed 1
+      x-summary-source: derived
+    servers:
+    - description: EPE (Test Environment)
+      url: https://epe-onsitetrackeasy.com.au/onsite-rest
+    - description: Production
+      url: https://secure.onsitetrackeasy.com.au/onsite-rest
+components:
+  schemas:
+    3.29.14_NaturalKeyResource:
+      type: object
+      properties:
+        extSysKey:
+          type: string
+        idKey:
+          type: string
+    3.29.14_AssignCompetencyDetailedResource:
+      type: object
+      properties:
+        assignCompetencyCommand:
+          $ref: '#/components/schemas/3.29.14_AssignCompetencyCommand'
+        description:
+          type: string
+        verificationMethod:
+          type: string
+        competencySteps:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_AssignCompetencyStepCommand'
+        active:
+          type: boolean
+        adminNote:
+          $ref: '#/components/schemas/3.29.14_AdminNoteUserInputCommand'
+        requestId:
+          type: string
+        suppressAutoEnrolment:
+          type: boolean
+        documentFileName:
+          type: string
+        competencyStepsImpl:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_AssignCompetencyStepCommandImpl'
+        detailedCommand:
+          type: boolean
+    3.29.14_StatusType:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        reasonPhrase:
+          type: string
+    3.29.14_KeyedIntegerResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    3.29.14_AssignCompetencyCommand:
+      required:
+      - cost
+      - percentContribution
+      - tax
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        assignmentLocationType:
+          type: string
+        autoCompleted:
+          type: boolean
+        apiClientName:
+          type: string
+        expiryDate:
+          type: string
+        cost:
+          type: number
+        personId:
+          type: integer
+          format: int32
+        extSysKey:
+          type: string
+        idKey:
+          type: string
+        deliveredByTraining:
+          type: boolean
+        assignmentDate:
+          type: string
+        competencyId:
+          type: integer
+          format: int32
+        assignmentLocationScopeId:
+          type: integer
+          format: int32
+        tax:
+          type: number
+        percentContribution:
+          type: number
+        durationHours:
+          type: number
+        onlineTraining:
+          type: boolean
+        trainStepAssigned:
+          type: boolean
+        trainTheoryStepAssigned:
+          type: boolean
+        assessStepAssigned:
+          type: boolean
+    3.29.14_AssignCompetencyResource:
+      required:
+      - competencyId
+      - cost
+      - durationHours
+      - percentContribution
+      - tax
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        extSysKey:
+          type: string
+        idKey:
+          type: string
+        personId:
+          type: integer
+          format: int32
+        competencyId:
+          type: integer
+          format: int32
+        assignmentDate:
+          type: string
+        expiryDate:
+          type: string
+        cost:
+          minimum: 0
+          type: number
+        tax:
+          minimum: 0
+          type: number
+        percentContribution:
+          maximum: 1
+          minimum: 0
+          type: number
+        durationHours:
+          minimum: 0
+          type: number
+        deliveredByTraining:
+          type: boolean
+        onlineTraining:
+          type: boolean
+        trainStepAssigned:
+          type: boolean
+        trainTheoryStepAssigned:
+          type: boolean
+        assessStepAssigned:
+          type: boolean
+        assignmentLocationType:
+          type: string
+        assignmentLocationScopeId:
+          type: integer
+          format: int32
+        requestId:
+          type: string
+        apiClientName:
+          type: string
+        autoCompleted:
+          type: boolean
+    3.29.14_UploadFileResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        fileName:
+          type: string
+        fileType:
+          type: string
+        mimeType:
+          type: string
+        size:
+          type: integer
+          format: int32
+        description:
+          type: string
+        competencyId:
+          type: integer
+          format: int32
+        uploadTime:
+          type: string
+        uploadBy:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        associatedTime:
+          type: string
+        associatedBy:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        privateFile:
+          type: boolean
+        sensitiveFile:
+          type: boolean
+        fileLink:
+          type: string
+        assignmentStep:
+          type: string
+          enum:
+          - PERMIT_TO_TRAIN
+          - TRAINED
+          - TRAINED_TT
+          - TRAINED_TP
+          - TRAINED_TE
+          - ASSESSED
+          - AUTHORISED
+          - APPOINTED
+    3.29.14_FileUploadRequirementResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        mandatoryStatus:
+          type: string
+          enum:
+          - 'YES'
+          - 'NO'
+          - CONDITIONAL
+        mandatoryConditionalText:
+          type: string
+        requirementsDescription:
+          type: string
+        helpLinkUrl:
+          type: string
+        fileType:
+          type: string
+        fileSizeBytes:
+          type: integer
+          format: int32
+        mimetypes:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        downloadableDocId:
+          type: integer
+          format: int32
+        allowOnlineAssessment:
+          type: boolean
+        issueDateMandatoryStatus:
+          type: string
+          enum:
+          - NOT_ALLOWED
+          - OPTIONAL
+          - MANDATORY
+        expiryDateMandatoryStatus:
+          type: string
+          enum:
+          - NOT_ALLOWED
+          - OPTIONAL
+          - MANDATORY
+    3.29.14_FullErrorResource:
+      type: object
+      properties:
+        errorType:
+          type: string
+          enum:
+          - GENERAL_ERROR
+          - BAD_REQUEST
+          - FORBIDDEN
+          - UNAUTHORISED
+          - NO_ACCESS_TO_PORTAL
+          - INVALID_PASSWORD
+          - NOT_FOUND
+          - CONSTRAINT_VIOLATION
+          - VALIDATION_ERROR
+          - ALREADY_EXISTS
+          - DATA_MISMATCH
+          - NOT_AN_EMPLOYEE
+          - CANNOT_BE_TERMINATED
+          - TOO_MANY_FAILED_ATTEMPTS
+          - REQUIRED_FIELD_MISSING
+          - VERIFICATION_TOKEN_EXPIRED
+          - PURCHASE_ORDER_EXPIRED
+          - DUPLICATE_PAYMENT
+          - PAYMENT_ERROR
+          - CANNOT_BE_UPDATED
+          - PENDING_CARD_IN_PROGRESS
+          - CANNOT_ASSIGN
+          - INVALID_PERSON_STATE
+        error:
+          type: string
+        field:
+          type: string
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_Problem'
+        errorDetail:
+          type: string
+    3.29.14_CompetencyResource:
+      type: object
+      properties:
+        stubId:
+          type: integer
+          format: int32
+        competencyId:
+          type: integer
+          format: int32
+        name:
+          type: string
+        description:
+          type: string
+        duration:
+          type: integer
+          format: int32
+        durationUnit:
+          type: string
+          enum:
+          - Days
+          - Weeks
+          - Months
+          - Years
+        groupCompetency:
+          type: boolean
+        verifiedDocument:
+          type: boolean
+        allowTrainingBookings:
+          type: boolean
+        external:
+          type: boolean
+        active:
+          type: boolean
+        hideFileUpload:
+          type: boolean
+        externalId:
+          $ref: '#/components/schemas/3.29.14_KeyedStringResource'
+        clientKey:
+          $ref: '#/components/schemas/3.29.14_NaturalKeyResource'
+        scope:
+          $ref: '#/components/schemas/3.29.14_ScopeDetailResource'
+        suffix:
+          type: string
+        level:
+          type: string
+        global:
+          type: string
+        verifiedDocumentIssueMandatoryStatus:
+          type: string
+          enum:
+          - NOT_ALLOWED
+          - OPTIONAL
+          - MANDATORY
+        verifiedDocumentExpiryMandatoryStatus:
+          type: string
+          enum:
+          - NOT_ALLOWED
+          - OPTIONAL
+          - MANDATORY
+        nonVerifiedDocumentIssueMandatoryStatus:
+          type: string
+          enum:
+          - NOT_ALLOWED
+          - OPTIONAL
+          - MANDATORY
+        nonVerifiedDocumentExpiryMandatoryStatus:
+          type: string
+          enum:
+          - NOT_ALLOWED
+          - OPTIONAL
+          - MANDATORY
+        scopeId:
+          type: integer
+          format: int32
+        fileUploadRequirement:
+          $ref: '#/components/schemas/3.29.14_FileUploadRequirementResource'
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_CompetencyResource'
+        competencyRequirement:
+          type: string
+          enum:
+          - MANDATORY
+          - OPTIONAL
+          - CONDITIONAL
+        uploadAllowed:
+          type: boolean
+        deliveredByTraining:
+          type: boolean
+        issueDateMandatoryStatus:
+          type: string
+          enum:
+          - NOT_ALLOWED
+          - OPTIONAL
+          - MANDATORY
+        expiryDateMandatoryStatus:
+          type: string
+          enum:
+          - NOT_ALLOWED
+          - OPTIONAL
+          - MANDATORY
+        minimumValidityDaysBeforeRenewal:
+          type: integer
+          format: int32
+    3.29.14_CompetencyAssignmentResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        personId:
+          type: integer
+          format: int32
+        timezone:
+          type: string
+        issueDate:
+          type: string
+        expiryDate:
+          type: string
+        expiryNotifiedDate:
+          type: string
+        pending:
+          type: boolean
+        status:
+          type: string
+          enum:
+          - started
+          - submitted
+          - forAssessment
+          - forEndorsement
+          - approved
+          - returned
+          - rejected
+          - terminated
+        competency:
+          $ref: '#/components/schemas/3.29.14_CompetencyResource'
+        comment:
+          type: string
+        uploadFile:
+          $ref: '#/components/schemas/3.29.14_UploadFileResource'
+        pendingAssessment:
+          $ref: '#/components/schemas/3.29.14_PendingAssessmentResource'
+        reviewDate:
+          type: string
+        active:
+          type: boolean
+    3.29.14_AssignCompetencyStepCommandImpl:
+      type: object
+      properties:
+        step:
+          type: string
+          enum:
+          - PERMIT_TO_TRAIN
+          - TRAINED
+          - TRAINED_TT
+          - TRAINED_TP
+          - TRAINED_TE
+          - ASSESSED
+          - AUTHORISED
+          - APPOINTED
+        date:
+          type: string
+        userPersonId:
+          type: integer
+          format: int32
+        authoriser:
+          type: string
+        notes:
+          type: string
+        docFile:
+          type: string
+        valid:
+          type: boolean
+        validUser:
+          type: boolean
+        specified:
+          type: boolean
+    3.29.14_PendingAssessmentResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        portalPurchaseFileUploadId:
+          type: integer
+          format: int32
+        role:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        status:
+          type: string
+          enum:
+          - started
+          - submitted
+          - forAssessment
+          - forEndorsement
+          - approved
+          - returned
+          - rejected
+          - terminated
+        portalId:
+          type: integer
+          format: int32
+        assessorId:
+          type: integer
+          format: int32
+    3.29.14_ScopeDetailResource:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        timezone:
+          type: string
+        fatigueLimit:
+          type: integer
+          format: int32
+        siteId:
+          type: integer
+          format: int32
+        realmId:
+          type: integer
+          format: int32
+        concoId:
+          type: integer
+          format: int32
+        type:
+          type: string
+          enum:
+          - SYSTEM
+          - REALM
+          - SITE
+          - LOCATION
+          - CONCO_WEB
+          - EMPLOYEE
+          - UNKNOWN
+        typeDisplayName:
+          type: string
+        ownerName:
+          type: string
+        connectAccountId:
+          type: string
+        connectClient:
+          type: boolean
+        parentId:
+          type: integer
+          format: int32
+        realm:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        site:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        conco:
+          $ref: '#/components/schemas/3.29.14_KeyedIntegerResource'
+        topLevel:
+          type: boolean
+    3.29.14_ErrorResource:
+      type: object
+      properties:
+        errorType:
+          type: string
+          enum:
+          - GENERAL_ERROR
+          - BAD_REQUEST
+          - FORBIDDEN
+          - UNAUTHORISED
+          - NO_ACCESS_TO_PORTAL
+          - INVALID_PASSWORD
+          - NOT_FOUND
+          - CONSTRAINT_VIOLATION
+          - VALIDATION_ERROR
+          - ALREADY_EXISTS
+          - DATA_MISMATCH
+          - NOT_AN_EMPLOYEE
+          - CANNOT_BE_TERMINATED
+          - TOO_MANY_FAILED_ATTEMPTS
+          - REQUIRED_FIELD_MISSING
+          - VERIFICATION_TOKEN_EXPIRED
+          - PURCHASE_ORDER_EXPIRED
+          - DUPLICATE_PAYMENT
+          - PAYMENT_ERROR
+          - CANNOT_BE_UPDATED
+          - PENDING_CARD_IN_PROGRESS
+          - CANNOT_ASSIGN
+          - INVALID_PERSON_STATE
+        error:
+          type: string
+        field:
+          type: string
+        problems:
+          type: array
+          items:
+            $ref: '#/components/schemas/3.29.14_Problem'
+    3.29.14_AssignCompetencyStepCommand:
+      type: object
+      properties:
+        valid:
+          type: boolean
+        date:
+          type: string
+        validUser:
+          type: boolean
+        step:
+          type: string
+          enum:
+          - PERMIT_TO_TRAIN
+          - TRAINED
+          - TRAINED_TT
+          - TRAINED_TP
+          - TRAINED_TE
+          - ASSESSED
+          - AUTHORISED
+          - APPOINTED
+        specified:
+          type: boolean
+        notes:
+          type: string
+        docFile:
+          type: string
+        userPersonId:
+          type: integer
+          format: int32
+        authoriser:
+          type: string
+    3.29.14_Problem:
+      type: object
+      properties:
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        detail:
+          type: string
+        title:
+          type: string
+        status:
+          $ref: '#/components/schemas/3.29.14_StatusType'
+    3.29.14_AdminNoteUserInputCommand:
+      required:
+      - authoriser
+      - comment
+      type: object
+      properties:
+        comment:
+          type: string
+        authoriser:
+          type: string
+    3.29.14_KeyedStringResource:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+  securitySchemes:
+    3.29.14_security_auth:
+      type: oauth2
+      scheme: Bearer
+      flows:
+        authorizationCode:
+          authorizationUrl: https://login.poweredbyonsite.com/cas/oidc/authorize
+          tokenUrl: https://login.poweredbyonsite.com/cas/oidc/accessToken
+          scopes:
+            pegasus: Pegasus Authentication Scope
+    3.29.14_security_apikey:
+      type: apiKey
+      name: api_key
+      in: header
+x-refined-from:
+- avetta-pegasus-dist.json
+- avetta-pegasus-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

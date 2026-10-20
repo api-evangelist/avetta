@@ -1,0 +1,5523 @@
+openapi: 3.2.0
+info:
+  title: Avetta Users API
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  version: '1.0'
+  description: 'Operations tagged Users across 4 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v2.json, avetta-worker-v1-openapi.yml, avetta-worker-v2-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+- url: https://{environment}.avetta.com/api/v2
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - worker-au
+security:
+- ApiKeyAuth: []
+tags:
+- name: Users
+  description: The Users API allows you to retrieve all users information.
+paths:
+  /users/{id}:
+    get:
+      operationId: getUsers
+      tags:
+      - Users
+      summary: List of users
+      description: Returns a list of users that could be filtered by the given parameters
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/users_components-parameters-sortParam'
+      - $ref: '#/components/parameters/users_components-parameters-searchParam-2'
+      - $ref: '#/components/parameters/parameters-modifiedAfterParam'
+      - $ref: '#/components/parameters/users_components-parameters-flagParam'
+      - $ref: '#/components/parameters/searchTypeParam'
+      - $ref: '#/components/parameters/users_components-parameters-extraParam'
+      - $ref: '#/components/parameters/components-parameters-roleIDParam'
+      - $ref: '#/components/parameters/components-parameters-showInactiveParam'
+      - $ref: '#/components/parameters/showRemovedParam'
+      - $ref: '#/components/parameters/components-parameters-accountIDParam'
+      - $ref: '#/components/parameters/accountConIDParam'
+      - $ref: '#/components/parameters/users_components-parameters-siteIDParam'
+      - $ref: '#/components/parameters/allusersParam'
+      - $ref: '#/components/parameters/parameters-connectionIDParam'
+      - $ref: '#/components/parameters/connectionConIDParam'
+      - $ref: '#/components/parameters/showAllConnectionsParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulReport'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    post:
+      operationId: postUsers
+      tags:
+      - Users
+      summary: Insert or Update a user
+      description: Insert or update a user or a list of users
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      requestBody:
+        $ref: '#/components/requestBodies/jsonUsers'
+      responses:
+        '200':
+          $ref: '#/components/responses/upsertResponses'
+        '201':
+          $ref: '#/components/responses/handleSaveMessages'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /users/fields:
+    get:
+      operationId: getUsersFields
+      tags:
+      - Users
+      summary: List of users fields
+      description: Returns a list of fields for creating a new user
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          $ref: '#/components/responses/fieldsUsers'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorForbidden'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /users/{id}/fields:
+    get:
+      operationId: getUsersFieldsID
+      tags:
+      - Users
+      summary: List of users fields by id
+      description: Returns a list of fields for a user by id for edit or update
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/fieldsUsers'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/errorForbidden'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /users/credit:
+    get:
+      operationId: getUsersCredit
+      tags:
+      - Users
+      summary: List of users (Credit)
+      description: Returns a list of users that could be credited for a requirement
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/users_components-parameters-sortParam'
+      - $ref: '#/components/parameters/users_components-parameters-searchParam-2'
+      - $ref: '#/components/parameters/parameters-modifiedAfterParam'
+      - $ref: '#/components/parameters/users_components-parameters-flagParam'
+      - $ref: '#/components/parameters/searchTypeParam'
+      - $ref: '#/components/parameters/components-parameters-roleIDParam'
+      - $ref: '#/components/parameters/components-parameters-showInactiveParam'
+      - $ref: '#/components/parameters/showRemovedParam'
+      - $ref: '#/components/parameters/components-parameters-accountIDParam'
+      - $ref: '#/components/parameters/accountConIDParam'
+      - $ref: '#/components/parameters/users_components-parameters-siteIDParam'
+      - $ref: '#/components/parameters/allusersParam'
+      - $ref: '#/components/parameters/parameters-connectionIDParam'
+      - $ref: '#/components/parameters/connectionConIDParam'
+      - $ref: '#/components/parameters/eventParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successful'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /users/manage:
+    get:
+      operationId: getUsersManage
+      tags:
+      - Users
+      summary: List of users (Manage)
+      description: Returns a list of users that can be managed
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/users_components-parameters-sortParam'
+      - $ref: '#/components/parameters/users_components-parameters-searchParam-2'
+      - $ref: '#/components/parameters/users_components-parameters-siteIDParam'
+      - $ref: '#/components/parameters/components-parameters-accountIDParam'
+      - $ref: '#/components/parameters/parameters-connectionIDParam'
+      - $ref: '#/components/parameters/users_components-parameters-flagParam'
+      - $ref: '#/components/parameters/components-parameters-roleIDParam'
+      - $ref: '#/components/parameters/components-parameters-showInactiveParam'
+      - $ref: '#/components/parameters/showRemovedParam'
+      - $ref: '#/components/parameters/parameters-modifiedAfterParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successful'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /users/manage/{id}:
+    get:
+      operationId: getUsersManageID
+      tags:
+      - Users
+      summary: List of users (Manage by ID)
+      description: Returns a list of users that can be managed by ID
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successful'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /users/variance:
+    get:
+      operationId: getUsersVariance
+      tags:
+      - Users
+      summary: List of users (Variance)
+      description: Returns a list of users that can be given a variance
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/users_components-parameters-sortParam'
+      - $ref: '#/components/parameters/users_components-parameters-searchParam-2'
+      - $ref: '#/components/parameters/parameters-modifiedAfterParam'
+      - $ref: '#/components/parameters/users_components-parameters-flagParam'
+      - $ref: '#/components/parameters/searchTypeParam'
+      - $ref: '#/components/parameters/components-parameters-roleIDParam'
+      - $ref: '#/components/parameters/components-parameters-showInactiveParam'
+      - $ref: '#/components/parameters/showRemovedParam'
+      - $ref: '#/components/parameters/components-parameters-accountIDParam'
+      - $ref: '#/components/parameters/accountConIDParam'
+      - $ref: '#/components/parameters/users_components-parameters-siteIDParam'
+      - $ref: '#/components/parameters/allusersParam'
+      - $ref: '#/components/parameters/parameters-connectionIDParam'
+      - $ref: '#/components/parameters/connectionConIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successful'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /users:
+    get:
+      operationId: v2GetUsers
+      tags:
+      - Users
+      summary: List all users (v2)
+      description: 'Returns all users attached to the API key regardless of training status.
+
+        Requires read-only (`ST_REPORT`) access. Supports pagination via `start` / `limit`.
+
+
+        **v2 differences from v1**
+
+        - All users are returned by default, not just trained workers.
+
+        - `extra=checkin` populates `last_checkin_date` and `last_checkout_date` as opt-in extras; they are omitted otherwise.
+
+        - `extra=status` populates `flag` and `flag_forced` as opt-in extras; they are omitted otherwise.
+
+        - `extra=external` populates the `external_id` and `account.external_id` arrays as an opt-in extra; they are omitted otherwise.
+
+        - `extra=variances` populates the `variances` array as an opt-in extra; it is omitted otherwise.
+
+        - `all_variances=1` includes all variances(past, current, and future) when `extra=variances` is requested.
+
+        - The `allusers` parameter is removed.
+
+        - `modifiedAfter` renamed to `modified_after`.
+
+        - `showInactive` renamed to `show_inactive`.
+
+        - `showRemoved` renamed to `show_removed`.
+
+        - `showAllConnections` renamed to `all_connections`.
+
+        - An invalid `modified_after`, `flag`, `sort`, `account_con_id`, or `connection_con_id` returns 400 instead of being ignored.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParamV2'
+      - $ref: '#/components/parameters/v2SortParam'
+      - $ref: '#/components/parameters/searchParam'
+      - $ref: '#/components/parameters/modifiedAfterParam'
+      - $ref: '#/components/parameters/v2FlagParam'
+      - $ref: '#/components/parameters/searchTypeParam'
+      - $ref: '#/components/parameters/v2ExtraParam'
+      - $ref: '#/components/parameters/allVariancesParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/showInactiveParam'
+      - $ref: '#/components/parameters/showRemovedParam_2'
+      - $ref: '#/components/parameters/accountIDParam'
+      - $ref: '#/components/parameters/accountConIDParam'
+      - $ref: '#/components/parameters/siteIDParam'
+      - $ref: '#/components/parameters/connectionIDParam'
+      - $ref: '#/components/parameters/connectionConIDParam'
+      - $ref: '#/components/parameters/allConnectionsParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2Successful'
+        '400':
+          $ref: '#/components/responses/v2InvalidParameter'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2Forbidden'
+    servers:
+    - url: https://{environment}.avetta.com/api/v2
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - worker-au
+  /users/{id}/checkin/{group}:
+    post:
+      operationId: v2PostUsersIDCheckinGroup
+      tags:
+      - Users
+      summary: Check a worker in at a group (v2)
+      description: 'Lets an admin check worker `id` in at `group`, opening a time card. Requires read-only (`ST_REPORT`) access
+
+        over `group`, and the caller must belong to the group''s company (sysadmins are exempt).
+
+
+        The check in is allowed only when:
+
+        - `group` is active and in the caller''s view (any level under the company, not only sites),
+
+        - the group''s company has Time Card enabled,
+
+        - the worker is active and has an approved, valid connection to `group`,
+
+        - the worker has no other open check in at any group.
+
+
+        Repeating a check in while the worker''s time card at `group` is still open returns `code` 204 with that
+
+        time card''s `id` instead of opening a second one.
+
+
+        Workers who are not Green at `group` may still be checked in, but `notes` is then required as the reason.
+
+        The time card records the worker''s current compliance flag at `group`.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/groupPathParam'
+      - $ref: '#/components/parameters/checkinNotesParam'
+      - $ref: '#/components/parameters/timeinParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2CheckInOutSuccessful'
+        '400':
+          $ref: '#/components/responses/v2CheckInOutError'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2CheckInOutError'
+        '404':
+          $ref: '#/components/responses/v2CheckInOutError'
+    servers:
+    - url: https://{environment}.avetta.com/api/v2
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - worker-au
+  /users/{id}/checkout/{group}:
+    post:
+      operationId: v2PostUsersIDCheckoutGroup
+      tags:
+      - Users
+      summary: Check a worker out of a group (v2)
+      description: 'Lets an admin check worker `id` out of `group`, closing an open time card. Same access rules as check in:
+
+        `ST_REPORT` over `group`, caller in the group''s company (or sysadmin), Time Card enabled for the company,
+
+        and the worker holding an approved, valid connection to `group`.
+
+
+        Closes the worker''s most recent open time card at `group`, or the one given by `card_id`, which must be open
+
+        and belong to the worker and `group`; otherwise the response is 404. `time_out` cannot be earlier than the check in time.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/groupPathParam'
+      - $ref: '#/components/parameters/cardIdParam'
+      - $ref: '#/components/parameters/notesParam'
+      - $ref: '#/components/parameters/timeoutParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2CheckInOutSuccessful'
+        '400':
+          $ref: '#/components/responses/v2CheckInOutError'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2CheckInOutError'
+        '404':
+          $ref: '#/components/responses/v2CheckInOutError'
+    servers:
+    - url: https://{environment}.avetta.com/api/v2
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - worker-au
+  /users/credit/{id}:
+    get:
+      operationId: v2GetUsersCreditID
+      tags:
+      - Users
+      summary: Get a single creditable user by ID (v2)
+      description: 'Returns the user record (scoped to the credit context) for the given `id`.
+
+        Requires `ST_CREDIT` access. Typically used with `event_id` to verify a specific
+
+        worker has the requirement on their plan.
+
+
+        A lookup by ID returns the user regardless of status (inactive users included);
+
+        deleted users are never returned and yield 404.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/connectionIDParam'
+      - $ref: '#/components/parameters/siteIDParam'
+      - $ref: '#/components/parameters/v2EventParam'
+      - $ref: '#/components/parameters/v2ExtraParam'
+      - $ref: '#/components/parameters/allVariancesParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2Successful'
+        '400':
+          $ref: '#/components/responses/v2InvalidParameter'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2Forbidden'
+        '404':
+          $ref: '#/components/responses/v2NotFound'
+    servers:
+    - url: https://{environment}.avetta.com/api/v2
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - worker-au
+  /users/variance/{id}:
+    get:
+      operationId: v2GetUsersVarianceID
+      tags:
+      - Users
+      summary: Get a single variance-eligible user by ID (v2)
+      description: 'Returns the user record (scoped to the variance context) for the given `id`.
+
+        Requires `ST_VARIANCE` access. Used to confirm a specific worker is in scope
+
+        before creating or editing a variance.
+
+
+        A lookup by ID returns the user regardless of status (inactive users included);
+
+        deleted users are never returned and yield 404.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/roleIDParam'
+      - $ref: '#/components/parameters/connectionIDParam'
+      - $ref: '#/components/parameters/siteIDParam'
+      - $ref: '#/components/parameters/v2ExtraParam'
+      - $ref: '#/components/parameters/allVariancesParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/v2Successful'
+        '400':
+          $ref: '#/components/responses/v2InvalidParameter'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+        '403':
+          $ref: '#/components/responses/v2Forbidden'
+        '404':
+          $ref: '#/components/responses/v2NotFound'
+    servers:
+    - url: https://{environment}.avetta.com/api/v2
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - worker-au
+components:
+  schemas:
+    schemas-userSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: User ID
+          example: 1235
+        con_id:
+          type: integer
+          description: User code from Connect
+          example: 1568432
+        first_name:
+          type: string
+          description: First name
+          example: John
+        last_name:
+          type: string
+          description: Last name
+          example: Doe
+        login_id:
+          type: string
+          description: User login id
+          example: jdoe
+        email:
+          type: string
+          description: User email
+          example: test@test.com
+        dob:
+          type: string
+          description: User date of birth
+          example: '1998-08-10'
+        sap_id:
+          type: string
+          description: User SAP id
+          example: 265813
+        cat_code:
+          type: string
+          description: User category code
+          example: 15546
+        phone:
+          type: string
+          description: User phone
+          example: 123456789
+        status:
+          type: string
+          description: User status
+          example: active
+          enum:
+          - active
+          - inactive
+        flag:
+          type: string
+          description: User flag
+          example: Green
+          enum:
+          - Green
+          - Amber
+          - Red
+        flag_forced:
+          type: boolean
+          description: User flag forced - when a variance is applied to the user
+          example: false
+          enum:
+          - true
+          - false
+        title:
+          type: string
+          description: User title
+          example: Director of Software Development
+        created_date:
+          type: string
+          description: Date user was created
+          example: '2018-10-23 18:31:00'
+        updated_date:
+          type: string
+          description: Last date user was updated
+          example: '2017-15-05 16:41:00'
+        last_checkin_date:
+          type: string
+          description: Last date user checked in to a site
+          example: '2020-10-23 15:00:00'
+        last_checkout_date:
+          type: string
+          description: Last date user checked out of a site
+          example: '2020-10-23 19:45:00'
+        badge_link:
+          type: string
+          description: User badge link
+        external_id:
+          type: array
+          description: Contain the external id fields configured for the user
+          items:
+            type: object
+            properties:
+              ExtSource:
+                type: object
+                description: Name of the external source
+                example: Connect
+                properties:
+                  ExtKey:
+                    type: string
+                    description: Key and value configured for the external source
+                    example: 'SAP: 11035178'
+        removed:
+          type: integer
+          description: Flag to show if the user was removed (0 - it wasn't, 1 - it was)
+          example: 0
+          enum:
+          - 0
+          - 1
+        emergency_phone:
+          type: string
+          description: Phone number
+          example: 555-555-5555
+        emergency_contact_name:
+          type: string
+          description: Person to contact in case of emergency
+          example: Bob Smith
+        emergency_contact_relationship:
+          type: string
+          description: Relationship to the person to contact in case of emergency
+          example: Parent
+          enum:
+          - Parent
+          - Spouse
+          - Child
+          - Sibling
+          - Friend
+          - Relative
+          - Other
+        photo:
+          type: object
+          description: Show details of the user photo when requested in extras (photo)
+          properties:
+            name:
+              type: string
+              description: Name of the user profile picture file requested
+              example: photo.jpg
+            size:
+              type: string
+              description: Size of the profile picture file
+              example: 123456789
+            data:
+              type: string
+              description: Profile picture data
+              example: data:image/jpeg;base64,/9j/...
+        account:
+          type: object
+          description: Company the user belongs to or is connected to
+          properties:
+            id:
+              type: integer
+              description: Account ID
+              example: 1235
+            parent_id:
+              type: integer
+              description: Account parent ID
+              example: 1235
+            name:
+              type: string
+              description: Name of the company
+              example: Avetta
+            type:
+              type: string
+              description: Type of the company
+              example: client
+              enum:
+              - Client
+              - Supplier
+              - Subcontractor
+            con_id:
+              type: integer
+              description: Company code
+              example: 235843
+            con_flag:
+              type: string
+              description: Rating of the company connection (Green, Amber, Red)
+              example: Red
+              enum:
+              - Green
+              - Amber
+              - Red
+            external_id:
+              type: array
+              description: Contain the external id fields configured for the company
+              items:
+                type: object
+                properties:
+                  ExtSource:
+                    type: object
+                    description: Name of the external source
+                    example: Connect
+                    properties:
+                      ExtKey:
+                        type: string
+                        description: Key and value configured for the external source
+                        example: 'SAP: 11035178'
+            permissions:
+              type: array
+              description: Permission the user has for the company
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Permission ID
+                    example: 3012
+                  name:
+                    type: string
+                    description: Permission name
+                    example: Reports
+        roles:
+          type: array
+          description: Roles assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Role ID
+                example: 132
+              code:
+                type: string
+                description: Role code
+                example: 15621
+              title:
+                type: string
+                description: Role title
+                example: Electrician
+              type:
+                type: string
+                description: Role type
+                example: Function
+                enum:
+                - Function
+                - Skill
+              flag:
+                type: string
+                description: Flag of the role (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Roles flag forced - when a variance is applied to the role
+                example: false
+                enum:
+                - true
+                - false
+        requirements:
+          type: array
+          description: Requirements assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Requirement ID
+                example: 15651
+              code:
+                type: string
+                description: Requirement code
+                example: 584135
+              title:
+                type: string
+                description: Requirement title
+                example: Driver's License
+              date:
+                type: string
+                description: Due date of the requirement when it should be retaken
+                example: '2024-05-15'
+              flag:
+                type: string
+                description: Flag of the requirement (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Requirement flag forced - when a variance is applied to the requirement
+                example: false
+                enum:
+                - true
+                - false
+              completed_date:
+                type: string
+                description: Date when the requirement was completed
+                example: '2022-10-08'
+              requires_mfa:
+                type: boolean
+                description: Show if the requirement requires MFA
+                example: false
+                enum:
+                - true
+                - false
+              status:
+                type: string
+                description: Status of the requirement
+                example: Completed
+                enum:
+                - past due (if worker is past due on the requirement)
+                - current (if worker is current and NOT due for requirement)
+                - in review (if there is a review currently in process for the worker)
+                - completed (if requirement is a take once and the worker has completed the training)
+        connections:
+          type: array
+          description: Connections assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Group IDs
+                example: 325
+              name:
+                type: string
+                description: Group company name as a path
+                example: 'Avetta :: Corporate'
+              flag:
+                type: string
+                description: Flag of the connection (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Connection flag forced - when a variance is applied to the site
+                example: false
+                enum:
+                - true
+                - false
+              con_id:
+                type: integer
+                description: Group code
+                example: 250000000
+              con_flag:
+                type: string
+                description: Rating of the connection (Green, Amber, Red)
+                example: Red
+                enum:
+                - Green
+                - Amber
+                - Red
+              removed:
+                type: integer
+                description: Show if the site - user connection was removed (0 - it wasn't, 1 - it was)
+                example: 0
+                enum:
+                - 0
+                - 1
+              checked_in:
+                type: integer
+                description: Show if the user is checked in to the site currently (0 - it isn't, 1 - it is)
+                example: 0
+                enum:
+                - 0
+                - 1
+        history:
+          type: array
+          description: History of the events the user has been involved
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Requirement ID
+                example: 123
+              code:
+                type: string
+                description: Requirement code
+                example: 1457
+              title:
+                type: string
+                description: Requirement Title
+                example: Driver's License
+              date:
+                type: string
+                description: Date and time of the history event
+                example: '2022-10-08'
+              score:
+                type: string
+                description: Score obtained in the history event
+                example: 100
+              result:
+                type: string
+                description: Result obtained in the history event
+                example: Pass
+                enum:
+                - Pass
+                - Fail
+        variances:
+          type: array
+          description: Open variances on the user, returned when extra=variances is requested
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Variance ID
+                example: 123
+              site:
+                type: string
+                description: Full hierarchical site title the variance applies to
+                example: 'Acme Corp :: Main Site'
+              type:
+                type: string
+                description: What the variance is against
+                example: Requirement
+                enum:
+                - Requirement
+                - Role
+                - Site
+              flag:
+                type: integer
+                description: Variance status type ID (rating)
+                example: 741
+              target:
+                type: object
+                description: The entity the variance targets
+                properties:
+                  id:
+                    type: integer
+                    description: Target entity ID
+                    example: 12
+                  title:
+                    type: string
+                    description: Target entity title
+                    example: Driver's License
+              begin:
+                type: string
+                description: Variance start date
+                example: '2024-01-01 00:00:00'
+              end:
+                type: string
+                description: Variance end date (null if open-ended)
+                example: '2024-12-31 00:00:00'
+              reason:
+                type: string
+                description: Reason for the variance (HTML stripped)
+                example: Worker has a medical exemption
+              files:
+                type: array
+                description: Documents attached to the variance
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Document ID
+                      example: 456
+                    name:
+                      type: string
+                      description: File name
+                      example: exemption.pdf
+                    size:
+                      type: integer
+                      description: File size in bytes
+                      example: 102400
+                    type:
+                      type: string
+                      description: Document delivery type
+                      example: web
+                    url:
+                      type: string
+                      description: URL to access the file (empty if caller lacks view permission)
+                      example: https://example.com/docs/exemption.pdf
+                    is_secure:
+                      type: boolean
+                      description: Whether the document is marked secure
+                      example: false
+        custom:
+          type: array
+          description: Custom fields configured for the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Custom ID
+                example: 2116
+              key:
+                type: string
+                description: Custom key
+                example: DOB
+              title:
+                type: string
+                description: Custom title
+                example: Date of birthday
+              value:
+                type: string
+                description: Custom value
+                example: '1998-05-25'
+              created_date:
+                type: string
+                description: Date the custom field was created
+                example: '2020-11-01'
+              updated_date:
+                type: string
+                description: Date the custom field was updated
+                example: '2022-01-21'
+              account:
+                type: object
+                description: Custom account
+                properties:
+                  name:
+                    type: string
+                    description: Account name
+                    example: Avetta
+                  id:
+                    type: integer
+                    description: Account ID
+                    example: 123
+                  con_id:
+                    type: integer
+                    description: Account code
+                    example: 15651
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    bulkUsersUpsertSchema:
+      type: array
+      description: Array of users to be created or updated
+      items:
+        type: object
+        format: object
+        properties:
+          id:
+            type: integer
+            description: User ID - if it exists it will update the user, if not it will create a new user
+            example: 1235
+          login_id:
+            type: string
+            description: User login id - if is a new user it is required
+            example: jdoe
+          first_name:
+            type: string
+            description: User first name - if is a new user it is required
+            example: John
+          middle_initial:
+            type: string
+            description: User middle initial
+            example: M
+          last_name:
+            type: string
+            description: User last name - if is a new user it is required
+            example: Smith
+          password:
+            type: string
+            description: User password - if is a new user it is required
+            example: password!
+          site:
+            type: string
+            description: Company site id - if is a new user it is required
+            example: 26516
+          email:
+            type: string
+            description: User email
+            example: test@email.com
+          address1:
+            type: string
+            description: User address line 1
+            example: 45 Main St
+          address2:
+            type: string
+            description: User address line 2
+            example: Apt 2
+          city:
+            type: string
+            description: User city name
+            example: New York
+          state:
+            type: string
+            description: User state name
+            example: NY
+          zipcode:
+            type: string
+            description: User zipcode number
+            example: 10001
+          country:
+            type: string
+            description: User country name - it could be the country id, code or the country name
+            example: 1 / US / USA / United States
+          mobile_phone:
+            type: string
+            description: User mobile phone number - it should be in the international format
+            example: +1 123456789
+          home_phone:
+            type: string
+            description: User home phone number - it should be in the international format
+            example: +1 123456789
+          work_phone:
+            type: string
+            description: User work phone number - it should be in the international format
+            example: +1 123456789
+          emergency_contact_name:
+            type: string
+            description: User emergency contact name
+            example: Bob Smith
+          emergency_contact_phone:
+            type: string
+            description: User emergency contact phone number - it should be in the international format
+            example: +1 123456789
+          birth_date:
+            type: string
+            description: User birth date - it should be in the format YYYY-MM-DD
+            example: '1998-05-25'
+          ssn:
+            type: string
+            description: User social security number - it should be in the format XXX-XX-XXXX / XXXXXXXXX
+            example: 123-45-6789 / 123456789
+          photo:
+            type: string
+            description: User photo - it should be in the format of a base64 string
+            example: /9j/...
+          hire_date:
+            type: string
+            description: User hire date - it should be in the format YYYY-MM-DD
+            example: '2020-10-23'
+          term_date:
+            type: string
+            description: User termination date - it should be in the format YYYY-MM-DD
+            example: '2024-10-23'
+          status:
+            type: string
+            description: User status - for new users it will be active
+            example: active
+            enum:
+            - active
+            - inactive
+          locale:
+            type: string
+            description: User locale - it should be in the format of language-country - for new users it will be set as default if not provided
+            example: en-us
+          sap:
+            type: string
+            description: User SAP id
+            example: 265813
+          notes:
+            type: string
+            description: User notes
+            example: User notes
+          reset_password:
+            type: boolean
+            description: User reset password - if true it will check it to reset the user password
+            example: true
+            enum:
+            - true
+            - false
+          password_never_expired:
+            type: boolean
+            description: User password never expired - if true it will check it to set the user password as never expired
+            example: false
+            enum:
+            - true
+            - false
+          2fa:
+            type: boolean
+            description: User 2fa - if true it will check it to set the user as two factor authentication. Supplier admins and system admins may only enable MFA (true) on their own account; enabling it for another user via this endpoint returns 403. Disabling MFA (false) for another user requires the ST_USER (Workers) permission. While MFA is enabled, email and mobile_phone can only be added if not already set - an existing value cannot be changed by another user.
+            example: false
+            enum:
+            - true
+            - false
+    messageForbiddenSchema:
+      type: object
+      format: object
+      properties:
+        code:
+          type: integer
+          description: Error code
+          example: 403
+        status:
+          type: string
+          description: Error status
+          example: Forbidden
+        success:
+          type: boolean
+          description: Success status
+          example: false
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+    handleSaveResponseSchema:
+      type: object
+      format: object
+      description: Envelope built by _UpsertUsers() around one or more HandleSave() results. The overall code/status only ever reflect 200 (all succeeded), 207 (mixed), or 400 (all failed) - per-item codes (e.g. 403) are only found inside detail.fail[].code.
+      properties:
+        status:
+          type: string
+          description: HTTP status text derived from the overall code
+          example: Bad Request
+          enum:
+          - Good
+          - Multi-Status
+          - Bad Request
+        success:
+          type: boolean
+          description: True when at least one user was saved successfully
+        code:
+          type: integer
+          description: Overall response code - 200 if all succeeded, 207 if mixed, 400 if all failed
+          enum:
+          - 200
+          - 207
+          - 400
+        message:
+          type: string
+          description: Only present when every user in the request failed to save
+          example: Invalid request
+        detail:
+          type: object
+          properties:
+            success:
+              type: array
+              description: Users that were saved, with any non-fatal warning messages
+              items:
+                type: object
+                properties:
+                  UsrID:
+                    type: integer
+                    description: User ID processed
+                    example: 189
+                  code:
+                    type: integer
+                    description: Always 200 for entries in this array
+                    example: 200
+                  message:
+                    type: array
+                    description: Informative messages accumulated while saving the user (always an array, ends with 'User saved successfully')
+                    items:
+                      type: string
+            fail:
+              type: array
+              description: Users that failed to save, with the validation or permission error message
+              items:
+                type: object
+                properties:
+                  UsrID:
+                    type:
+                    - integer
+                    - 'null'
+                    description: User ID processed, null when the user could not be identified/created
+                    example: 189
+                  code:
+                    type: integer
+                    description: Code of the specific error for this user (400 or 403)
+                    example: 400
+                  message:
+                    description: Validation/permission error for this user. A plain string for most HandleSave() failures; an array only for the underlying-save-failed case (errors collected from MBOL::User::GetErrorMessages()).
+                    oneOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+    fieldsUsersSchema:
+      type: object
+      format: object
+      properties:
+        value:
+          type: string
+          description: Field value, when you create a new field the value is empty, when you retrieve a field the value is the field value
+          example: ''
+        title:
+          type: string
+          description: Field title, there are 30 titles available
+          example:
+            enum:
+            - Login ID
+            - First Name
+            - MI
+            - Last Name
+            - Password
+            - Company ::Site
+            - E-mail
+            - Address Line 1
+            - Address Line 2
+            - City
+            - State
+            - Zip
+            - Country
+            - Mobile Phone
+            - Home Phone
+            - Work Phone
+            - Emergency Contact Name
+            - Emergency Contact Phone
+            - Birth Date
+            - SSN
+            - Photo
+            - Hire Date
+            - Term Date
+            - Status
+            - Locale
+            - SAP
+            - Notes
+            - Reset Password
+            - Password Never Expired
+            - 2FA
+        validation:
+          type: object
+          description: Field validation
+          properties:
+            maxvalue:
+              type: string
+              description: Field maximum value
+              example: null
+            maxlength:
+              type: integer
+              description: Field maximum length
+              example: 128
+            required:
+              type: boolean
+              description: Field required
+              example: true
+            minvalue:
+              type: string
+              description: Field minimum value
+              example: null
+            minlength:
+              type: string
+              description: Field minimum length
+              example: null
+            special:
+              type: string
+              description: Field special
+              example: email
+        type:
+          type: integer
+          description: Field type, 501= $FT_VARCHAR, 502= $FT_MEMO, 508= $FT_TYPID, 509= $FT_BOOL, 512= $FT_UPHTTP, 513= $FT_GRPID, 518= $FT_DATE, 524= $FT_COUNTRY, 525= $FT_LNGID, 526= $FT_PHONE
+          example:
+            enum:
+            - 501
+            - 502
+            - 508
+            - 509
+            - 512
+            - 513
+            - 518
+            - 524
+            - 525
+            - 526
+        key:
+          type: string
+          description: Field key
+          example:
+            enum:
+            - login_id
+            - first_name
+            - middle_initial
+            - last_name
+            - password
+            - site
+            - email
+            - address1
+            - address2
+            - city
+            - state
+            - zipcode
+            - country
+            - mobile_phone
+            - home_phone
+            - work_phone
+            - emergency_contact_name
+            - emergency_contact_phone
+            - birth_date
+            - ssn',
+            - photo
+            - hire_date
+            - term_date
+            - status
+            - locale
+            - sap',
+            - notes
+            - reset_password
+            - password_never_expired
+            - 2fa
+        typename:
+          type: string
+          description: Field type name
+          example:
+            enum:
+            - textfield
+            - password
+            - combo
+            - popup
+            - textblock
+            - checkbox
+        readonly:
+          type: boolean
+          description: Field readonly
+          example: false
+        order:
+          type: integer
+          description: Field order
+          example: 1
+        values:
+          type: array
+          description: this atributes field appear for Country and Status when the field type is popup
+          items:
+            type: object
+            format: object
+            properties:
+              id:
+                type: integer
+                description: Id of the country or status
+                example: 840 / 81
+              value:
+                type: string
+                description: Country name or status name
+                example: United States of America / Active or inactive
+    userSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: User ID
+          example: 1235
+        con_id:
+          type: integer
+          description: User code from Connect
+          example: 1568432
+        first_name:
+          type: string
+          description: First name
+          example: John
+        last_name:
+          type: string
+          description: Last name
+          example: Doe
+        login_id:
+          type: string
+          description: User login id
+          example: jdoe
+        email:
+          type: string
+          description: User email
+          example: test@test.com
+        dob:
+          type: string
+          description: User date of birth
+          example: '1998-08-10'
+        sap_id:
+          type: string
+          description: User SAP id
+          example: 265813
+        cat_code:
+          type: string
+          description: User category code
+          example: 15546
+        phone:
+          type: string
+          description: User phone
+          example: 123456789
+        status:
+          type: string
+          description: User status
+          example: active
+          enum:
+          - active
+          - inactive
+        flag:
+          type: string
+          description: User flag
+          example: Green
+          enum:
+          - Green
+          - Amber
+          - Red
+        flag_forced:
+          type: boolean
+          description: User flag forced - when a variance is applied to the user
+          example: false
+          enum:
+          - true
+          - false
+        title:
+          type: string
+          description: User title
+          example: Director of Software Development
+        created_date:
+          type: string
+          description: Date user was created
+          example: '2018-10-23 18:31:00'
+        updated_date:
+          type: string
+          description: Last date user was updated
+          example: '2017-15-05 16:41:00'
+        last_checkin_date:
+          type: string
+          description: Last date user checked in to a site
+          example: '2020-10-23 15:00:00'
+        last_checkout_date:
+          type: string
+          description: Last date user checked out of a site
+          example: '2020-10-23 19:45:00'
+        badge_link:
+          type: string
+          description: User badge link
+        external_id:
+          type: array
+          description: Contain the external id fields configured for the user
+          items:
+            type: object
+            properties:
+              ExtSource:
+                type: object
+                description: Name of the external source
+                example: Connect
+                properties:
+                  ExtKey:
+                    type: string
+                    description: Key and value configured for the external source
+                    example: 'SAP: 11035178'
+        removed:
+          type: integer
+          description: Flag to show if the user was removed (0 - it wasn't, 1 - it was)
+          example: 0
+          enum:
+          - 0
+          - 1
+        emergency_phone:
+          type: string
+          description: Phone number
+          example: 555-555-5555
+        emergency_contact_name:
+          type: string
+          description: Person to contact in case of emergency
+          example: Bob Smith
+        emergency_contact_relationship:
+          type: string
+          description: Relationship to the person to contact in case of emergency
+          example: Parent
+          enum:
+          - Parent
+          - Spouse
+          - Child
+          - Sibling
+          - Friend
+          - Relative
+          - Other
+        photo:
+          type: object
+          description: Show details of the user photo when requested in extras (photo)
+          properties:
+            name:
+              type: string
+              description: Name of the user profile picture file requested
+              example: photo.jpg
+            size:
+              type: string
+              description: Size of the profile picture file
+              example: 123456789
+            data:
+              type: string
+              description: Profile picture data
+              example: data:image/jpeg;base64,/9j/...
+        account:
+          type: object
+          description: Company the user belongs to or is connected to
+          properties:
+            id:
+              type: integer
+              description: Account ID
+              example: 1235
+            parent_id:
+              type: integer
+              description: Account parent ID
+              example: 1235
+            name:
+              type: string
+              description: Name of the company
+              example: Avetta
+            type:
+              type: string
+              description: Type of the company
+              example: client
+              enum:
+              - Client
+              - Supplier
+              - Subcontractor
+            con_id:
+              type: integer
+              description: Company code
+              example: 235843
+            con_flag:
+              type: string
+              description: Rating of the company connection (Green, Amber, Red)
+              example: Red
+              enum:
+              - Green
+              - Amber
+              - Red
+            external_id:
+              type: array
+              description: Contain the external id fields configured for the company
+              items:
+                type: object
+                properties:
+                  ExtSource:
+                    type: object
+                    description: Name of the external source
+                    example: Connect
+                    properties:
+                      ExtKey:
+                        type: string
+                        description: Key and value configured for the external source
+                        example: 'SAP: 11035178'
+            permissions:
+              type: array
+              description: Permission the user has for the company
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Permission ID
+                    example: 3012
+                  name:
+                    type: string
+                    description: Permission name
+                    example: Reports
+        roles:
+          type: array
+          description: Roles assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Role ID
+                example: 132
+              code:
+                type: string
+                description: Role code
+                example: 15621
+              title:
+                type: string
+                description: Role title
+                example: Electrician
+              type:
+                type: string
+                description: Role type
+                example: Function
+                enum:
+                - Function
+                - Skill
+              flag:
+                type: string
+                description: Flag of the role (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Roles flag forced - when a variance is applied to the role
+                example: false
+                enum:
+                - true
+                - false
+        requirements:
+          type: array
+          description: Requirements assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Requirement ID
+                example: 15651
+              code:
+                type: string
+                description: Requirement code
+                example: 584135
+              title:
+                type: string
+                description: Requirement title
+                example: Driver's License
+              date:
+                type: string
+                description: Due date of the requirement when it should be retaken
+                example: '2024-05-15'
+              flag:
+                type: string
+                description: Flag of the requirement (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Requirement flag forced - when a variance is applied to the requirement
+                example: false
+                enum:
+                - true
+                - false
+              completed_date:
+                type: string
+                description: Date when the requirement was completed
+                example: '2022-10-08'
+              requires_mfa:
+                type: boolean
+                description: Show if the requirement requires MFA
+                example: false
+                enum:
+                - true
+                - false
+              status:
+                type: string
+                description: Status of the requirement
+                example: Completed
+                enum:
+                - past due (if worker is past due on the requirement)
+                - current (if worker is current and NOT due for requirement)
+                - in review (if there is a review currently in process for the worker)
+                - completed (if requirement is a take once and the worker has completed the training)
+        connections:
+          type: array
+          description: Connections assigned to the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Group IDs
+                example: 325
+              name:
+                type: string
+                description: Group company name as a path
+                example: 'Avetta :: Corporate'
+              flag:
+                type: string
+                description: Flag of the connection (Green, Amber, Red)
+                example: Green
+                enum:
+                - Green
+                - Amber
+                - Red
+              flag_forced:
+                type: boolean
+                description: Connection flag forced - when a variance is applied to the site
+                example: false
+                enum:
+                - true
+                - false
+              con_id:
+                type: integer
+                description: Group code
+                example: 250000000
+              con_flag:
+                type: string
+                description: Rating of the connection (Green, Amber, Red)
+                example: Red
+                enum:
+                - Green
+                - Amber
+                - Red
+              removed:
+                type: integer
+                description: Show if the site - user connection was removed (0 - it wasn't, 1 - it was)
+                example: 0
+                enum:
+                - 0
+                - 1
+              checked_in:
+                type: integer
+                description: Show if the user is checked in to the site currently (0 - it isn't, 1 - it is)
+                example: 0
+                enum:
+                - 0
+                - 1
+        history:
+          type: array
+          description: History of the events the user has been involved
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Requirement ID
+                example: 123
+              code:
+                type: string
+                description: Requirement code
+                example: 1457
+              title:
+                type: string
+                description: Requirement Title
+                example: Driver's License
+              date:
+                type: string
+                description: Date and time of the history event
+                example: '2022-10-08'
+              score:
+                type: string
+                description: Score obtained in the history event
+                example: 100
+              result:
+                type: string
+                description: Result obtained in the history event
+                example: Pass
+                enum:
+                - Pass
+                - Fail
+        variances:
+          type: array
+          description: Open variances on the user, returned when extra=variances is requested
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Variance ID
+                example: 123
+              site:
+                type: string
+                description: Full hierarchical site title the variance applies to
+                example: 'Acme Corp :: Main Site'
+              type:
+                type: string
+                description: What the variance is against
+                example: Requirement
+                enum:
+                - Requirement
+                - Role
+                - Site
+              flag:
+                type: integer
+                description: Variance status type ID (rating)
+                example: 741
+              target:
+                type: object
+                description: The entity the variance targets
+                properties:
+                  id:
+                    type: integer
+                    description: Target entity ID
+                    example: 12
+                  title:
+                    type: string
+                    description: Target entity title
+                    example: Driver's License
+              begin:
+                type: string
+                description: Variance start date
+                example: '2024-01-01 00:00:00'
+              end:
+                type: string
+                description: Variance end date (null if open-ended)
+                example: '2024-12-31 00:00:00'
+              reason:
+                type: string
+                description: Reason for the variance (HTML stripped)
+                example: Worker has a medical exemption
+              files:
+                type: array
+                description: Documents attached to the variance
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Document ID
+                      example: 456
+                    name:
+                      type: string
+                      description: File name
+                      example: exemption.pdf
+                    size:
+                      type: integer
+                      description: File size in bytes
+                      example: 102400
+                    type:
+                      type: string
+                      description: Document delivery type
+                      example: web
+                    url:
+                      type: string
+                      description: URL to access the file (empty if caller lacks view permission)
+                      example: https://example.com/docs/exemption.pdf
+                    is_secure:
+                      type: boolean
+                      description: Whether the document is marked secure
+                      example: false
+        custom:
+          type: array
+          description: Custom fields configured for the user
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: Custom ID
+                example: 2116
+              key:
+                type: string
+                description: Custom key
+                example: DOB
+              title:
+                type: string
+                description: Custom title
+                example: Date of birthday
+              value:
+                type: string
+                description: Custom value
+                example: '1998-05-25'
+              created_date:
+                type: string
+                description: Date the custom field was created
+                example: '2020-11-01'
+              updated_date:
+                type: string
+                description: Date the custom field was updated
+                example: '2022-01-21'
+              account:
+                type: object
+                description: Custom account
+                properties:
+                  name:
+                    type: string
+                    description: Account name
+                    example: Avetta
+                  id:
+                    type: integer
+                    description: Account ID
+                    example: 123
+                  con_id:
+                    type: integer
+                    description: Account code
+                    example: 15651
+  examples:
+    someUsersUpdated:
+      summary: Some users updated
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 2
+          records: 2
+          fail: 1
+          success: 1
+          total: 2
+        users:
+          status: Multi-Status
+          success: true
+          code: 207
+          detail:
+            success:
+            - UsrID: 189
+              code: 200
+              message:
+              - User saved successfully
+            fail:
+            - UsrID: null
+              code: 400
+              message: Login ID is required
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+    allUsersUpdated:
+      summary: All users updated
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 2
+          records: 2
+          fail: 0
+          success: 2
+          total: 2
+        users:
+          status: Good
+          success: true
+          code: 200
+          detail:
+            success:
+            - UsrID: 189
+              code: 200
+              message:
+              - User saved successfully
+            - UsrID: 190
+              code: 200
+              message:
+              - The country value is not valid
+              - User saved successfully
+            fail: []
+    singleUpdateUser:
+      summary: Single user to be updated
+      value:
+        login_id: jdoe
+        first_name: John
+        middle_initial: M
+        last_name: Smith
+        password: password!
+        site: 26516
+        email: test@email.com
+        address1: 45 Main St
+        address2: Apt 2
+        city: New York
+        state: NY
+        zipcode: 10001
+        country: USA
+        mobile_phone: +1 123456789
+        home_phone: +1 123456789
+        work_phone: +1 123456789
+        emergency_contact_name: Bob Smith
+        emergency_contact_phone: +1 123456789
+        birth_date: '1998-05-25'
+        ssn: 123-45-6789
+        photo: /9j/...
+        hire_date: '2020-10-23'
+        term_date: '2024-10-23'
+        status: active
+        locale: en-us
+        sap: 265813
+        notes: User notes
+        reset_password: true
+        password_never_expired: false
+        2fa: false
+    noPermissionInsertSite:
+      summary: 400 - No permission to insert/update a user into the given site
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: null
+              code: 400
+              message: You do not have permission to insert or update users in this site
+    siteSetToZero:
+      summary: 400 - The site was sent as 0
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: null
+              code: 400
+              message: You cannot set the site to 0
+    bulkInsertUsers:
+      summary: Multiple users to be inserted
+      value:
+      - login_id: jdoe
+        first_name: John
+        middle_initial: M
+        last_name: Smith
+        password: password!
+        site: 26516
+        email: test@email.com
+        address1: 45 Main St
+        address2: Apt 2
+        city: New York
+        state: NY
+        zipcode: 10001
+        country: USA
+        mobile_phone: +1 123456789
+        home_phone: +1 123456789
+        work_phone: +1 123456789
+        emergency_contact_name: Bob Smith
+        emergency_contact_phone: +1 123456789
+        birth_date: '1998-05-25'
+        ssn: 123-45-6789
+        photo: /9j/...
+        hire_date: '2020-10-23'
+        term_date: '2024-10-23'
+        status: active
+        locale: en-us
+        sap: 265813
+        notes: User notes
+        reset_password: true
+        password_never_expired: false
+        2fa: false
+    allUsersInserted:
+      summary: All users inserted
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 2
+          records: 2
+          fail: 0
+          success: 2
+          total: 2
+        users:
+          status: Good
+          success: true
+          code: 200
+          detail:
+            success:
+            - UsrID: 189
+              code: 200
+              message:
+              - User saved successfully
+            - UsrID: 190
+              code: 200
+              message:
+              - The country value is not valid
+              - User saved successfully
+            fail: []
+    userSavedWithInvalidBirthDate:
+      summary: 200 - Saved, but the birth date value was not valid so it was ignored
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+          fail: 0
+          success: 1
+          total: 1
+        users:
+          status: Good
+          success: true
+          code: 200
+          detail:
+            success:
+            - UsrID: 189
+              code: 200
+              message:
+              - The birth date value is not valid
+              - User saved successfully
+            fail: []
+    userSavedWithInvalidPhoto:
+      summary: 200 - Saved, but the photo value was not valid so it was ignored
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+          fail: 0
+          success: 1
+          total: 1
+        users:
+          status: Good
+          success: true
+          code: 200
+          detail:
+            success:
+            - UsrID: 189
+              code: 200
+              message:
+              - The photo value is not valid
+              - User saved successfully
+            fail: []
+    userSavedWithInvalidCountry:
+      summary: 200 - Saved, but the country value was not valid so it was ignored
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+          fail: 0
+          success: 1
+          total: 1
+        users:
+          status: Good
+          success: true
+          code: 200
+          detail:
+            success:
+            - UsrID: 189
+              code: 200
+              message:
+              - The country value is not valid
+              - User saved successfully
+            fail: []
+    userSavedWithInvalidTermDate:
+      summary: 200 - Saved, but the term date value was not valid so it was ignored
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+          fail: 0
+          success: 1
+          total: 1
+        users:
+          status: Good
+          success: true
+          code: 200
+          detail:
+            success:
+            - UsrID: 189
+              code: 200
+              message:
+              - The term date value is not valid
+              - User saved successfully
+            fail: []
+    singleInsertUser:
+      summary: Single user to be inserted
+      value:
+        login_id: jdoe
+        first_name: John
+        middle_initial: M
+        last_name: Smith
+        password: password!
+        site: 26516
+        email: test@email.com
+        address1: 45 Main St
+        address2: Apt 2
+        city: New York
+        state: NY
+        zipcode: 10001
+        country: USA
+        mobile_phone: +1 123456789
+        home_phone: +1 123456789
+        work_phone: +1 123456789
+        emergency_contact_name: Bob Smith
+        emergency_contact_phone: +1 123456789
+        birth_date: '1998-05-25'
+        ssn: 123-45-6789
+        photo: /9j/...
+        hire_date: '2020-10-23'
+        term_date: '2024-10-23'
+        status: active
+        locale: en-us
+        sap: 265813
+        notes: User notes
+        reset_password: true
+        password_never_expired: false
+        2fa: false
+    examples-firstNameRequired:
+      summary: 400 - First Name is required (new user)
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: null
+              code: 400
+              message: First Name is required
+    fieldsUsersWithIDExample:
+      summary: fields for users with ID
+      value:
+        stats:
+          command: Users
+          version: v1
+          msg: Good
+          start: 1
+          time: 0.54373
+          limit: 3000
+          owner: 1365
+          id: 1477
+        users:
+        - key: UsrLoginID
+          title: Login ID
+          type: 501
+          order: 1
+          validation:
+            required: true
+            minlength: null
+            maxlength: 128
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: WORKER-1
+        - key: UsrFirstName
+          title: First Name
+          type: 501
+          order: 2
+          validation:
+            required: true
+            minlength: 1
+            maxlength: 50
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: WORKER
+        - key: UsrMiddleInitial
+          title: Middle Initial
+          type: 501
+          order: 3
+          validation:
+            required: false
+            minlength: 1
+            maxlength: 1
+            special: alpha
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrLastName
+          title: Last Name
+          type: 501
+          order: 4
+          validation:
+            required: true
+            minlength: 1
+            maxlength: 50
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ONE
+        - key: UsrPassword
+          title: Password
+          type: 501
+          order: 5
+          validation:
+            required: true
+            minlength: 8
+            maxlength: 50
+            special: password
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: 2008521773
+        - key: UsrGrpID
+          title: 'Company :: Site'
+          type: 513
+          order: 6
+          validation:
+            required: true
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: combo
+          readonly: false
+          value: 562
+        - key: UsrEmailAddr
+          title: Email
+          type: 501
+          order: 7
+          validation:
+            required: false
+            minlength: null
+            maxlength: 255
+            special: email:1
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: worker_1@avetta.com
+        - key: UsrAddress1
+          title: Address 1
+          type: 501
+          order: 8
+          validation:
+            required: false
+            minlength: null
+            maxlength: 100
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrAddress2
+          title: Address 2
+          type: 501
+          order: 9
+          validation:
+            required: false
+            minlength: null
+            maxlength: 100
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrCity
+          title: City
+          type: 501
+          order: 10
+          validation:
+            required: false
+            minlength: null
+            maxlength: 100
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrState
+          title: State
+          type: 501
+          order: 11
+          validation:
+            required: false
+            minlength: 2
+            maxlength: 2
+            special: alpha
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrZipCode
+          title: Zip
+          type: 501
+          order: 12
+          validation:
+            required: false
+            minlength: null
+            maxlength: 15
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrCountryID
+          title: Country
+          type: 524
+          order: 13
+          validation:
+            required: false
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: popup
+          readonly: false
+          value: null
+          values:
+          - id: 840,
+            value": United States of America
+        - key: UsrMobilePhone
+          title: Mobile Phone
+          type: 526
+          order: 14
+          validation:
+            required: false
+            minlength: null
+            maxlength: 50
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: +1 456894562
+        - key: UsrHomePhone
+          title: Home Phone
+          type: 526
+          order: 15
+          validation:
+            required: false
+            minlength: null
+            maxlength: 50
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrWorkPhone
+          title: Work Phone
+          type: 526
+          order: 16
+          validation:
+            required: false
+            minlength: null
+            maxlength: 50
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrEmergencyContactName
+          title: Emergency Contact Name
+          type: 501
+          order: 17
+          validation:
+            required: false
+            minlength: null
+            maxlength: 100
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrEmergencyContactPhone
+          title: Emergency Contact Phone
+          type: 526
+          order: 18
+          validation:
+            required: false
+            minlength: null
+            maxlength: 50
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrBirthDate
+          title: Birth Date
+          type: 518
+          order: 19
+          validation:
+            required: false
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: null
+            maxvalue: '2024-02-26 19:59:59'
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrSSN
+          title: SSN
+          type: 501
+          order: 20
+          validation:
+            required: false
+            minlength: null
+            maxlength: 100
+            special: ssn
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrImageURL
+          title: Picture
+          type: 512
+          order: 21
+          validation:
+            required: false
+            minlength: null
+            maxlength: 255
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrHireDate
+          title: Hire Date
+          type: 518
+          order: 22
+          validation:
+            required: false
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: '2024-02-20'
+        - key: UsrTerminationDate
+          title: Term Date
+          type: 518
+          order: 23
+          validation:
+            required: false
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: '2024-02-29'
+        - key: UsrStatusTypID
+          title: Status
+          type: 508
+          order: 24
+          validation:
+            required: true
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: popup
+          readonly: false
+          value: 81
+          values:
+          - id: 81
+            value: Active
+          - id: 82
+            value: Inactive
+        - key: UsrLngID
+          title: Language
+          type: 525
+          order: 25
+          validation:
+            required: false
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: popup
+          readonly: false
+          value: 3
+        - key: UsrSAPID
+          title: SAP ID
+          type: 501
+          order: 26
+          validation:
+            required: false
+            minlength: null
+            maxlength: 25
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrNotes
+          title: Notes
+          type: 502
+          order: 27
+          validation:
+            required: false
+            minlength: null
+            maxlength: 4000
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textblock
+          readonly: false
+          value: ''
+        - key: reset_password
+          title: Change Password at next login
+          type: 509
+          order: 28
+          validation:
+            required: false
+            minvalue: 0
+            maxvalue: 1
+          typename: checkbox
+          readonly: false
+          value: 0
+        - key: password_never_expired
+          title: Password Never Expires
+          type: 509
+          order: 29
+          validation:
+            required: true
+            minvalue: 0
+            maxvalue: 1
+          typename: checkbox
+          readonly: false
+          value: 1
+        - key: 2fa
+          title: Multi-Factor Authentication (MFA)
+          type: 509
+          order: 30
+          validation:
+            required: false
+            minvalue: 0
+            maxvalue: 1
+          typename: checkbox
+          readonly: true
+          value: 0
+    successfulExtraPhoto:
+      summary: Successful with extra - photos
+      value:
+        id: 1235
+        con_id: 1568432
+        first_name: John
+        last_name: Doe
+        login_id: jdoe
+        email: test@test.com
+        dob: '1998-05-25'
+        sap_id: 265813
+        cat_code: 1632
+        phone: 4561231159
+        status: Active
+        flag: Green
+        flag_forced: 0
+        title: Director of Software Development
+        created_date: '2018-10-23 18:31:00'
+        updated_date: '2017-15-05 16:41:00'
+        last_checkin_date: '2020-10-23 15:00:00'
+        last_checkout_date: '2020-10-23 19:45:00'
+        badge_link: ''
+        external_id:
+        - Connect:
+            SAP: 11035178
+        removed: 0
+        emergency_phone: 555-555-5555
+        emergency_contact_name: Bob Smith
+        emergency_contact_relationship: Parent
+        photo:
+          name: profile.jpg
+          size: 123456789
+          data: 123456789
+        account:
+          id: 1235
+          parent_id: 1235
+          name: Avetta
+          type: client
+          con_id: 235843
+          con_flag: 0
+          external_id:
+          - Connect:
+              SAP: 11035178
+    allExtrasApplied:
+      summary: Successful with all extras
+      value:
+        id: 1235
+        con_id: 1568432
+        first_name: John
+        last_name: Doe
+        login_id: jdoe
+        email: test@test.com
+        dob: '1998-05-25'
+        sap_id: 265813
+        cat_code: 1632
+        phone: 4561231159
+        status: Active
+        flag: Green
+        flag_forced: 0
+        title: Director of Software Development
+        created_date: '2018-10-23 18:31:00'
+        updated_date: '2017-15-05 16:41:00'
+        last_checkin_date: '2020-10-23 15:00:00'
+        last_checkout_date: '2020-10-23 19:45:00'
+        badge_link: ''
+        external_id:
+        - Connect:
+            SAP: 11035178
+        removed: 0
+        emergency_phone: 555-555-5555
+        emergency_contact_name: Bob Smith
+        emergency_contact_relationship: Parent
+        photo:
+          name: profile.jpg
+          size: 123456789
+          data: 123456789
+        account:
+          id: 1235
+          parent_id: 1235
+          name: Avetta
+          type: client
+          con_id: 235843
+          con_flag: 0
+          external_id:
+          - Connect:
+              SAP: 11035178
+          permissions:
+          - id: 3012
+            name: Reports
+        roles:
+        - id: 132
+          code: 15621
+          title: Electrician
+          type: Function
+          flag: 0
+          flag_forced: 0
+        requirements:
+        - id: 15651
+          code: 584135
+          title: Driver's License
+          date: '2024-05-15'
+          flag: 0
+          flag_forced: 0
+          completed_date: '2022-10-08'
+          requires_mfa: 0
+        connections:
+        - id: 325
+          name: 'Avetta :: Corporate'
+          flag: 0
+          flag_forced: 0
+          con_id: 250000000
+          con_flag: 0
+          removed: 0
+          checked_in: 0
+        history:
+        - id: 123
+          code: 12651
+          title: Driver's License
+          date: '2022-10-08'
+          score: 100
+          result: Pass
+        custom:
+        - id: 2116
+          key: DOB
+          title: Date of birthday
+          value: '1998-05-25'
+          created_date: '2020-11-01'
+          updated_date: '2022-01-21'
+          account:
+            name: Avetta
+            id: 123
+            con_id: 15651
+        variances:
+        - id: 123
+          site: 'Acme Corp :: Main Site'
+          type: Requirement
+          flag: 741
+          target:
+            id: 12
+            title: Driver's License
+          begin: '2024-01-01 00:00:00'
+          end: '2024-12-31 00:00:00'
+          reason: Worker has a medical exemption
+          files:
+          - id: 456
+            name: exemption.pdf
+            size: 102400
+            type: web
+            url: https://example.com/docs/exemption.pdf
+            is_secure: false
+    successfulExtraRequirements:
+      summary: Successful with extra - requirements
+      value:
+        id: 1235
+        con_id: 1568432
+        first_name: John
+        last_name: Doe
+        login_id: jdoe
+        email: test@test.com
+        dob: '1998-05-25'
+        sap_id: 265813
+        cat_code: 1632
+        phone: 4561231159
+        status: Active
+        flag: Green
+        flag_forced: 0
+        title: Director of Software Development
+        created_date: '2018-10-23 18:31:00'
+        updated_date: '2017-15-05 16:41:00'
+        last_checkin_date: '2020-10-23 15:00:00'
+        last_checkout_date: '2020-10-23 19:45:00'
+        badge_link: ''
+        external_id:
+        - Connect:
+            SAP: 11035178
+        removed: 0
+        emergency_phone: 555-555-5555
+        emergency_contact_name: Bob Smith
+        emergency_contact_relationship: Parent
+        account:
+          id: 1235
+          parent_id: 1235
+          name: Avetta
+          type: client
+          con_id: 235843
+          con_flag: 0
+          external_id:
+          - Connect:
+              SAP: 11035178
+        requirements:
+        - id: 15651
+          code: 584135
+          title: Driver's License
+          date: '2024-05-15'
+          flag: 0
+          flag_forced: 0
+          completed_date: '2022-10-08'
+          requires_mfa: 0
+          status: completed
+    successful:
+      summary: Successful list of users
+      value:
+        id: 1235
+        con_id: 1568432
+        first_name: John
+        last_name: Doe
+        login_id: jdoe
+        email: test@test.com
+        dob: '1998-05-25'
+        sap_id: 265813
+        cat_code: 1632
+        phone: 4561231159
+        status: Active
+        flag: Green
+        flag_forced: 0
+        title: Director of Software Development
+        created_date: '2018-10-23 18:31:00'
+        updated_date: '2017-15-05 16:41:00'
+        last_checkin_date: '2020-10-23 15:00:00'
+        last_checkout_date: '2020-10-23 19:45:00'
+        badge_link: ''
+        external_id:
+        - Connect:
+            SAP: 11035178
+        removed: 0
+        emergency_phone: 555-555-5555
+        emergency_contact_name: Bob Smith
+        emergency_contact_relationship: Parent
+        account:
+          id: 1235
+          parent_id: 1235
+          name: Avetta
+          type: client
+          con_id: 235843
+          con_flag: 0
+          external_id:
+          - Connect:
+              SAP: 11035178
+    someUsersInserted:
+      summary: Some users inserted
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 2
+          records: 2
+          fail: 1
+          success: 1
+          total: 2
+        users:
+          status: Multi-Status
+          success: true
+          code: 207
+          detail:
+            success:
+            - UsrID: 189
+              code: 200
+              message:
+              - User saved successfully
+            fail:
+            - UsrID: null
+              code: 400
+              message: Login ID is required
+    successfulExtraConnections:
+      summary: Successful with extra - connections
+      value:
+        id: 1235
+        con_id: 1568432
+        first_name: John
+        last_name: Doe
+        login_id: jdoe
+        email: test@test.com
+        dob: '1998-05-25'
+        sap_id: 265813
+        cat_code: 1632
+        phone: 4561231159
+        status: Active
+        flag: Green
+        flag_forced: 0
+        title: Director of Software Development
+        created_date: '2018-10-23 18:31:00'
+        updated_date: '2017-15-05 16:41:00'
+        last_checkin_date: '2020-10-23 15:00:00'
+        last_checkout_date: '2020-10-23 19:45:00'
+        badge_link: ''
+        external_id:
+        - Connect:
+            SAP: 11035178
+        removed: 0
+        emergency_phone: 555-555-5555
+        emergency_contact_name: Bob Smith
+        emergency_contact_relationship: Parent
+        account:
+          id: 1235
+          parent_id: 1235
+          name: Avetta
+          type: client
+          con_id: 235843
+          con_flag: 0
+          external_id:
+          - Connect:
+              SAP: 11035178
+        connections:
+        - id: 325
+          name: 'Avetta :: Corporate'
+          flag: 0
+          flag_forced: 0
+          con_id: 250000000
+          con_flag: 0
+          removed: 0
+          checked_in: 0
+    userSaveFailed:
+      summary: 400 - The underlying user record failed to save
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: 189
+              code: 400
+              message:
+              - The Login ID is already in use
+    successfulExtraPermissions:
+      summary: Successful with extra - permissions
+      value:
+        id: 1235
+        con_id: 1568432
+        first_name: John
+        last_name: Doe
+        login_id: jdoe
+        email: test@test.com
+        dob: '1998-05-25'
+        sap_id: 265813
+        cat_code: 1632
+        phone: 4561231159
+        status: Active
+        flag: Green
+        flag_forced: 0
+        title: Director of Software Development
+        created_date: '2018-10-23 18:31:00'
+        updated_date: '2017-15-05 16:41:00'
+        last_checkin_date: '2020-10-23 15:00:00'
+        last_checkout_date: '2020-10-23 19:45:00'
+        badge_link: ''
+        external_id:
+        - Connect:
+            SAP: 11035178
+        removed: 0
+        emergency_phone: 555-555-5555
+        emergency_contact_name: Bob Smith
+        emergency_contact_relationship: Parent
+        account:
+          id: 1235
+          parent_id: 1235
+          name: Avetta
+          type: client
+          con_id: 235843
+          con_flag: 0
+          external_id:
+          - Connect:
+              SAP: 11035178
+          permissions:
+          - id: 3012
+            name: Reports
+    lastNameEmptyString:
+      summary: 400 - last_name was sent as an empty string (update)
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: 189
+              code: 400
+              message: You cannot set the last_name to an empty string
+    loginIDEmptyString:
+      summary: 400 - login_id was sent as an empty string (update)
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: 189
+              code: 400
+              message: You cannot set the login_id to an empty string
+    noPermissionToEditUser:
+      summary: 403 - No permission over the target user
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: 189
+              code: 403
+              message: You do not have permission to edit this user
+    noPermissionModifySite:
+      summary: 400 - No permission over the user's current site
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: 189
+              code: 400
+              message: You do not have permission to modified users in this site
+    fieldsUsersExample:
+      summary: fields for users
+      value:
+        stats:
+          command: Users
+          version: v1
+          msg: Good
+          start: 1
+          time: 0.54373
+          limit: 3000
+          owner: 1365
+        users:
+        - key: UsrLoginID
+          title: Login ID
+          type: 501
+          order: 1
+          validation:
+            required: true
+            minlength: null
+            maxlength: 128
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrFirstName
+          title: First Name
+          type: 501
+          order: 2
+          validation:
+            required: true
+            minlength: 1
+            maxlength: 50
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrMiddleInitial
+          title: Middle Initial
+          type: 501
+          order: 3
+          validation:
+            required: false
+            minlength: 1
+            maxlength: 1
+            special: alpha
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrLastName
+          title: Last Name
+          type: 501
+          order: 4
+          validation:
+            required: true
+            minlength: 1
+            maxlength: 50
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrPassword
+          title: Password
+          type: 501
+          order: 5
+          validation:
+            required: true
+            minlength: 8
+            maxlength: 50
+            special: password
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrGrpID
+          title: 'Company :: Site'
+          type: 513
+          order: 6
+          validation:
+            required: true
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: combo
+          readonly: false
+          value: ''
+        - key: UsrEmailAddr
+          title: Email
+          type: 501
+          order: 7
+          validation:
+            required: false
+            minlength: null
+            maxlength: 255
+            special: email:1
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrAddress1
+          title: Address 1
+          type: 501
+          order: 8
+          validation:
+            required: false
+            minlength: null
+            maxlength: 100
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrAddress2
+          title: Address 2
+          type: 501
+          order: 9
+          validation:
+            required: false
+            minlength: null
+            maxlength: 100
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrCity
+          title: City
+          type: 501
+          order: 10
+          validation:
+            required: false
+            minlength: null
+            maxlength: 100
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrState
+          title: State
+          type: 501
+          order: 11
+          validation:
+            required: false
+            minlength: 2
+            maxlength: 2
+            special: alpha
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrZipCode
+          title: Zip
+          type: 501
+          order: 12
+          validation:
+            required: false
+            minlength: null
+            maxlength: 15
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrCountryID
+          title: Country
+          type: 524
+          order: 13
+          validation:
+            required: false
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: popup
+          readonly: false
+          value: null
+          values:
+          - id: 4
+            value: Afghanistan
+          - id: 8
+            value: Albania
+          - id: 12
+            value: Algeria
+          - id: 16
+            value: American Samoa
+          - '........'
+        - key: UsrMobilePhone
+          title: Mobile Phone
+          type: 526
+          order: 14
+          validation:
+            required: false
+            minlength: null
+            maxlength: 50
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrHomePhone
+          title: Home Phone
+          type: 526
+          order: 15
+          validation:
+            required: false
+            minlength: null
+            maxlength: 50
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrWorkPhone
+          title: Work Phone
+          type: 526
+          order: 16
+          validation:
+            required: false
+            minlength: null
+            maxlength: 50
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrEmergencyContactName
+          title: Emergency Contact Name
+          type: 501
+          order: 17
+          validation:
+            required: false
+            minlength: null
+            maxlength: 100
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrEmergencyContactPhone
+          title: Emergency Contact Phone
+          type: 526
+          order: 18
+          validation:
+            required: false
+            minlength: null
+            maxlength: 50
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrBirthDate
+          title: Birth Date
+          type: 518
+          order: 19
+          validation:
+            required: false
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: null
+            maxvalue: '2024-02-26 19:59:59'
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrSSN
+          title: SSN
+          type: 501
+          order: 20
+          validation:
+            required: false
+            minlength: null
+            maxlength: 100
+            special: ssn
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrImageURL
+          title: Picture
+          type: 512
+          order: 21
+          validation:
+            required: false
+            minlength: null
+            maxlength: 255
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrHireDate
+          title: Hire Date
+          type: 518
+          order: 22
+          validation:
+            required: false
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrTerminationDate
+          title: Term Date
+          type: 518
+          order: 23
+          validation:
+            required: false
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrStatusTypID
+          title: Status
+          type: 508
+          order: 24
+          validation:
+            required: true
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: popup
+          readonly: false
+          value: null
+          values:
+          - id: 81
+            value: Active
+          - id: 82
+            value: Inactive
+        - key: UsrLngID
+          title: Language
+          type: 525
+          order: 25
+          validation:
+            required: false
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: popup
+          readonly: false
+          value: null
+        - key: UsrSAPID
+          title: SAP ID
+          type: 501
+          order: 26
+          validation:
+            required: false
+            minlength: null
+            maxlength: 25
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textfield
+          readonly: false
+          value: ''
+        - key: UsrNotes
+          title: Notes
+          type: 502
+          order: 27
+          validation:
+            required: false
+            minlength: null
+            maxlength: 4000
+            special: null
+            minvalue: null
+            maxvalue: null
+          typename: textblock
+          readonly: false
+          value: ''
+        - key: reset_password
+          title: Change Password at next login
+          type: 509
+          order: 28
+          validation:
+            required: true
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: 0
+            maxvalue: 1
+          typename: checkbox
+          readonly: false
+          value: 1
+        - key: password_never_expired
+          title: Password Never Expires
+          type: 509
+          order: 29
+          validation:
+            required: true
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: 0
+            maxvalue: 1
+          typename: checkbox
+          readonly: false
+          value: 1
+        - key: 2fa
+          title: Multi-Factor Authentication (MFA)
+          type: 509
+          order: 30
+          validation:
+            required: false
+            minlength: null
+            maxlength: null
+            special: null
+            minvalue: 0
+            maxvalue: 1
+          typename: checkbox
+          readonly: true
+          value: 0
+    successfulExtraHistory:
+      summary: Successful with extra - history
+      value:
+        id: 1235
+        con_id: 1568432
+        first_name: John
+        last_name: Doe
+        login_id: jdoe
+        email: test@test.com
+        dob: '1998-05-25'
+        sap_id: 265813
+        cat_code: 1632
+        phone: 4561231159
+        status: Active
+        flag: Green
+        flag_forced: 0
+        title: Director of Software Development
+        created_date: '2018-10-23 18:31:00'
+        updated_date: '2017-15-05 16:41:00'
+        last_checkin_date: '2020-10-23 15:00:00'
+        last_checkout_date: '2020-10-23 19:45:00'
+        badge_link: ''
+        external_id:
+        - Connect:
+            SAP: 11035178
+        removed: 0
+        emergency_phone: 555-555-5555
+        emergency_contact_name: Bob Smith
+        emergency_contact_relationship: Parent
+        account:
+          id: 1235
+          parent_id: 1235
+          name: Avetta
+          type: client
+          con_id: 235843
+          con_flag: 0
+          external_id:
+          - Connect:
+              SAP: 11035178
+        history:
+        - id: 123
+          code: 12651
+          title: Driver's License
+          date: '2022-10-08'
+          score: 100
+          result: Pass
+    noneUsersInserted:
+      summary: None users inserted
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 2
+          records: 2
+          fail: 2
+          success: 0
+          total: 2
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: null
+              code: 400
+              message: You do not have permission to insert or update users in this site
+            - UsrID: null
+              code: 400
+              message: Login ID is required
+    userSavedSuccessfully:
+      summary: 200 - User saved successfully
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+          fail: 0
+          success: 1
+          total: 1
+        users:
+          status: Good
+          success: true
+          code: 200
+          detail:
+            success:
+            - UsrID: 189
+              code: 200
+              message:
+              - User saved successfully
+            fail: []
+    firstNameEmptyString:
+      summary: 400 - first_name was sent as an empty string (update)
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: 189
+              code: 400
+              message: You cannot set the first_name to an empty string
+    userSavedWithPhoneTooLong:
+      summary: 200 - Saved, but a phone number exceeded the maximum length so it was ignored
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+          fail: 0
+          success: 1
+          total: 1
+        users:
+          status: Good
+          success: true
+          code: 200
+          detail:
+            success:
+            - UsrID: 189
+              code: 200
+              message:
+              - mobile_phone is too long. It should be less than or equal to 50 characters
+              - User saved successfully
+            fail: []
+    bulkUpdateUsers:
+      summary: Multiple users to be updated
+      value:
+      - id: 1235
+        login_id: jdoe
+        first_name: John
+        middle_initial: M
+        last_name: Smith
+        password: password!
+        site: 26516
+        email: test@email.com
+        address1: 45 Main St
+        address2: Apt 2
+        city: New York
+        state: NY
+        zipcode: 10001
+        country: USA
+        mobile_phone: +1 123456789
+        home_phone: +1 123456789
+        work_phone: +1 123456789
+        emergency_contact_name: Bob Smith
+        emergency_contact_phone: +1 123456789
+        birth_date: '1998-05-25'
+        ssn: 123-45-6789
+        photo: /9j/...
+        hire_date: '2020-10-23'
+        term_date: '2024-10-23'
+        status: active
+        locale: en-us
+        sap: 265813
+        notes: User notes
+        reset_password: true
+        password_never_expired: false
+        2fa: false
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+    examples-passwordRequired:
+      summary: 400 - Password is required (new user)
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: null
+              code: 400
+              message: Password is required
+    examples-lastNameRequired:
+      summary: 400 - Last Name is required (new user)
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: null
+              code: 400
+              message: Last Name is required
+    successfulExtraCustom:
+      summary: Successful with extra - custom
+      value:
+        id: 1235
+        con_id: 1568432
+        first_name: John
+        last_name: Doe
+        login_id: jdoe
+        email: test@test.com
+        dob: '1998-05-25'
+        sap_id: 265813
+        cat_code: 1632
+        phone: 4561231159
+        status: Active
+        flag: Green
+        flag_forced: 0
+        title: Director of Software Development
+        created_date: '2018-10-23 18:31:00'
+        updated_date: '2017-15-05 16:41:00'
+        last_checkin_date: '2020-10-23 15:00:00'
+        last_checkout_date: '2020-10-23 19:45:00'
+        badge_link: ''
+        external_id:
+        - Connect:
+            SAP: 11035178
+        removed: 0
+        emergency_phone: 555-555-5555
+        emergency_contact_name: Bob Smith
+        emergency_contact_relationship: Parent
+        account:
+          id: 1235
+          parent_id: 1235
+          name: Avetta
+          type: client
+          con_id: 235843
+          con_flag: 0
+          external_id:
+          - Connect:
+              SAP: 11035178
+        custom:
+        - id: 2116
+          key: DOB
+          title: Date of birthday
+          value: '1998-05-25'
+          created_date: '2020-11-01'
+          updated_date: '2022-01-21'
+          account:
+            name: Avetta
+            id: 123
+            con_id: 15651
+        - key: DriverLicense
+          title: Driver's License
+          value: null
+          account:
+            name: Avetta
+            id: 123
+            con_id: 15651
+    examples-loginIDRequired:
+      summary: 400 - Login ID is required (new user)
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: null
+              code: 400
+              message: Login ID is required
+    successfulExtraRoles:
+      summary: Successful with extra - roles
+      value:
+        id: 1235
+        con_id: 1568432
+        first_name: John
+        last_name: Doe
+        login_id: jdoe
+        email: test@test.com
+        dob: '1998-05-25'
+        sap_id: 265813
+        cat_code: 1632
+        phone: 4561231159
+        status: Active
+        flag: Green
+        flag_forced: 0
+        title: Director of Software Development
+        created_date: '2018-10-23 18:31:00'
+        updated_date: '2017-15-05 16:41:00'
+        last_checkin_date: '2020-10-23 15:00:00'
+        last_checkout_date: '2020-10-23 19:45:00'
+        badge_link: ''
+        external_id:
+        - Connect:
+            SAP: 11035178
+        removed: 0
+        emergency_phone: 555-555-5555
+        emergency_contact_name: Bob Smith
+        emergency_contact_relationship: Parent
+        account:
+          id: 1235
+          parent_id: 1235
+          name: Avetta
+          type: client
+          con_id: 235843
+          con_flag: 0
+          external_id:
+          - Connect:
+              SAP: 11035178
+        roles:
+        - id: 132
+          code: 15621
+          title: Electrician
+          type: Function
+          flag: 0
+          flag_forced: 0
+    passwordEmptyString:
+      summary: 400 - password was sent as an empty string (update)
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: 189
+              code: 400
+              message: You cannot set the password to an empty string
+    cannotChangeMobilePhoneWithMFA:
+      summary: 403 - Mobile phone cannot be changed while MFA is enabled for another user
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: 189
+              code: 403
+              message: You cannot change the mobile phone for a user with MFA enabled
+    cannotChangeEmailWithMFA:
+      summary: 403 - Email cannot be changed while MFA is enabled for another user
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: 189
+              code: 403
+              message: You cannot change the email address for a user with MFA enabled
+    noPermissionEnableMFA:
+      summary: 403 - No permission to enable MFA for another user
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: 189
+              code: 403
+              message: You do not have permission to enable MFA for this user
+    siteEmptyString:
+      summary: 400 - The site was sent as an empty string
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: null
+              code: 400
+              message: You cannot set the site to an empty string
+    userSavedWithInvalidHireDate:
+      summary: 200 - Saved, but the hire date value was not valid so it was ignored
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+          fail: 0
+          success: 1
+          total: 1
+        users:
+          status: Good
+          success: true
+          code: 200
+          detail:
+            success:
+            - UsrID: 189
+              code: 200
+              message:
+              - The hire date value is not valid
+              - User saved successfully
+            fail: []
+    nonUsersUpdated:
+      summary: None users updated
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 2
+          records: 2
+          fail: 2
+          success: 0
+          total: 2
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: null
+              code: 400
+              message: You cannot set the first_name to an empty string
+            - UsrID: null
+              code: 400
+              message: You cannot set the login_id to an empty string
+    userReadOnlyOrRemoved:
+      summary: 403 - User is Read Only or Removed
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: 189
+              code: 403
+              message: This user cannot be edited due to Read Only or Removed status
+    noPermissionDisableMFA:
+      summary: 403 - No permission to disable MFA for another user
+      value:
+        stats:
+          start: 1
+          command: Users
+          success: 0
+          fail: 1
+          msg: Good
+          device_id: 123
+          time: 0.41186
+          total: 1
+          limit: 3000
+          owner: 1234567890
+          version: v1
+        users:
+          status: Bad Request
+          success: false
+          code: 400
+          message: Invalid request
+          detail:
+            success: []
+            fail:
+            - UsrID: 189
+              code: 403
+              message: You do not have permission to disable MFA for this user
+    userSavedWithInvalidPhone:
+      summary: 200 - Saved, but a phone number was not valid so it was ignored
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: Good
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 1
+          records: 1
+          fail: 0
+          success: 1
+          total: 1
+        users:
+          status: Good
+          success: true
+          code: 200
+          detail:
+            success:
+            - UsrID: 189
+              code: 200
+              message:
+              - mobile_phone value is not valid
+              - User saved successfully
+            fail: []
+  parameters:
+    users_components-parameters-flagParam:
+      name: flag
+      in: query
+      description: Filter the results for a specify rating (Green, Amber, Red)
+      required: false
+      schema:
+        type: string
+        enum:
+        - Green
+        - Amber
+        - Red
+    users_components-parameters-siteIDParam:
+      name: site_id
+      in: query
+      description: Filter from a specific site id to drill down
+      required: false
+      schema:
+        type: integer
+    accountConIDParam:
+      name: account_con_id
+      in: query
+      description: Filter down form a group code where user belongs to
+      required: false
+      schema:
+        type: integer
+    showRemovedParam:
+      name: showRemoved
+      in: query
+      description: Show removed users in the results
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    users_components-parameters-searchParam-2:
+      name: search
+      in: query
+      description: Search term - It checks the term in login id, email, first name, last name, mobile phone, company name and company site name.
+      required: false
+      schema:
+        type: string
+    limitParam:
+      name: limit
+      in: query
+      description: Maximum number of records to return
+      required: false
+      schema:
+        type: integer
+        default: 3000
+    components-parameters-accountIDParam:
+      name: account_id
+      in: query
+      description: Filter down from a group id where user belongs to
+      required: false
+      schema:
+        type: integer
+    components-parameters-roleIDParam:
+      name: role_id
+      in: query
+      description: Filter down to a role
+      required: false
+      schema:
+        type: integer
+    parameters-connectionIDParam:
+      name: connection_id
+      in: query
+      description: Filter by the connected site id to drill down
+      required: false
+      schema:
+        type: integer
+    idParam:
+      name: id
+      in: path
+      description: references an id to reduce list down to 1 item
+      required: false
+      schema:
+        type: integer
+    parameters-modifiedAfterParam:
+      name: modifiedAfter
+      in: query
+      description: Filter Only users modified or added after this date
+      required: false
+      schema:
+        type: string
+        format: date-time
+    connectionConIDParam:
+      name: connection_con_id
+      in: query
+      description: Filter by the connected site code to drill down
+      required: false
+      schema:
+        type: integer
+    eventParam:
+      name: event_id
+      in: query
+      description: Show users that can be credited for the given requirement
+      required: false
+      schema:
+        type: integer
+    components-parameters-showInactiveParam:
+      name: showInactive
+      in: query
+      description: Show inactive users in the results
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    users_components-parameters-sortParam:
+      name: sort
+      in: query
+      description: Name of field to sort by
+      required: false
+      schema:
+        type: string
+        enum:
+        - id
+        - first_name
+        - last_name
+        - login_id
+        - email
+        - status
+        - flag
+        - created_date
+        - updated_date
+    users_components-parameters-extraParam:
+      name: extra
+      in: query
+      description: Extra data to return for users (Can be send as a list separated by commas)
+      required: false
+      schema:
+        type: string
+        enum:
+        - photos
+        - permissions
+        - roles
+        - requirements
+        - connections
+        - history
+        - custom
+        - variances
+    showAllConnectionsParam:
+      name: showAllConnections
+      in: query
+      description: Show all connections for the user, even if there is no training associated
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    allusersParam:
+      name: allusers
+      in: query
+      description: Return all users regardless if they have training
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    startParam:
+      name: start
+      in: query
+      description: Offset of the first record to return
+      required: false
+      schema:
+        type: integer
+        default: 1
+    searchTypeParam:
+      name: search_type
+      in: query
+      description: 'Restrict the search value by comparing first name and last name only (value: 2010 or null)'
+      required: false
+      schema:
+        type: integer
+        enum:
+        - 2010
+    allConnectionsParam:
+      name: all_connections
+      in: query
+      description: Show all connections for the user even when no training is associated. Renamed from `showAllConnections` in v1.
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    allVariancesParam:
+      name: all_variances
+      in: query
+      description: 'Return all non-deleted variances for each user (past, current, and future), not just the
+
+        currently open ones. Applies only with `extra=variances`.
+
+        '
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    groupPathParam:
+      name: group
+      in: path
+      description: ID of the group (site or any other group under the company) to check the worker in at or out of
+      required: true
+      schema:
+        type: integer
+      example: 21345
+    v2EventParam:
+      name: event_id
+      in: query
+      description: 'Limit the result to workers with this requirement on their plan. Only accepted on
+
+        `/users/credit` and `/users/credit/{id}`; on any other route it returns 400.
+
+        Returns 404 `Event not found` when the requirement is not available to the caller.
+
+        '
+      required: false
+      schema:
+        type: integer
+    showRemovedParam_2:
+      name: show_removed
+      in: query
+      description: Include removed (deleted) users in the results, alongside non-removed users of any status (inactive included). Ignored on `{id}` routes, which never return deleted users. Renamed from `showRemoved` in v1.
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    roleIDParam:
+      name: role_id
+      in: query
+      description: Filter down to a role
+      required: false
+      schema:
+        type: integer
+    accountIDParam:
+      name: account_id
+      in: query
+      description: Filter down from a group id where user belongs to
+      required: false
+      schema:
+        type: integer
+    limitParamV2:
+      name: limit
+      in: query
+      description: Maximum number of records to return. Values above 3000 are capped at 3000
+      required: false
+      schema:
+        type: integer
+        default: 1000
+        maximum: 3000
+    checkinNotesParam:
+      name: notes
+      in: query
+      description: Notes about the check in, stored up to 255 characters. Required as the reason when the worker is not Green at `group`.
+      required: false
+      schema:
+        type: string
+      example: Supervisor approved pending renewal
+    v2FlagParam:
+      name: flag
+      in: query
+      description: 'Filter to users whose rolled-up training flag matches: a single distinct flag across their
+
+        training status rows yields that flag, a mix of flags yields Amber. Scoped by `role_id`
+
+        and `connection_id` when supplied; client keys only roll up sites they can view.
+
+        Matched case-insensitively by first letter (`G`reen, `A`mber or `Y`ellow, `R`ed);
+
+        any other value returns 400 `Invalid flag`.
+
+        '
+      required: false
+      schema:
+        type: string
+        enum:
+        - Green
+        - Amber
+        - Yellow
+        - Red
+    timeoutParam:
+      name: time_out
+      in: query
+      description: Time out. Defaults to the current date/time when not provided.
+      required: false
+      schema:
+        type: string
+      example: 2021-09-01 17:00
+    searchParam:
+      name: search
+      in: query
+      description: Search term - It checks the term in login id, email, first name, last name, mobile phone, company name and company site name.
+      required: false
+      schema:
+        type: string
+    siteIDParam:
+      name: site_id
+      in: query
+      description: Filter from a specific site id to drill down
+      required: false
+      schema:
+        type: integer
+    showInactiveParam:
+      name: show_inactive
+      in: query
+      description: Include inactive users in the results. Ignored on `{id}` routes, which always include inactive users. Renamed from `showInactive` in v1.
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+    v2SortParam:
+      name: sort
+      in: query
+      description: 'Comma-separated list of fields to sort by, each optionally suffixed with `:asc` or `:desc`
+
+        (default `asc`), e.g. `last_name,created_date:desc`. Defaults to `last_name`.
+
+
+        Allowed fields: `id`, `first_name`, `last_name`, `login_id`, `email`, `status`,
+
+        `created_date`, `updated_date`. `flag` is not sortable in v2. Any other field returns 400 `Invalid sort`.
+
+        '
+      required: false
+      schema:
+        type: string
+        pattern: ^(id|first_name|last_name|login_id|email|status|created_date|updated_date)(:(asc|desc))?(,(id|first_name|last_name|login_id|email|status|created_date|updated_date)(:(asc|desc))?)*$
+        example: last_name,created_date:desc
+    connectionIDParam:
+      name: connection_id
+      in: query
+      description: Filter by the connected site id to drill down
+      required: false
+      schema:
+        type: integer
+    timeinParam:
+      name: time_in
+      in: query
+      description: Time in. Defaults to the current date/time when not provided.
+      required: false
+      schema:
+        type: string
+      example: 2021-09-01 08:00
+    cardIdParam:
+      name: card_id
+      in: query
+      description: ID of the time card to check out. If omitted, the most recent time card for the user at the given site that has not yet been checked out is used automatically.
+      required: false
+      schema:
+        type: integer
+      example: 4521
+    v2ExtraParam:
+      name: extra
+      in: query
+      description: 'Comma-separated list of extra data blocks to include in each user record.
+
+        v2 adds `checkin`, `status`, and `external` to the v1 set; the fields they populate
+
+        are omitted from the user object unless requested.
+
+
+        | Value          | Added fields on each user object |
+
+        |----------------|----------------------------------|
+
+        | `checkin`      | `last_checkin_date`, `last_checkout_date` |
+
+        | `status`       | `flag`, `flag_forced` |
+
+        | `external`     | `external_id`, `account.external_id` (arrays of external ID maps keyed by source) |
+
+        | `photos`       | `photo` (name, size, base64 data) when the user has a profile picture |
+
+        | `connections`  | `connections` (sites the user is authorised to work at) |
+
+        | `history`      | `history` (training history records) |
+
+        | `permissions`  | `permissions` (admin privilege flags) |
+
+        | `requirements` | `requirements` (user''s UEP requirements) |
+
+        | `roles`        | `roles` (assigned role list) |
+
+        | `custom`       | `custom` (custom field values) |
+
+        | `variances`    | `variances` (open variance records; all records with `all_variances=1`) |
+
+
+        When any extra is requested, `stats.search_id` is returned.
+
+        '
+      required: false
+      schema:
+        type: string
+        example: checkin,status,external,roles
+    notesParam:
+      name: notes
+      in: query
+      description: Notes about the check in/out
+      required: false
+      schema:
+        type: string
+      example: Check in
+    modifiedAfterParam:
+      name: modified_after
+      in: query
+      description: Filter, only users modified or added after this date (ISO 8601 date-time). An unparseable date returns 400 `Invalid modified_after`. Renamed from `modifiedAfter` in v1.
+      required: false
+      schema:
+        type: string
+        format: date-time
+    showRemovedParam_3:
+      name: show_removed
+      in: query
+      description: Include removed (deleted) users in the results, alongside non-removed users of any status (inactive included). Ignored on `{id}` routes, which never return deleted users. Renamed from `showRemoved` in v1.
+      required: false
+      schema:
+        type: integer
+        format: boolean
+        enum:
+        - 0
+        - 1
+  responses:
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+    successfulReport:
+      description: Successful
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                allOf:
+                - $ref: '#/components/schemas/statsSchema'
+                - type: object
+                  properties:
+                    search_id:
+                      type: integer
+                      description: Search ID for search external IDs and any extras
+                      example: 231019020
+              users:
+                allOf:
+                - type: array
+                  items:
+                    $ref: '#/components/schemas/schemas-userSchema'
+          examples:
+            successful:
+              $ref: '#/components/examples/successful'
+            successfulExtraPhoto:
+              $ref: '#/components/examples/successfulExtraPhoto'
+            successfulExtraPermissions:
+              $ref: '#/components/examples/successfulExtraPermissions'
+            successfulExtraRoles:
+              $ref: '#/components/examples/successfulExtraRoles'
+            successfulExtraRequirements:
+              $ref: '#/components/examples/successfulExtraRequirements'
+            successfulExtraConnections:
+              $ref: '#/components/examples/successfulExtraConnections'
+            successfulExtraHistory:
+              $ref: '#/components/examples/successfulExtraHistory'
+            successfulExtraCustom:
+              $ref: '#/components/examples/successfulExtraCustom'
+            successfulExtraAll:
+              $ref: '#/components/examples/allExtrasApplied'
+    errorForbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              users:
+                $ref: '#/components/schemas/messageForbiddenSchema'
+    handleSaveMessages:
+      description: Every possible message HandleSave() can return for a single user - validation/permission failures and successful saves (with or without a non-fatal field warning)
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                allOf:
+                - $ref: '#/components/schemas/statsSchema'
+                - type: object
+                  properties:
+                    fail:
+                      type: integer
+                      description: number of failed insert or update users
+                      example: 1
+                    success:
+                      type: integer
+                      description: number of successful insert or update users
+                      example: 0
+                    total:
+                      type: integer
+                      description: total number of registers processed
+                      example: 1
+              users:
+                $ref: '#/components/schemas/handleSaveResponseSchema'
+          examples:
+            loginIDRequired:
+              $ref: '#/components/examples/examples-loginIDRequired'
+            firstNameRequired:
+              $ref: '#/components/examples/examples-firstNameRequired'
+            lastNameRequired:
+              $ref: '#/components/examples/examples-lastNameRequired'
+            passwordRequired:
+              $ref: '#/components/examples/examples-passwordRequired'
+            siteEmptyString:
+              $ref: '#/components/examples/siteEmptyString'
+            siteSetToZero:
+              $ref: '#/components/examples/siteSetToZero'
+            userReadOnlyOrRemoved:
+              $ref: '#/components/examples/userReadOnlyOrRemoved'
+            noPermissionToEditUser:
+              $ref: '#/components/examples/noPermissionToEditUser'
+            cannotChangeEmailWithMFA:
+              $ref: '#/components/examples/cannotChangeEmailWithMFA'
+            cannotChangeMobilePhoneWithMFA:
+              $ref: '#/components/examples/cannotChangeMobilePhoneWithMFA'
+            loginIDEmptyString:
+              $ref: '#/components/examples/loginIDEmptyString'
+            firstNameEmptyString:
+              $ref: '#/components/examples/firstNameEmptyString'
+            lastNameEmptyString:
+              $ref: '#/components/examples/lastNameEmptyString'
+            passwordEmptyString:
+              $ref: '#/components/examples/passwordEmptyString'
+            noPermissionInsertSite:
+              $ref: '#/components/examples/noPermissionInsertSite'
+            noPermissionModifySite:
+              $ref: '#/components/examples/noPermissionModifySite'
+            noPermissionEnableMFA:
+              $ref: '#/components/examples/noPermissionEnableMFA'
+            noPermissionDisableMFA:
+              $ref: '#/components/examples/noPermissionDisableMFA'
+            userSaveFailed:
+              $ref: '#/components/examples/userSaveFailed'
+            userSavedSuccessfully:
+              $ref: '#/components/examples/userSavedSuccessfully'
+            userSavedWithInvalidCountry:
+              $ref: '#/components/examples/userSavedWithInvalidCountry'
+            userSavedWithInvalidBirthDate:
+              $ref: '#/components/examples/userSavedWithInvalidBirthDate'
+            userSavedWithInvalidHireDate:
+              $ref: '#/components/examples/userSavedWithInvalidHireDate'
+            userSavedWithInvalidTermDate:
+              $ref: '#/components/examples/userSavedWithInvalidTermDate'
+            userSavedWithInvalidPhone:
+              $ref: '#/components/examples/userSavedWithInvalidPhone'
+            userSavedWithPhoneTooLong:
+              $ref: '#/components/examples/userSavedWithPhoneTooLong'
+            userSavedWithInvalidPhoto:
+              $ref: '#/components/examples/userSavedWithInvalidPhoto'
+    fieldsUsers:
+      description: Successful - Show fields of users
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              users:
+                $ref: '#/components/schemas/fieldsUsersSchema'
+          examples:
+            fieldsUsersWithoutID:
+              $ref: '#/components/examples/fieldsUsersExample'
+            fieldsUsersWithID:
+              $ref: '#/components/examples/fieldsUsersWithIDExample'
+    upsertResponses:
+      description: Successful insert or update of users
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                allOf:
+                - $ref: '#/components/schemas/statsSchema'
+                - type: object
+                  properties:
+                    fail:
+                      type: integer
+                      description: number of failed insert or update users
+                      example: 2
+                    success:
+                      type: integer
+                      description: number of successful insert or update users
+                      example: 3
+                    total:
+                      type: integer
+                      description: total number of registers processed
+                      example: 5
+              users:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    detail:
+                      type: object
+                      properties:
+                        fail:
+                          type: array
+                          description: list of users that failed to insert or update with the user id and the error messages
+                          items:
+                            type: object
+                            properties:
+                              UsrID:
+                                type: integer
+                                description: User ID processed
+                                example: 22822
+                              code:
+                                type: integer
+                                description: Code of the error for this particular user
+                                example: 400
+                              message:
+                                type: array
+                                description: Message related to the failure of the insert or update of the user
+                        success:
+                          type: array
+                          description: list of users that were successfully inserted or updated with the user id and the informative messages
+                          items:
+                            type: object
+                            properties:
+                              UsrID:
+                                type: integer
+                                description: User ID processed
+                                example: 22822
+                              code:
+                                type: integer
+                                description: Code of the success for this particular user
+                                example: 200
+                              message:
+                                type: array
+                                description: Message related to the validation of data during the insert or update of the user
+          examples:
+            allUsersInserted:
+              $ref: '#/components/examples/allUsersInserted'
+            someUsersInserted:
+              $ref: '#/components/examples/someUsersInserted'
+            nonUsersInserted:
+              $ref: '#/components/examples/noneUsersInserted'
+            allUsersUpdated:
+              $ref: '#/components/examples/allUsersUpdated'
+            someUsersUpdated:
+              $ref: '#/components/examples/someUsersUpdated'
+            nonUsersUpdated:
+              $ref: '#/components/examples/nonUsersUpdated'
+    successful:
+      description: List of users
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              users:
+                allOf:
+                - type: array
+                  items:
+                    $ref: '#/components/schemas/schemas-userSchema'
+          examples:
+            successful:
+              $ref: '#/components/examples/successful'
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+    v2Successful:
+      description: 'List of users. `last_checkin_date`, `last_checkout_date`, `flag`, `flag_forced`,
+
+        `external_id`, and `account.external_id` are present only when requested through `extra`.
+
+        `{id}` routes wrap the user in a single-element array.
+
+        `dob` (`YYYY-MM-DD`) is `''''` unless the caller holds a worker-PII grant over a site the user is connected to.
+
+        `account.con_flag` rolls up the account''s connection ratings (one distinct rating => that rating,
+
+        mixed => Amber, none => None), scoped to the caller''s sites for client keys and to `connection_id` / `site_id` when supplied.
+
+        '
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                allOf:
+                - $ref: '#/components/schemas/statsSchema'
+                - type: object
+                  properties:
+                    search_id:
+                      type: integer
+                      description: Search ID used to load extras; present only when `extra` is supplied
+                      example: 231019020
+              users:
+                type: array
+                items:
+                  $ref: '#/components/schemas/userSchema'
+          examples:
+            successful:
+              summary: Default user (no extras)
+              value:
+                users:
+                - id: 1235
+                  con_id: 1568432
+                  first_name: John
+                  last_name: Doe
+                  login_id: jdoe
+                  email: test@test.com
+                  dob: '1998-05-25'
+                  sap_id: 265813
+                  cat_code: 1632
+                  phone: 4561231159
+                  status: Active
+                  title: Director of Software Development
+                  created_date: '2018-10-23 18:31:00'
+                  updated_date: '2019-05-15 16:41:00'
+                  badge_link: ''
+                  removed: 0
+                  emergency_phone: 555-555-5555
+                  emergency_contact_name: Bob Smith
+                  emergency_contact_relationship: Parent
+                  account:
+                    id: 1235
+                    parent_id: 1235
+                    name: Avetta
+                    type: client
+                    con_id: 235843
+                    con_flag: 0
+            successfulExtraCheckinStatusExternal:
+              summary: With extra=checkin,status,external
+              value:
+                stats:
+                  search_id: 231019020
+                users:
+                - id: 1235
+                  con_id: 1568432
+                  first_name: John
+                  last_name: Doe
+                  login_id: jdoe
+                  email: test@test.com
+                  status: Active
+                  flag: Green
+                  flag_forced: 0
+                  last_checkin_date: '2020-10-23 15:00:00'
+                  last_checkout_date: '2020-10-23 19:45:00'
+                  external_id:
+                  - Connect:
+                      SAP: 11035178
+                  removed: 0
+                  account:
+                    id: 1235
+                    parent_id: 1235
+                    name: Avetta
+                    type: client
+                    con_id: 235843
+                    con_flag: 0
+                    external_id:
+                    - Connect:
+                        SAP: 11035178
+    v2Forbidden:
+      description: 'Caller does not hold the route''s security type, or has no viewing groups to search within.
+
+        Missing or invalid credentials return 401 instead.
+
+        '
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              error:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            missingSecurityType:
+              summary: Caller does not hold the route's security type
+              value:
+                error:
+                  success: false
+                  code: 403
+                  status: Forbidden
+            noViewingNodes:
+              summary: No viewing groups for the route's security type
+              value:
+                error:
+                  success: false
+                  code: 403
+                  status: Forbidden
+                  message: Invalid security
+    v2NotFound:
+      description: User not found (`{id}` routes), or `event_id` not available to the caller (credit routes)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              error:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            userNotFound:
+              summary: No visible, non-deleted user with this id
+              value:
+                error:
+                  success: false
+                  code: 404
+                  status: Not Found
+                  message: User not found
+            eventNotFound:
+              summary: Requirement not available to the caller
+              value:
+                error:
+                  success: false
+                  code: 404
+                  status: Not Found
+                  message: Event not found
+    v2CheckInOutError:
+      description: "Check in/out rejected. Possible messages by code:\n- 400: `User is not connected to the group` (check in only), `User is already checked in. Please check out before checking in to another site.` (open time card at a different group),\n  `Reason required to check in a non-compliant worker`, `time_out is before the check in time`\n- 403: no message (caller does not hold the route's security type), `Invalid security`, `Invalid security - group belongs to another company`, `Timecard not enabled`\n- 404: `Group not found`, `User not found` (check in only), `Failed to find check in`\n\nCheck out does not require the worker to be active or connected; it only needs an open time card for the worker at the group.\n"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              error:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            reasonRequired:
+              summary: Non-Green worker checked in without notes
+              value:
+                error:
+                  success: false
+                  code: 400
+                  status: Bad Request
+                  message: Reason required to check in a non-compliant worker
+            otherCompany:
+              summary: Caller does not belong to the group's company
+              value:
+                error:
+                  success: false
+                  code: 403
+                  status: Forbidden
+                  message: Invalid security - group belongs to another company
+            noOpenCheckin:
+              summary: No open time card for the worker at the group
+              value:
+                error:
+                  success: false
+                  code: 404
+                  status: Not Found
+                  message: Failed to find check in
+    v2CheckInOutSuccessful:
+      description: Successful - the time card was saved. `id` is the time card id (pass it as `card_id` to check out).
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              users:
+                allOf:
+                - $ref: '#/components/schemas/messageSchema'
+                - type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Time card id
+                      example: 915482
+          examples:
+            successful:
+              summary: Time card saved
+              value:
+                users:
+                  success: true
+                  code: 200
+                  status: Good
+                  id: 915482
+            alreadyCheckedIn:
+              summary: Check in repeated while already checked in at the same group
+              value:
+                users:
+                  success: true
+                  code: 204
+                  status: No Content
+                  message: User already checked in to this group
+                  id: 915482
+    v2InvalidParameter:
+      description: 'Invalid parameter value. v2 rejects invalid filters rather than ignoring them. Possible messages:
+
+        `Invalid modified_after`, `Invalid flag`, `Invalid sort`, `Invalid account_con_id`,
+
+        `Invalid connection_con_id`, `event_id is only supported on /users/credit`.
+
+        '
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              error:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            invalidSort:
+              summary: Unknown sort field
+              value:
+                error:
+                  success: false
+                  code: 400
+                  status: Bad Request
+                  message: Invalid sort
+            eventIDNotSupported:
+              summary: event_id on a non-credit route
+              value:
+                error:
+                  success: false
+                  code: 400
+                  status: Bad Request
+                  message: event_id is only supported on /users/credit
+  requestBodies:
+    jsonUsers:
+      description: JSON data with the user information details - it could be a json object for one user or an array of objects for multiple users
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/bulkUsersUpsertSchema'
+          examples:
+            singleInsertUser:
+              $ref: '#/components/examples/singleInsertUser'
+            singleUpdateUser:
+              $ref: '#/components/examples/singleUpdateUser'
+            multipleInsertUsers:
+              $ref: '#/components/examples/bulkInsertUsers'
+            multipleUpdateUsers:
+              $ref: '#/components/examples/bulkUpdateUsers'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v2.json
+- avetta-worker-v1-openapi.yml
+- avetta-worker-v2-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

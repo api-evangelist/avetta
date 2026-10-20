@@ -1,0 +1,1589 @@
+{
+  "@context": {
+    "@vocab": "https://avetta.com/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "avetta": "https://avetta.com/schema#",
+    "1.0.0_ErrorResponse": "avetta:1.0.0_ErrorResponse",
+    "error": {
+      "@id": "avetta:error",
+      "@type": "xsd:string"
+    },
+    "code": {
+      "@id": "avetta:code",
+      "@type": "xsd:string"
+    },
+    "details": {
+      "@id": "avetta:details"
+    },
+    "timestamp": {
+      "@id": "avetta:timestamp",
+      "@type": "xsd:dateTime"
+    },
+    "requestId": {
+      "@id": "avetta:requestId",
+      "@type": "xsd:string"
+    },
+    "1.0.0_User": "avetta:1.0.0_User",
+    "userId": {
+      "@id": "avetta:userId",
+      "@type": "xsd:string"
+    },
+    "firstName": {
+      "@id": "avetta:firstName",
+      "@type": "xsd:string"
+    },
+    "lastName": {
+      "@id": "avetta:lastName",
+      "@type": "xsd:string"
+    },
+    "userType": {
+      "@id": "avetta:userType",
+      "@type": "xsd:string"
+    },
+    "1.0.0_controllers.v1.messages.GetVarianceTasksResponse": "avetta:1.0.0_controllers.v1.messages.GetVarianceTasksResponse",
+    "totalCount": {
+      "@id": "avetta:totalCount",
+      "@type": "xsd:integer"
+    },
+    "varianceTasks": {
+      "@id": "avetta:varianceTasks",
+      "@container": "@list"
+    },
+    "1.0.0_controllers.v1.messages.VarianceTask": "avetta:1.0.0_controllers.v1.messages.VarianceTask",
+    "workflowId": {
+      "@id": "avetta:workflowId",
+      "@type": "xsd:string"
+    },
+    "createdDate": {
+      "@id": "avetta:createdDate",
+      "@type": "xsd:dateTime"
+    },
+    "createdByFirstName": {
+      "@id": "avetta:createdByFirstName",
+      "@type": "xsd:string"
+    },
+    "createdByLastName": {
+      "@id": "avetta:createdByLastName",
+      "@type": "xsd:string"
+    },
+    "originalFlagResult": {
+      "@id": "avetta:originalFlagResult",
+      "@type": "xsd:integer"
+    },
+    "recommendedFlagResult": {
+      "@id": "avetta:recommendedFlagResult",
+      "@type": "xsd:integer"
+    },
+    "reviewers": {
+      "@id": "avetta:reviewers",
+      "@container": "@list"
+    },
+    "status": {
+      "@id": "avetta:status",
+      "@type": "xsd:string"
+    },
+    "varianceEndDate": {
+      "@id": "avetta:varianceEndDate",
+      "@type": "xsd:dateTime"
+    },
+    "sites": {
+      "@id": "avetta:sites",
+      "@container": "@list"
+    },
+    "notes": {
+      "@id": "avetta:notes",
+      "@container": "@list"
+    },
+    "1.0.0_controllers.v1.messages.VarianceReviewer": "avetta:1.0.0_controllers.v1.messages.VarianceReviewer",
+    "vote": {
+      "@id": "avetta:vote",
+      "@type": "xsd:string"
+    },
+    "voteDate": {
+      "@id": "avetta:voteDate",
+      "@type": "xsd:dateTime"
+    },
+    "name": {
+      "@id": "avetta:name",
+      "@type": "xsd:string"
+    },
+    "1.0.0_controllers.v1.messages.Note": "avetta:1.0.0_controllers.v1.messages.Note",
+    "accountId": {
+      "@id": "avetta:accountId",
+      "@type": "xsd:string"
+    },
+    "text": {
+      "@id": "avetta:text",
+      "@type": "xsd:string"
+    },
+    "visibleToSupplier": {
+      "@id": "avetta:visibleToSupplier",
+      "@type": "xsd:boolean"
+    },
+    "1.0.0_controllers.v1.messages.GetTasksResponse": "avetta:1.0.0_controllers.v1.messages.GetTasksResponse",
+    "forms": {
+      "@id": "avetta:forms",
+      "@container": "@list"
+    },
+    "1.0.0_controllers.v1.messages.FormsTasks": "avetta:1.0.0_controllers.v1.messages.FormsTasks",
+    "supplierFormName": {
+      "@id": "avetta:supplierFormName",
+      "@type": "xsd:string"
+    },
+    "workflowStatus": {
+      "@id": "avetta:workflowStatus",
+      "@type": "xsd:string"
+    },
+    "supplierName": {
+      "@id": "avetta:supplierName",
+      "@type": "xsd:string"
+    },
+    "supplierId": {
+      "@id": "avetta:supplierId",
+      "@type": "xsd:string"
+    },
+    "taskId": {
+      "@id": "avetta:taskId",
+      "@type": "xsd:string"
+    },
+    "workflowStatusId": {
+      "@id": "avetta:workflowStatusId",
+      "@type": "xsd:string"
+    },
+    "questionGroupId": {
+      "@id": "avetta:questionGroupId",
+      "@type": "xsd:string"
+    },
+    "questionGroupVersionId": {
+      "@id": "avetta:questionGroupVersionId",
+      "@type": "xsd:string"
+    },
+    "validStartDate": {
+      "@id": "avetta:validStartDate",
+      "@type": "xsd:string"
+    },
+    "updatedDate": {
+      "@id": "avetta:updatedDate",
+      "@type": "xsd:string"
+    },
+    "1.0.0_controllers.v1.messages.IdNamePair": "avetta:1.0.0_controllers.v1.messages.IdNamePair",
+    "id": {
+      "@id": "avetta:id",
+      "@type": "xsd:string"
+    },
+    "1.0.0_controllers.v1.messages.EsgForm": "avetta:1.0.0_controllers.v1.messages.EsgForm",
+    "1.0.0_controllers.v1.messages.EsgLevel": "avetta:1.0.0_controllers.v1.messages.EsgLevel",
+    "level": {
+      "@id": "avetta:level",
+      "@type": "xsd:string"
+    },
+    "minimumScore": {
+      "@id": "avetta:minimumScore",
+      "@type": "xsd:integer"
+    },
+    "maximumScore": {
+      "@id": "avetta:maximumScore",
+      "@type": "xsd:integer"
+    },
+    "1.0.0_controllers.v1.messages.EsgScore": "avetta:1.0.0_controllers.v1.messages.EsgScore",
+    "esgIndex": {
+      "@id": "avetta:esgIndex",
+      "@type": "xsd:string"
+    },
+    "score": {
+      "@id": "avetta:score",
+      "@type": "xsd:integer"
+    },
+    "1.0.0_controllers.v1.messages.GetEsgScoresResponse": "avetta:1.0.0_controllers.v1.messages.GetEsgScoresResponse",
+    "esgScores": {
+      "@id": "avetta:esgScores",
+      "@container": "@list"
+    },
+    "esgLevels": {
+      "@id": "avetta:esgLevels",
+      "@container": "@list"
+    },
+    "scoreTier": {
+      "@id": "avetta:scoreTier",
+      "@type": "xsd:string"
+    },
+    "1.0.0_controllers.v1.messages.GetSiteSupplierFlagsResponse": "avetta:1.0.0_controllers.v1.messages.GetSiteSupplierFlagsResponse",
+    "flags": {
+      "@id": "avetta:flags",
+      "@container": "@list"
+    },
+    "1.0.0_controllers.v1.messages.getSiteSupplierFlagsResponse.SupplierFlag": "avetta:1.0.0_controllers.v1.messages.getSiteSupplierFlagsResponse.SupplierFlag",
+    "supplierMongoId": {
+      "@id": "avetta:supplierMongoId",
+      "@type": "xsd:string"
+    },
+    "flagDisplayId": {
+      "@id": "avetta:flagDisplayId",
+      "@type": "xsd:string"
+    },
+    "flagMongoId": {
+      "@id": "avetta:flagMongoId",
+      "@type": "xsd:string"
+    },
+    "flagType": {
+      "@id": "avetta:flagType",
+      "@type": "xsd:string"
+    },
+    "calculationDisplayId": {
+      "@id": "avetta:calculationDisplayId",
+      "@type": "xsd:string"
+    },
+    "calculationMongoId": {
+      "@id": "avetta:calculationMongoId",
+      "@type": "xsd:string"
+    },
+    "description": {
+      "@id": "avetta:description",
+      "@type": "xsd:string"
+    },
+    "originalColor": {
+      "@id": "avetta:originalColor",
+      "@type": "xsd:string"
+    },
+    "newColor": {
+      "@id": "avetta:newColor",
+      "@type": "xsd:string"
+    },
+    "hasVariance": {
+      "@id": "avetta:hasVariance",
+      "@type": "xsd:boolean"
+    },
+    "varianceWorkflowId": {
+      "@id": "avetta:varianceWorkflowId",
+      "@type": "xsd:string"
+    },
+    "shortComment": {
+      "@id": "avetta:shortComment",
+      "@type": "xsd:string"
+    },
+    "comment": {
+      "@id": "avetta:comment",
+      "@type": "xsd:string"
+    },
+    "files": {
+      "@id": "avetta:files",
+      "@container": "@list"
+    },
+    "1.0.0_controllers.v1.messages.GetSupplierFlagsResponse": "avetta:1.0.0_controllers.v1.messages.GetSupplierFlagsResponse",
+    "1.0.0_controllers.v1.messages.SupplierFlag": "avetta:1.0.0_controllers.v1.messages.SupplierFlag",
+    "supplierStatus": {
+      "@id": "avetta:supplierStatus",
+      "@type": "xsd:string"
+    },
+    "siteId": {
+      "@id": "avetta:siteId",
+      "@type": "xsd:string"
+    },
+    "siteName": {
+      "@id": "avetta:siteName",
+      "@type": "xsd:string"
+    },
+    "calculationId": {
+      "@id": "avetta:calculationId",
+      "@type": "xsd:string"
+    },
+    "calculationDescription": {
+      "@id": "avetta:calculationDescription",
+      "@type": "xsd:string"
+    },
+    "flagId": {
+      "@id": "avetta:flagId",
+      "@type": "xsd:string"
+    },
+    "color": {
+      "@id": "avetta:color",
+      "@type": "xsd:string"
+    },
+    "isForced": {
+      "@id": "avetta:isForced",
+      "@type": "xsd:boolean"
+    },
+    "forcedBy": {
+      "@id": "avetta:forcedBy",
+      "@type": "xsd:string"
+    },
+    "varianceStartDate": {
+      "@id": "avetta:varianceStartDate",
+      "@type": "xsd:string"
+    },
+    "1.0.0_controllers.v1.messages.CreateVarianceResponse": "avetta:1.0.0_controllers.v1.messages.CreateVarianceResponse",
+    "1.0.0_controllers.v1.messages.GetSupplierFormsByWorkflowStatusResponse": "avetta:1.0.0_controllers.v1.messages.GetSupplierFormsByWorkflowStatusResponse",
+    "waitingonsupplier": {
+      "@id": "avetta:waitingonsupplier",
+      "@type": "@id"
+    },
+    "waitingonavetta": {
+      "@id": "avetta:waitingonavetta",
+      "@type": "@id"
+    },
+    "variances": {
+      "@id": "avetta:variances",
+      "@type": "@id"
+    },
+    "completed": {
+      "@id": "avetta:completed",
+      "@type": "@id"
+    },
+    "1.0.0_controllers.v1.messages.WaitingOnSupplier": "avetta:1.0.0_controllers.v1.messages.WaitingOnSupplier",
+    "count": {
+      "@id": "avetta:count",
+      "@type": "xsd:integer"
+    },
+    "1.0.0_controllers.v1.messages.WaitingOnAvetta": "avetta:1.0.0_controllers.v1.messages.WaitingOnAvetta",
+    "1.0.0_controllers.v1.messages.Variances": "avetta:1.0.0_controllers.v1.messages.Variances",
+    "1.0.0_controllers.v1.messages.Completed": "avetta:1.0.0_controllers.v1.messages.Completed",
+    "1.0.0_controllers.v1.messages.EnrichedSupplierForm": "avetta:1.0.0_controllers.v1.messages.EnrichedSupplierForm",
+    "formName": {
+      "@id": "avetta:formName",
+      "@type": "xsd:string"
+    },
+    "formId": {
+      "@id": "avetta:formId",
+      "@type": "xsd:string"
+    },
+    "displayId": {
+      "@id": "avetta:displayId",
+      "@type": "xsd:string"
+    },
+    "formType": {
+      "@id": "avetta:formType",
+      "@type": "xsd:string"
+    },
+    "formStatus": {
+      "@id": "avetta:formStatus",
+      "@type": "xsd:string"
+    },
+    "validEndDate": {
+      "@id": "avetta:validEndDate",
+      "@type": "xsd:dateTime"
+    },
+    "expirationDate": {
+      "@id": "avetta:expirationDate",
+      "@type": "xsd:dateTime"
+    },
+    "validDateFormat": {
+      "@id": "avetta:validDateFormat",
+      "@type": "xsd:string"
+    },
+    "statusUpdatedDate": {
+      "@id": "avetta:statusUpdatedDate",
+      "@type": "xsd:dateTime"
+    },
+    "1.0.0_controllers.v2.messages.GetSupplierFormsAndAnswersResponse": "avetta:1.0.0_controllers.v2.messages.GetSupplierFormsAndAnswersResponse",
+    "supplierFormsAndAnswers": {
+      "@id": "avetta:supplierFormsAndAnswers",
+      "@container": "@list"
+    },
+    "1.0.0_controllers.v2.messages.SupplierFormsAndAnswers": "avetta:1.0.0_controllers.v2.messages.SupplierFormsAndAnswers",
+    "formTypeId": {
+      "@id": "avetta:formTypeId",
+      "@type": "xsd:integer"
+    },
+    "formUpdatedDate": {
+      "@id": "avetta:formUpdatedDate",
+      "@type": "xsd:dateTime"
+    },
+    "formYear": {
+      "@id": "avetta:formYear",
+      "@type": "xsd:string"
+    },
+    "formPeriod": {
+      "@id": "avetta:formPeriod",
+      "@type": "xsd:string"
+    },
+    "clientSites": {
+      "@id": "avetta:clientSites",
+      "@container": "@list"
+    },
+    "isActive": {
+      "@id": "avetta:isActive",
+      "@type": "xsd:boolean"
+    },
+    "questions": {
+      "@id": "avetta:questions",
+      "@container": "@list"
+    },
+    "1.0.0_controllers.v2.messages.ClientSiteInfo": "avetta:1.0.0_controllers.v2.messages.ClientSiteInfo",
+    "clientId": {
+      "@id": "avetta:clientId",
+      "@type": "xsd:string"
+    },
+    "clientName": {
+      "@id": "avetta:clientName",
+      "@type": "xsd:string"
+    },
+    "1.0.0_controllers.v2.messages.SupplierFormQuestion": "avetta:1.0.0_controllers.v2.messages.SupplierFormQuestion",
+    "questionId": {
+      "@id": "avetta:questionId",
+      "@type": "xsd:integer"
+    },
+    "question": {
+      "@id": "avetta:question",
+      "@type": "xsd:string"
+    },
+    "questionTitle": {
+      "@id": "avetta:questionTitle",
+      "@type": "xsd:string"
+    },
+    "categoryId": {
+      "@id": "avetta:categoryId",
+      "@type": "xsd:integer"
+    },
+    "categoryName": {
+      "@id": "avetta:categoryName",
+      "@type": "xsd:string"
+    },
+    "answerDataType": {
+      "@id": "avetta:answerDataType",
+      "@type": "xsd:string"
+    },
+    "answerDataPointType": {
+      "@id": "avetta:answerDataPointType",
+      "@type": "xsd:string"
+    },
+    "answer": {
+      "@id": "avetta:answer",
+      "@type": "@id"
+    },
+    "1.0.0_controllers.v2.messages.SupplierFormAnswer": "avetta:1.0.0_controllers.v2.messages.SupplierFormAnswer",
+    "values": {
+      "@id": "avetta:values",
+      "@container": "@list"
+    },
+    "answerUpdatedDate": {
+      "@id": "avetta:answerUpdatedDate",
+      "@type": "xsd:dateTime"
+    },
+    "answerComment": {
+      "@id": "avetta:answerComment",
+      "@type": "xsd:string"
+    },
+    "1.0.0_controllers.v2.messages.FormAnswerValue": "avetta:1.0.0_controllers.v2.messages.FormAnswerValue",
+    "value": {
+      "@id": "avetta:value",
+      "@type": "xsd:string"
+    },
+    "href": {
+      "@id": "avetta:href",
+      "@type": "xsd:string"
+    },
+    "1.0.0_GetExternalIdsResponse": "avetta:1.0.0_GetExternalIdsResponse",
+    "externalIds": {
+      "@id": "avetta:externalIds",
+      "@container": "@list"
+    },
+    "1.0.0_SupplierProfile": "avetta:1.0.0_SupplierProfile",
+    "dbaNames": {
+      "@id": "avetta:dbaNames",
+      "@container": "@list"
+    },
+    "accountStatus": {
+      "@id": "avetta:accountStatus",
+      "@type": "xsd:string"
+    },
+    "website": {
+      "@id": "avetta:website",
+      "@type": "xsd:string"
+    },
+    "primaryContact": {
+      "@id": "avetta:primaryContact"
+    },
+    "billingAddress": {
+      "@id": "avetta:billingAddress"
+    },
+    "location": {
+      "@id": "avetta:location",
+      "@container": "@list"
+    },
+    "serviceAreas": {
+      "@id": "avetta:serviceAreas",
+      "@container": "@list"
+    },
+    "diversity": {
+      "@id": "avetta:diversity",
+      "@container": "@list"
+    },
+    "externalId": {
+      "@id": "avetta:externalId",
+      "@container": "@list"
+    },
+    "businessNumbers": {
+      "@id": "avetta:businessNumbers",
+      "@container": "@list"
+    },
+    "authorizations": {
+      "@id": "avetta:authorizations",
+      "@container": "@list"
+    },
+    "clientTags": {
+      "@id": "avetta:clientTags",
+      "@container": "@list"
+    },
+    "supplierSettings": {
+      "@id": "avetta:supplierSettings",
+      "@container": "@list"
+    },
+    "trades": {
+      "@id": "avetta:trades",
+      "@container": "@list"
+    },
+    "1.0.0_GetJobCategoriesResponse": "avetta:1.0.0_GetJobCategoriesResponse",
+    "jobCategories": {
+      "@id": "avetta:jobCategories",
+      "@container": "@list"
+    },
+    "1.0.0_JobCategory": "avetta:1.0.0_JobCategory",
+    "displayText": {
+      "@id": "avetta:displayText",
+      "@type": "xsd:string"
+    },
+    "jobRoles": {
+      "@id": "avetta:jobRoles",
+      "@container": "@list"
+    },
+    "1.0.0_JobRole": "avetta:1.0.0_JobRole",
+    "1.0.0_GetUserProfileResponse": "avetta:1.0.0_GetUserProfileResponse",
+    "email": {
+      "@id": "avetta:email",
+      "@type": "xsd:string"
+    },
+    "phoneNumber": {
+      "@id": "avetta:phoneNumber",
+      "@type": "xsd:string"
+    },
+    "faxNumber": {
+      "@id": "avetta:faxNumber",
+      "@type": "xsd:string"
+    },
+    "department": {
+      "@id": "avetta:department",
+      "@type": "xsd:string"
+    },
+    "jobCategoryId": {
+      "@id": "avetta:jobCategoryId",
+      "@type": "xsd:string"
+    },
+    "jobRoleId": {
+      "@id": "avetta:jobRoleId",
+      "@type": "xsd:string"
+    },
+    "dateFormat": {
+      "@id": "avetta:dateFormat",
+      "@type": "xsd:string"
+    },
+    "profileImageUrl": {
+      "@id": "avetta:profileImageUrl",
+      "@type": "xsd:string"
+    },
+    "lastLogin": {
+      "@id": "avetta:lastLogin",
+      "@type": "xsd:dateTime"
+    },
+    "1.0.0_GetClientProfileResponse": "avetta:1.0.0_GetClientProfileResponse",
+    "billingId": {
+      "@id": "avetta:billingId",
+      "@type": "xsd:string"
+    },
+    "accountTypes": {
+      "@id": "avetta:accountTypes",
+      "@container": "@list"
+    },
+    "hierarchyLevel": {
+      "@id": "avetta:hierarchyLevel",
+      "@type": "xsd:string"
+    },
+    "1.0.0_SupplierProfiles": "avetta:1.0.0_SupplierProfiles",
+    "suppliers": {
+      "@id": "avetta:suppliers",
+      "@container": "@list"
+    },
+    "1.0.0_FullHierarchyResponse": "avetta:1.0.0_FullHierarchyResponse",
+    "children": {
+      "@id": "avetta:children",
+      "@container": "@list"
+    },
+    "1.0.0_GetClientHierarchyImmediateChildrenResponse": "avetta:1.0.0_GetClientHierarchyImmediateChildrenResponse",
+    "1.0.0_SearchClientSitesResponse": "avetta:1.0.0_SearchClientSitesResponse",
+    "1.0.0_SearchClientSuppliersResponse": "avetta:1.0.0_SearchClientSuppliersResponse",
+    "1.0.0_UpdateUserProfileResponse": "avetta:1.0.0_UpdateUserProfileResponse",
+    "1.0.0_WorkerOpenWorkRequestsSummary": "avetta:1.0.0_WorkerOpenWorkRequestsSummary",
+    "workerId": {
+      "@id": "avetta:workerId",
+      "@type": "xsd:string"
+    },
+    "openWorkRequestCount": {
+      "@id": "avetta:openWorkRequestCount",
+      "@type": "xsd:integer"
+    },
+    "connectUserExists": {
+      "@id": "avetta:connectUserExists",
+      "@type": "xsd:boolean"
+    },
+    "_links": {
+      "@id": "avetta:_links"
+    },
+    "1.0.0_UpdateAssignedUsersRequest": "avetta:1.0.0_UpdateAssignedUsersRequest",
+    "usersToBeAdded": {
+      "@id": "avetta:usersToBeAdded",
+      "@container": "@list"
+    },
+    "usersToBeRemoved": {
+      "@id": "avetta:usersToBeRemoved",
+      "@container": "@list"
+    },
+    "1.0.0_GatewayErrorResponse": "avetta:1.0.0_GatewayErrorResponse",
+    "service": {
+      "@id": "avetta:service",
+      "@type": "xsd:string"
+    },
+    "message": {
+      "@id": "avetta:message",
+      "@type": "xsd:string"
+    },
+    "displayMessage": {
+      "@id": "avetta:displayMessage",
+      "@type": "xsd:string"
+    },
+    "1.0.0_SupplierUsersResponse": "avetta:1.0.0_SupplierUsersResponse",
+    "supplierBillingId": {
+      "@id": "avetta:supplierBillingId",
+      "@type": "xsd:string"
+    },
+    "users": {
+      "@id": "avetta:users",
+      "@container": "@list"
+    },
+    "1.0.0_SupplierUser": "avetta:1.0.0_SupplierUser",
+    "userEmail": {
+      "@id": "avetta:userEmail",
+      "@type": "xsd:string"
+    },
+    "1.0.0_GetAssignedUsersResponse": "avetta:1.0.0_GetAssignedUsersResponse",
+    "workRequestName": {
+      "@id": "avetta:workRequestName",
+      "@type": "xsd:string"
+    },
+    "1.0.0_GetWorkRequestQuestionsAnswersResponse": "avetta:1.0.0_GetWorkRequestQuestionsAnswersResponse",
+    "workRequestId": {
+      "@id": "avetta:workRequestId",
+      "@type": "xsd:string"
+    },
+    "categories": {
+      "@id": "avetta:categories",
+      "@container": "@list"
+    },
+    "childForms": {
+      "@id": "avetta:childForms",
+      "@container": "@list"
+    },
+    "1.0.0_FormWithAnswers": "avetta:1.0.0_FormWithAnswers",
+    "nextAvailableStatuses": {
+      "@id": "avetta:nextAvailableStatuses",
+      "@container": "@list"
+    },
+    "childCategories": {
+      "@id": "avetta:childCategories",
+      "@container": "@list"
+    },
+    "1.0.0_CategoryWithAnswers": "avetta:1.0.0_CategoryWithAnswers",
+    "allowsMultipleInstances": {
+      "@id": "avetta:allowsMultipleInstances",
+      "@type": "xsd:boolean"
+    },
+    "instances": {
+      "@id": "avetta:instances",
+      "@container": "@list"
+    },
+    "1.0.0_CategoryInstance": "avetta:1.0.0_CategoryInstance",
+    "instanceId": {
+      "@id": "avetta:instanceId",
+      "@type": "xsd:string"
+    },
+    "questionsAndAnswers": {
+      "@id": "avetta:questionsAndAnswers",
+      "@container": "@list"
+    },
+    "1.0.0_QuestionAndAnswerValue": "avetta:1.0.0_QuestionAndAnswerValue",
+    "questionDisplayText": {
+      "@id": "avetta:questionDisplayText",
+      "@type": "xsd:string"
+    },
+    "answerValues": {
+      "@id": "avetta:answerValues",
+      "@container": "@list"
+    },
+    "1.0.0_UpsertWorkRequestAnswersRequest": "avetta:1.0.0_UpsertWorkRequestAnswersRequest",
+    "1.0.0_CategoryAnswers": "avetta:1.0.0_CategoryAnswers",
+    "1.0.0_QuestionAndAnswer": "avetta:1.0.0_QuestionAndAnswer",
+    "1.0.0_UpsertWorkRequestAnswersResponse": "avetta:1.0.0_UpsertWorkRequestAnswersResponse",
+    "url": {
+      "@id": "avetta:url",
+      "@type": "@id"
+    },
+    "1.0.0_CreateWorkRequestRequest": "avetta:1.0.0_CreateWorkRequestRequest",
+    "projectId": {
+      "@id": "avetta:projectId",
+      "@type": "xsd:string"
+    },
+    "siteIds": {
+      "@id": "avetta:siteIds",
+      "@container": "@list"
+    },
+    "1.0.0_GetWorkRequestQuestionsResponse": "avetta:1.0.0_GetWorkRequestQuestionsResponse",
+    "isEditable": {
+      "@id": "avetta:isEditable",
+      "@type": "xsd:boolean"
+    },
+    "1.0.0_Form": "avetta:1.0.0_Form",
+    "1.0.0_QuestionCategory": "avetta:1.0.0_QuestionCategory",
+    "1.0.0_Question": "avetta:1.0.0_Question",
+    "questionType": {
+      "@id": "avetta:questionType",
+      "@type": "xsd:string"
+    },
+    "responseOptions": {
+      "@id": "avetta:responseOptions",
+      "@container": "@list"
+    },
+    "isRequired": {
+      "@id": "avetta:isRequired",
+      "@type": "xsd:boolean"
+    },
+    "1.0.0_ResponseOption": "avetta:1.0.0_ResponseOption",
+    "storageValue": {
+      "@id": "avetta:storageValue",
+      "@type": "xsd:string"
+    },
+    "1.0.0_GetWorkRequestsResponse": "avetta:1.0.0_GetWorkRequestsResponse",
+    "workRequests": {
+      "@id": "avetta:workRequests",
+      "@container": "@list"
+    },
+    "1.0.0_WorkRequest": "avetta:1.0.0_WorkRequest",
+    "projectName": {
+      "@id": "avetta:projectName",
+      "@type": "xsd:string"
+    },
+    "workRequestStatus": {
+      "@id": "avetta:workRequestStatus",
+      "@type": "xsd:string"
+    },
+    "1.0.0_GetProjectTemplatesResponse": "avetta:1.0.0_GetProjectTemplatesResponse",
+    "templates": {
+      "@id": "avetta:templates",
+      "@container": "@list"
+    },
+    "1.0.0_ProjectTemplate": "avetta:1.0.0_ProjectTemplate",
+    "templateId": {
+      "@id": "avetta:templateId",
+      "@type": "xsd:string"
+    },
+    "templateName": {
+      "@id": "avetta:templateName",
+      "@type": "xsd:string"
+    },
+    "1.0.0_GetProjectsResponse": "avetta:1.0.0_GetProjectsResponse",
+    "projects": {
+      "@id": "avetta:projects",
+      "@container": "@list"
+    },
+    "1.0.0_Project": "avetta:1.0.0_Project",
+    "isArchived": {
+      "@id": "avetta:isArchived",
+      "@type": "xsd:boolean"
+    },
+    "1.0.0_CreateWorkRequestResponse": "avetta:1.0.0_CreateWorkRequestResponse",
+    "1.0.0_CreateProjectRequest": "avetta:1.0.0_CreateProjectRequest",
+    "1.0.0_CreateProjectResponse": "avetta:1.0.0_CreateProjectResponse",
+    "1.0.0_GetAvailableChildFormsResponse": "avetta:1.0.0_GetAvailableChildFormsResponse",
+    "availableChildForms": {
+      "@id": "avetta:availableChildForms",
+      "@container": "@list"
+    },
+    "1.0.0_CreateChildFormRequest": "avetta:1.0.0_CreateChildFormRequest",
+    "formTemplateId": {
+      "@id": "avetta:formTemplateId",
+      "@type": "xsd:string"
+    },
+    "1.0.0_CreateChildFormResponse": "avetta:1.0.0_CreateChildFormResponse",
+    "1.0.0_WebLinks": "avetta:1.0.0_WebLinks",
+    "web": {
+      "@id": "avetta:web"
+    },
+    "1.0.0_AvailableChildForm": "avetta:1.0.0_AvailableChildForm",
+    "1.0.0_AuthenticationErrorResponse": "avetta:1.0.0_AuthenticationErrorResponse",
+    "1.0.0_GetWorkflowResponse": "avetta:1.0.0_GetWorkflowResponse",
+    "1.0.0_FormWorkflow": "avetta:1.0.0_FormWorkflow",
+    "currentStatus": {
+      "@id": "avetta:currentStatus",
+      "@type": "xsd:string"
+    },
+    "transitions": {
+      "@id": "avetta:transitions",
+      "@container": "@list"
+    },
+    "1.0.0_WorkflowTransition": "avetta:1.0.0_WorkflowTransition",
+    "from": {
+      "@id": "avetta:from",
+      "@type": "@id"
+    },
+    "to": {
+      "@id": "avetta:to",
+      "@container": "@list"
+    },
+    "1.0.0_WorkflowState": "avetta:1.0.0_WorkflowState",
+    "statusId": {
+      "@id": "avetta:statusId",
+      "@type": "xsd:string"
+    },
+    "isFinal": {
+      "@id": "avetta:isFinal",
+      "@type": "xsd:boolean"
+    },
+    "1.0.0_TransitionTarget": "avetta:1.0.0_TransitionTarget",
+    "clientCanTransition": {
+      "@id": "avetta:clientCanTransition",
+      "@type": "xsd:boolean"
+    },
+    "3.29.14_ErrorResource": "avetta:3.29.14_ErrorResource",
+    "errorType": {
+      "@id": "avetta:errorType",
+      "@type": "xsd:string"
+    },
+    "field": {
+      "@id": "avetta:field",
+      "@type": "xsd:string"
+    },
+    "problems": {
+      "@id": "avetta:problems",
+      "@container": "@list"
+    },
+    "3.29.14_Problem": "avetta:3.29.14_Problem",
+    "instance": {
+      "@id": "avetta:instance",
+      "@type": "@id"
+    },
+    "type": {
+      "@id": "avetta:type",
+      "@type": "@id"
+    },
+    "parameters": {
+      "@id": "avetta:parameters"
+    },
+    "detail": {
+      "@id": "avetta:detail",
+      "@type": "xsd:string"
+    },
+    "title": {
+      "@id": "avetta:title",
+      "@type": "xsd:string"
+    },
+    "3.29.14_StatusType": "avetta:3.29.14_StatusType",
+    "statusCode": {
+      "@id": "avetta:statusCode",
+      "@type": "xsd:integer"
+    },
+    "reasonPhrase": {
+      "@id": "avetta:reasonPhrase",
+      "@type": "xsd:string"
+    },
+    "3.29.14_FullErrorResource": "avetta:3.29.14_FullErrorResource",
+    "errorDetail": {
+      "@id": "avetta:errorDetail",
+      "@type": "xsd:string"
+    },
+    "3.29.14_AddressResource": "avetta:3.29.14_AddressResource",
+    "address": {
+      "@id": "avetta:address",
+      "@type": "xsd:string"
+    },
+    "town": {
+      "@id": "avetta:town",
+      "@type": "xsd:string"
+    },
+    "state": {
+      "@id": "avetta:state",
+      "@type": "xsd:string"
+    },
+    "postcode": {
+      "@id": "avetta:postcode",
+      "@type": "xsd:string"
+    },
+    "country": {
+      "@id": "avetta:country",
+      "@type": "xsd:string"
+    },
+    "3.29.14_DriversLicenseResource": "avetta:3.29.14_DriversLicenseResource",
+    "driversLicenseNumber": {
+      "@id": "avetta:driversLicenseNumber",
+      "@type": "xsd:string"
+    },
+    "driversLicenseState": {
+      "@id": "avetta:driversLicenseState",
+      "@type": "xsd:string"
+    },
+    "driversLicenseClass": {
+      "@id": "avetta:driversLicenseClass",
+      "@type": "xsd:string"
+    },
+    "driversLicenseExpiry": {
+      "@id": "avetta:driversLicenseExpiry",
+      "@type": "xsd:string"
+    },
+    "3.29.14_IntegrateEmployeeResource": "avetta:3.29.14_IntegrateEmployeeResource",
+    "extSysKey": {
+      "@id": "avetta:extSysKey",
+      "@type": "xsd:string"
+    },
+    "idKey": {
+      "@id": "avetta:idKey",
+      "@type": "xsd:string"
+    },
+    "companyId": {
+      "@id": "avetta:companyId",
+      "@type": "xsd:integer"
+    },
+    "dob": {
+      "@id": "avetta:dob",
+      "@type": "xsd:string"
+    },
+    "locale": {
+      "@id": "avetta:locale",
+      "@type": "xsd:string"
+    },
+    "active": {
+      "@id": "avetta:active",
+      "@type": "xsd:boolean"
+    },
+    "employeeNumber": {
+      "@id": "avetta:employeeNumber",
+      "@type": "xsd:string"
+    },
+    "middleName": {
+      "@id": "avetta:middleName",
+      "@type": "xsd:string"
+    },
+    "gender": {
+      "@id": "avetta:gender",
+      "@type": "xsd:string"
+    },
+    "pendingStatus": {
+      "@id": "avetta:pendingStatus",
+      "@type": "xsd:string"
+    },
+    "phone": {
+      "@id": "avetta:phone",
+      "@type": "xsd:string"
+    },
+    "phone2": {
+      "@id": "avetta:phone2",
+      "@type": "xsd:string"
+    },
+    "licenseResource": {
+      "@id": "avetta:licenseResource",
+      "@type": "@id"
+    },
+    "nextOfKin": {
+      "@id": "avetta:nextOfKin",
+      "@type": "@id"
+    },
+    "previousAddress": {
+      "@id": "avetta:previousAddress",
+      "@type": "@id"
+    },
+    "previousPhone": {
+      "@id": "avetta:previousPhone",
+      "@type": "xsd:string"
+    },
+    "previousEmail": {
+      "@id": "avetta:previousEmail",
+      "@type": "xsd:string"
+    },
+    "alternativeEmail": {
+      "@id": "avetta:alternativeEmail",
+      "@type": "xsd:string"
+    },
+    "trainingEmail": {
+      "@id": "avetta:trainingEmail",
+      "@type": "xsd:string"
+    },
+    "employmentStatus": {
+      "@id": "avetta:employmentStatus",
+      "@type": "xsd:string"
+    },
+    "businessUnit": {
+      "@id": "avetta:businessUnit",
+      "@type": "xsd:string"
+    },
+    "division": {
+      "@id": "avetta:division",
+      "@type": "xsd:string"
+    },
+    "position": {
+      "@id": "avetta:position",
+      "@type": "xsd:string"
+    },
+    "authoriser": {
+      "@id": "avetta:authoriser",
+      "@type": "xsd:string"
+    },
+    "personTypes": {
+      "@id": "avetta:personTypes",
+      "@container": "@list"
+    },
+    "universalStudentIdentifier": {
+      "@id": "avetta:universalStudentIdentifier",
+      "@type": "xsd:string"
+    },
+    "personId": {
+      "@id": "avetta:personId",
+      "@type": "xsd:integer"
+    },
+    "firstLastName": {
+      "@id": "avetta:firstLastName",
+      "@type": "xsd:string"
+    },
+    "lastFirstName": {
+      "@id": "avetta:lastFirstName",
+      "@type": "xsd:string"
+    },
+    "3.29.14_NextOfKinResource": "avetta:3.29.14_NextOfKinResource",
+    "relationship": {
+      "@id": "avetta:relationship",
+      "@type": "xsd:string"
+    },
+    "updateTime": {
+      "@id": "avetta:updateTime",
+      "@type": "xsd:string"
+    },
+    "3.29.14_PreviousAddressResource": "avetta:3.29.14_PreviousAddressResource",
+    "3.29.14_IntegrateEmployeeResourceResult": "avetta:3.29.14_IntegrateEmployeeResourceResult",
+    "employeeResource": {
+      "@id": "avetta:employeeResource",
+      "@type": "@id"
+    },
+    "pendingReason": {
+      "@id": "avetta:pendingReason",
+      "@type": "xsd:string"
+    },
+    "resultType": {
+      "@id": "avetta:resultType",
+      "@type": "xsd:string"
+    },
+    "3.29.14_PartialEmployeeResource": "avetta:3.29.14_PartialEmployeeResource",
+    "3.29.14_ClientSingleCompetencyUpdateResource": "avetta:3.29.14_ClientSingleCompetencyUpdateResource",
+    "scopeId": {
+      "@id": "avetta:scopeId",
+      "@type": "xsd:integer"
+    },
+    "globalId": {
+      "@id": "avetta:globalId",
+      "@type": "xsd:integer"
+    },
+    "levelId": {
+      "@id": "avetta:levelId",
+      "@type": "xsd:integer"
+    },
+    "suffix": {
+      "@id": "avetta:suffix",
+      "@type": "xsd:string"
+    },
+    "duration": {
+      "@id": "avetta:duration",
+      "@type": "xsd:integer"
+    },
+    "durationUnit": {
+      "@id": "avetta:durationUnit",
+      "@type": "xsd:string"
+    },
+    "verifiedDocument": {
+      "@id": "avetta:verifiedDocument",
+      "@type": "xsd:boolean"
+    },
+    "verifiedDocumentPrivateFile": {
+      "@id": "avetta:verifiedDocumentPrivateFile",
+      "@type": "xsd:boolean"
+    },
+    "verifiedDocumentSensitiveFile": {
+      "@id": "avetta:verifiedDocumentSensitiveFile",
+      "@type": "xsd:boolean"
+    },
+    "verifiedDocumentIssueMandatory": {
+      "@id": "avetta:verifiedDocumentIssueMandatory",
+      "@type": "xsd:string"
+    },
+    "verifiedDocumentExpiryMandatory": {
+      "@id": "avetta:verifiedDocumentExpiryMandatory",
+      "@type": "xsd:string"
+    },
+    "nonVerifiedDocumentIssueMandatory": {
+      "@id": "avetta:nonVerifiedDocumentIssueMandatory",
+      "@type": "xsd:string"
+    },
+    "nonVerifiedDocumentExpiryMandatory": {
+      "@id": "avetta:nonVerifiedDocumentExpiryMandatory",
+      "@type": "xsd:string"
+    },
+    "printOnSticker": {
+      "@id": "avetta:printOnSticker",
+      "@type": "xsd:boolean"
+    },
+    "hideFileUpload": {
+      "@id": "avetta:hideFileUpload",
+      "@type": "xsd:boolean"
+    },
+    "mandatoryCompetencySteps": {
+      "@id": "avetta:mandatoryCompetencySteps",
+      "@container": "@list"
+    },
+    "clientExtSysKey": {
+      "@id": "avetta:clientExtSysKey",
+      "@type": "xsd:string"
+    },
+    "clientIdKey": {
+      "@id": "avetta:clientIdKey",
+      "@type": "xsd:string"
+    },
+    "3.29.14_CompetencyResource": "avetta:3.29.14_CompetencyResource",
+    "stubId": {
+      "@id": "avetta:stubId",
+      "@type": "xsd:integer"
+    },
+    "competencyId": {
+      "@id": "avetta:competencyId",
+      "@type": "xsd:integer"
+    },
+    "groupCompetency": {
+      "@id": "avetta:groupCompetency",
+      "@type": "xsd:boolean"
+    },
+    "allowTrainingBookings": {
+      "@id": "avetta:allowTrainingBookings",
+      "@type": "xsd:boolean"
+    },
+    "external": {
+      "@id": "avetta:external",
+      "@type": "xsd:boolean"
+    },
+    "clientKey": {
+      "@id": "avetta:clientKey",
+      "@type": "@id"
+    },
+    "scope": {
+      "@id": "avetta:scope",
+      "@type": "@id"
+    },
+    "global": {
+      "@id": "avetta:global",
+      "@type": "xsd:string"
+    },
+    "verifiedDocumentIssueMandatoryStatus": {
+      "@id": "avetta:verifiedDocumentIssueMandatoryStatus",
+      "@type": "xsd:string"
+    },
+    "verifiedDocumentExpiryMandatoryStatus": {
+      "@id": "avetta:verifiedDocumentExpiryMandatoryStatus",
+      "@type": "xsd:string"
+    },
+    "nonVerifiedDocumentIssueMandatoryStatus": {
+      "@id": "avetta:nonVerifiedDocumentIssueMandatoryStatus",
+      "@type": "xsd:string"
+    },
+    "nonVerifiedDocumentExpiryMandatoryStatus": {
+      "@id": "avetta:nonVerifiedDocumentExpiryMandatoryStatus",
+      "@type": "xsd:string"
+    },
+    "fileUploadRequirement": {
+      "@id": "avetta:fileUploadRequirement",
+      "@type": "@id"
+    },
+    "members": {
+      "@id": "avetta:members",
+      "@container": "@list"
+    },
+    "competencyRequirement": {
+      "@id": "avetta:competencyRequirement",
+      "@type": "xsd:string"
+    },
+    "uploadAllowed": {
+      "@id": "avetta:uploadAllowed",
+      "@type": "xsd:boolean"
+    },
+    "deliveredByTraining": {
+      "@id": "avetta:deliveredByTraining",
+      "@type": "xsd:boolean"
+    },
+    "issueDateMandatoryStatus": {
+      "@id": "avetta:issueDateMandatoryStatus",
+      "@type": "xsd:string"
+    },
+    "expiryDateMandatoryStatus": {
+      "@id": "avetta:expiryDateMandatoryStatus",
+      "@type": "xsd:string"
+    },
+    "minimumValidityDaysBeforeRenewal": {
+      "@id": "avetta:minimumValidityDaysBeforeRenewal",
+      "@type": "xsd:integer"
+    },
+    "3.29.14_FileUploadRequirementResource": "avetta:3.29.14_FileUploadRequirementResource",
+    "mandatoryStatus": {
+      "@id": "avetta:mandatoryStatus",
+      "@type": "xsd:string"
+    },
+    "mandatoryConditionalText": {
+      "@id": "avetta:mandatoryConditionalText",
+      "@type": "xsd:string"
+    },
+    "requirementsDescription": {
+      "@id": "avetta:requirementsDescription",
+      "@type": "xsd:string"
+    },
+    "helpLinkUrl": {
+      "@id": "avetta:helpLinkUrl",
+      "@type": "xsd:string"
+    },
+    "fileType": {
+      "@id": "avetta:fileType",
+      "@type": "xsd:string"
+    },
+    "fileSizeBytes": {
+      "@id": "avetta:fileSizeBytes",
+      "@type": "xsd:integer"
+    },
+    "mimetypes": {
+      "@id": "avetta:mimetypes",
+      "@container": "@list"
+    },
+    "downloadableDocId": {
+      "@id": "avetta:downloadableDocId",
+      "@type": "xsd:integer"
+    },
+    "allowOnlineAssessment": {
+      "@id": "avetta:allowOnlineAssessment",
+      "@type": "xsd:boolean"
+    },
+    "3.29.14_KeyedIntegerResource": "avetta:3.29.14_KeyedIntegerResource",
+    "3.29.14_KeyedStringResource": "avetta:3.29.14_KeyedStringResource",
+    "3.29.14_NaturalKeyResource": "avetta:3.29.14_NaturalKeyResource",
+    "3.29.14_ScopeDetailResource": "avetta:3.29.14_ScopeDetailResource",
+    "timezone": {
+      "@id": "avetta:timezone",
+      "@type": "xsd:string"
+    },
+    "fatigueLimit": {
+      "@id": "avetta:fatigueLimit",
+      "@type": "xsd:integer"
+    },
+    "realmId": {
+      "@id": "avetta:realmId",
+      "@type": "xsd:integer"
+    },
+    "concoId": {
+      "@id": "avetta:concoId",
+      "@type": "xsd:integer"
+    },
+    "typeDisplayName": {
+      "@id": "avetta:typeDisplayName",
+      "@type": "xsd:string"
+    },
+    "ownerName": {
+      "@id": "avetta:ownerName",
+      "@type": "xsd:string"
+    },
+    "connectAccountId": {
+      "@id": "avetta:connectAccountId",
+      "@type": "xsd:string"
+    },
+    "connectClient": {
+      "@id": "avetta:connectClient",
+      "@type": "xsd:boolean"
+    },
+    "parentId": {
+      "@id": "avetta:parentId",
+      "@type": "xsd:integer"
+    },
+    "realm": {
+      "@id": "avetta:realm",
+      "@type": "@id"
+    },
+    "site": {
+      "@id": "avetta:site",
+      "@type": "@id"
+    },
+    "conco": {
+      "@id": "avetta:conco",
+      "@type": "@id"
+    },
+    "topLevel": {
+      "@id": "avetta:topLevel",
+      "@type": "xsd:boolean"
+    },
+    "3.29.14_UpdateExternalCompanySubscriptionResource": "avetta:3.29.14_UpdateExternalCompanySubscriptionResource",
+    "complete": {
+      "@id": "avetta:complete",
+      "@type": "xsd:boolean"
+    },
+    "expiry": {
+      "@id": "avetta:expiry",
+      "@type": "xsd:string"
+    },
+    "externalSource": {
+      "@id": "avetta:externalSource",
+      "@type": "xsd:string"
+    },
+    "complianceFlag": {
+      "@id": "avetta:complianceFlag",
+      "@type": "xsd:string"
+    },
+    "3.29.14_CompanyComplianceSubscriptionExternalResource": "avetta:3.29.14_CompanyComplianceSubscriptionExternalResource",
+    "company": {
+      "@id": "avetta:company",
+      "@type": "@id"
+    },
+    "3.29.14_ActionResource": "avetta:3.29.14_ActionResource",
+    "actionType": {
+      "@id": "avetta:actionType",
+      "@type": "xsd:string"
+    },
+    "actionDescription": {
+      "@id": "avetta:actionDescription",
+      "@type": "xsd:string"
+    },
+    "actionAllowed": {
+      "@id": "avetta:actionAllowed",
+      "@type": "xsd:boolean"
+    },
+    "actionDeniedType": {
+      "@id": "avetta:actionDeniedType",
+      "@type": "xsd:string"
+    },
+    "actionDeniedDescription": {
+      "@id": "avetta:actionDeniedDescription",
+      "@type": "xsd:string"
+    },
+    "actionDeniedDetails": {
+      "@id": "avetta:actionDeniedDetails",
+      "@type": "xsd:string"
+    },
+    "3.29.14_AdminNoteResource": "avetta:3.29.14_AdminNoteResource",
+    "action": {
+      "@id": "avetta:action",
+      "@type": "xsd:string"
+    },
+    "noteDateTime": {
+      "@id": "avetta:noteDateTime",
+      "@type": "xsd:string"
+    },
+    "note": {
+      "@id": "avetta:note",
+      "@type": "xsd:string"
+    },
+    "sysInfo": {
+      "@id": "avetta:sysInfo",
+      "@type": "xsd:string"
+    },
+    "user": {
+      "@id": "avetta:user",
+      "@type": "@id"
+    },
+    "restricted": {
+      "@id": "avetta:restricted",
+      "@type": "xsd:boolean"
+    },
+    "current": {
+      "@id": "avetta:current",
+      "@type": "xsd:boolean"
+    },
+    "3.29.14_BlockResource": "avetta:3.29.14_BlockResource",
+    "blockType": {
+      "@id": "avetta:blockType",
+      "@type": "xsd:string"
+    },
+    "recursive": {
+      "@id": "avetta:recursive",
+      "@type": "xsd:boolean"
+    },
+    "safetySelectionRunning": {
+      "@id": "avetta:safetySelectionRunning",
+      "@type": "xsd:boolean"
+    },
+    "contextBlock": {
+      "@id": "avetta:contextBlock",
+      "@type": "xsd:boolean"
+    },
+    "adminNote": {
+      "@id": "avetta:adminNote",
+      "@type": "@id"
+    },
+    "3.29.14_KeyedIntegerClientResource": "avetta:3.29.14_KeyedIntegerClientResource",
+    "3.29.14_RealmAssociationPersonResource": "avetta:3.29.14_RealmAssociationPersonResource",
+    "pending": {
+      "@id": "avetta:pending",
+      "@type": "xsd:boolean"
+    },
+    "associationDate": {
+      "@id": "avetta:associationDate",
+      "@type": "xsd:string"
+    },
+    "associatedBy": {
+      "@id": "avetta:associatedBy",
+      "@type": "xsd:string"
+    },
+    "createTime": {
+      "@id": "avetta:createTime",
+      "@type": "xsd:string"
+    },
+    "3.29.14_RealmResource": "avetta:3.29.14_RealmResource",
+    "3.29.14_ScopeDefaultCompanyResource": "avetta:3.29.14_ScopeDefaultCompanyResource",
+    "3.29.14_ScopeResource": "avetta:3.29.14_ScopeResource",
+    "3.29.14_SiteAssociationPersonResource": "avetta:3.29.14_SiteAssociationPersonResource",
+    "personType": {
+      "@id": "avetta:personType",
+      "@type": "xsd:string"
+    },
+    "3.29.14_SiteLegacyIdResource": "avetta:3.29.14_SiteLegacyIdResource",
+    "legacyIdName": {
+      "@id": "avetta:legacyIdName",
+      "@type": "xsd:string"
+    },
+    "legacyId": {
+      "@id": "avetta:legacyId",
+      "@type": "xsd:string"
+    },
+    "3.29.14_SiteResource": "avetta:3.29.14_SiteResource",
+    "genderCompulsory": {
+      "@id": "avetta:genderCompulsory",
+      "@type": "xsd:boolean"
+    },
+    "3.29.14_WorkerResource": "avetta:3.29.14_WorkerResource",
+    "photoLink": {
+      "@id": "avetta:photoLink",
+      "@type": "xsd:string"
+    },
+    "companies": {
+      "@id": "avetta:companies",
+      "@container": "@list"
+    },
+    "email1": {
+      "@id": "avetta:email1",
+      "@type": "xsd:string"
+    },
+    "email2": {
+      "@id": "avetta:email2",
+      "@type": "xsd:string"
+    },
+    "uniqueEmail": {
+      "@id": "avetta:uniqueEmail",
+      "@type": "xsd:string"
+    },
+    "phone1": {
+      "@id": "avetta:phone1",
+      "@type": "xsd:string"
+    },
+    "mergedToPersonId": {
+      "@id": "avetta:mergedToPersonId",
+      "@type": "xsd:integer"
+    },
+    "blocked": {
+      "@id": "avetta:blocked",
+      "@type": "xsd:boolean"
+    },
+    "blockRecursive": {
+      "@id": "avetta:blockRecursive",
+      "@type": "xsd:boolean"
+    },
+    "defaultCompanies": {
+      "@id": "avetta:defaultCompanies",
+      "@container": "@list"
+    },
+    "siteLegacyIds": {
+      "@id": "avetta:siteLegacyIds",
+      "@container": "@list"
+    },
+    "dateOfBirth": {
+      "@id": "avetta:dateOfBirth",
+      "@type": "xsd:string"
+    },
+    "placeOfBirth": {
+      "@id": "avetta:placeOfBirth",
+      "@type": "xsd:string"
+    },
+    "driversLicense": {
+      "@id": "avetta:driversLicense",
+      "@type": "@id"
+    },
+    "idCheckPass": {
+      "@id": "avetta:idCheckPass",
+      "@type": "xsd:boolean"
+    },
+    "idCheckPendingNonExpired": {
+      "@id": "avetta:idCheckPendingNonExpired",
+      "@type": "xsd:boolean"
+    },
+    "siteAssociations": {
+      "@id": "avetta:siteAssociations",
+      "@container": "@list"
+    },
+    "realmAssociations": {
+      "@id": "avetta:realmAssociations",
+      "@container": "@list"
+    },
+    "blocks": {
+      "@id": "avetta:blocks",
+      "@container": "@list"
+    },
+    "canEditAction": {
+      "@id": "avetta:canEditAction",
+      "@type": "@id"
+    },
+    "3.29.14_ExternalIdCommand": "avetta:3.29.14_ExternalIdCommand",
+    "3.29.14_UpdatePersonResource": "avetta:3.29.14_UpdatePersonResource",
+    "3.29.14_UpdateWorkerResource": "avetta:3.29.14_UpdateWorkerResource",
+    "person": {
+      "@id": "avetta:person",
+      "@type": "@id"
+    },
+    "driversLicence": {
+      "@id": "avetta:driversLicence",
+      "@type": "@id"
+    },
+    "3.29.14_UpdateSiteContactAvailabilityResource": "avetta:3.29.14_UpdateSiteContactAvailabilityResource",
+    "rangeTo": {
+      "@id": "avetta:rangeTo",
+      "@type": "xsd:string"
+    },
+    "rangeFrom": {
+      "@id": "avetta:rangeFrom",
+      "@type": "xsd:string"
+    },
+    "rangeType": {
+      "@id": "avetta:rangeType",
+      "@type": "xsd:string"
+    },
+    "days": {
+      "@id": "avetta:days",
+      "@container": "@list"
+    },
+    "daysBitwiseSum": {
+      "@id": "avetta:daysBitwiseSum",
+      "@type": "xsd:integer"
+    }
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Avetta API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Avetta's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-20) from openapi/avetta-connect-openapi.yml, openapi/avetta-pegasus-openapi.yml, openapi/avetta-worker-v1-openapi.yml.",
+  "dcterms:created": "2026-10-20",
+  "dcterms:source": [
+    "openapi/avetta-connect-openapi.yml",
+    "openapi/avetta-pegasus-openapi.yml",
+    "openapi/avetta-worker-v1-openapi.yml",
+    "openapi/avetta-worker-v2-openapi.yml"
+  ]
+}

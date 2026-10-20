@@ -1,0 +1,9 @@
+name: Avetta agent skills
+generated: '2026-10-20'
+method: generated
+source: openapi/avetta-connect-openapi.yml
+skills:
+- name: avetta-supplier-compliance-review
+  path: skills/avetta-supplier-compliance-review.md
+- name: avetta-register-supplier
+  path: skills/avetta-register-supplier.md

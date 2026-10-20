@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/avetta/main/json-schema/avetta-1-0-0-worker-open-work-requests-summary-schema.json",
+  "title": "1.0.0_WorkerOpenWorkRequestsSummary",
+  "x-generated": "2026-10-20",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/avetta-connect-openapi.yml#/components/schemas/1.0.0_WorkerOpenWorkRequestsSummary",
+  "type": "object",
+  "required": [
+    "workerId",
+    "openWorkRequestCount",
+    "connectUserExists"
+  ],
+  "properties": {
+    "workerId": {
+      "type": "string",
+      "description": "The worker as Worker Management spells it"
+    },
+    "openWorkRequestCount": {
+      "type": "integer",
+      "format": "int64",
+      "description": "Active Work Requests the worker is assigned to, across every account"
+    },
+    "connectUserExists": {
+      "type": "boolean",
+      "description": "Whether a Connect user stands for this worker; without one there is no link"
+    },
+    "_links": {
+      "type": "object",
+      "description": "Present only when a Connect user exists and a landing page is configured",
+      "properties": {
+        "web": {
+          "type": "object",
+          "properties": {
+            "href": {
+              "type": "string",
+              "description": "Where in Connect to send the worker"
+            }
+          }
+        }
+      }
+    }
+  }
+}

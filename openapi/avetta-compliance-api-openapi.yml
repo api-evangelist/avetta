@@ -1,0 +1,4140 @@
+openapi: 3.2.0
+info:
+  title: Avetta Compliance API
+  version: 1.0.0
+  description: 'Operations tagged Compliance across 2 of this provider''s published API definitions: avetta-connect-dist.json, avetta-connect-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.avetta.com
+  description: Production (as named in the Client API Service documentation examples)
+tags:
+- name: Compliance
+  x-displayName: Compliance
+paths:
+  /api/v1/suppliers/count:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    get:
+      description: Retrieves the number of suppliers returned from the `Get Suppliers` endpoint.
+      parameters:
+      - description: Optional value to return records after the specified date and time [yyyy-MM-dd hh:mm:ss]
+        example: '2016-07-23 05:10:57'
+        in: query
+        name: modifiedAfter
+        required: false
+        schema:
+          type: string
+      - description: Optional filter, returns total count of records with the specified `status`
+        in: query
+        name: status
+        schema:
+          enum:
+          - active
+          - disconnected
+          - inactive
+          - pending
+          - rejected
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                  - total_records: 1845
+              schema:
+                description: ''
+                items:
+                  properties:
+                    total_records:
+                      type: number
+                  required:
+                  - total_records
+                  type: object
+                minItems: 1
+                type: array
+                uniqueItems: true
+                x-examples:
+                  example-1:
+                  - total_records: 1845
+            example-1:
+              examples:
+                response:
+                  value:
+                  - total_records: 0
+          description: OK
+          headers: {}
+        '400':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: 3
+                    message: Bad Request
+              schema:
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+          headers: {}
+        '500':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+          headers: {}
+      summary: Get Suppliers Count v1
+      tags:
+      - Compliance
+      operationId: getApiV1SuppliersCount
+      x-operation-id-source: derived
+  /api/v1/suppliers/{supplierId}:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    get:
+      description: 'Retrieves a list of multiple supplier data. By default, only suppliers that have active connections to clients will be returned in this endpoint.
+
+        * The `flags` array contains the supplier’s flag for a particular `client_id`.
+
+        * The `client_id` field is the identifier of a specific site within your account hierarchy.
+
+        * The `system_flag` field shows the overall flag color for a particular supplier/contractor for that `client_id`.
+
+        * The `system_flag_details` array contains the detail of your individual flaggable data and its current flag color. This provides specific detailed reasons for the current overall flag color, `system_flag` for in regards to that specific `client_id`.
+
+        * The **updated_date** field(which the `modifiedAfter` applies to) helps you quickly identify the latest updates to your suppliers. It reflects not only changes you or the supplier make but also internal system adjustments, such as updates to evaluations or categories. This means a supplier you haven''t recently interacted with might still appear as "recently updated" due to these behind-the-scenes activities. It''s designed to ensure you always have the most current information at your fingertips, aiding in maintaining compliance within your supply chain.
+
+        > When `supplierId` path parameter is provided, a single supplier object related to the provided Supplier Id is returned. The `start`, `limit`, and `modifiedAfter` parameters will be ignored.'
+      parameters:
+      - name: supplierId
+        in: path
+        required: true
+        description: Unique identifier for a specific supplier
+        schema:
+          type: string
+      - description: The record to start with for pagination (0-based, not 1-based).
+        example: 1
+        in: query
+        name: start
+        required: false
+        schema:
+          default: 0
+          type: number
+      - description: The total number of records to return, maximum of 500.
+        example: 500
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 500
+          type: number
+      - description: 'Optional parameter. The modifiedAfter parameter will filter out any records with updated_date values older than the value of the parameter supplied.
+
+          **Please note**: updated_date does NOT keep track of the last time one of the fields in the payload has changed. In fact, it keeps track of the last change anywhere in the entire supplier model (an internal model, of which only certain fields are exposed in this endpoint). Changes that can result in updating this updated_date value include changes made by the supplier, changes made by the client (e.g. applying or removing tags), and also some changes made by the system. Example: modifiedAfter=2016-07-23 05:10:57'
+        in: query
+        name: modifiedAfter
+        required: false
+        schema:
+          type: string
+      - description: Optional filter to indicate the connection status of the supplier.
+        in: query
+        name: status
+        schema:
+          enum:
+          - active
+          - disconnected
+          - inactive
+          - pending
+          - rejected
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                  - id: 89010
+                    name: Bob's Plumbing Services
+                    dba_name: Bob's Plumbing Services, LLC
+                    company_url: www.bobsplumbing.com
+                    description: Providing plumbing services
+                    primary_contact:
+                      email: bob.smith@fakeemail.com
+                      fax: 555 555 4567
+                      first_name: Bob
+                      id: '123'
+                      last_name: Smith
+                      phone: 555 555 1234
+                    address:
+                      address_line1: 123 Main St
+                      address_line2: Suite 100
+                      city: Irvine
+                      country: United States
+                      country_subdivision: California
+                      postal_code: '92614'
+                    billing_address:
+                      address_line1: 123 Main St
+                      address_line2: Suite 100
+                      city: Irvine
+                      country: United States
+                      country_subdivision: California
+                      postal_code: '92614'
+                    account_status: Active
+                    updated_date: '2022-04-25 01:39:54'
+                    external_id:
+                    - client_id: 123
+                      type: Vendor
+                      value: '123'
+                    supplier_tags:
+                    - client_id: '123'
+                      tags:
+                      - id: '223'
+                        name: Sample Tag
+                    flags:
+                    - client_id: 123
+                      client_name: Oil Rig
+                      forced_expiration: '2018-06-30 00:00:00'
+                      is_forced: 'True'
+                      system_flag: Amber
+                      system_flag_details:
+                      - flag: Amber
+                        forcedExpiration: '2018-06-30 00:00:00'
+                        idForced: true
+                        reasons:
+                        - General Liability is missing
+                      - flag: Green
+                        forcedExpiration: ''
+                        idForced: true
+                        reasons:
+                        - ''
+                    trades:
+                    - Elevator, lift, escalator repair and maintenance services
+                    - Escalator installation
+                    - Elevator installation
+                    service_types:
+                    - On-Site
+              schema:
+                description: ''
+                items:
+                  properties:
+                    account_status:
+                      minLength: 1
+                      type: string
+                    address:
+                      properties:
+                        address_line1:
+                          minLength: 0
+                          type: string
+                        address_line2:
+                          minLength: 0
+                          type: string
+                        city:
+                          minLength: 1
+                          type: string
+                        country:
+                          minLength: 1
+                          type: string
+                        country_subdivision:
+                          minLength: 0
+                          type: string
+                        postal_code:
+                          minLength: 1
+                          type: string
+                      required:
+                      - address_line1
+                      - address_line2
+                      - city
+                      - country
+                      - country_subdivision
+                      - postal_code
+                      type: object
+                    billing_address:
+                      properties:
+                        address_line1:
+                          minLength: 0
+                          type: string
+                        address_line2:
+                          minLength: 0
+                          type: string
+                        city:
+                          minLength: 1
+                          type: string
+                        country:
+                          minLength: 1
+                          type: string
+                        country_subdivision:
+                          minLength: 0
+                          type: string
+                        postal_code:
+                          minLength: 1
+                          type: string
+                      required:
+                      - address_line1
+                      - city
+                      - country
+                      - country_subdivision
+                      - postal_code
+                      type: object
+                    company_url:
+                      minLength: 0
+                      type: string
+                    dba_name:
+                      minLength: 0
+                      type: string
+                    description:
+                      minLength: 0
+                      type: string
+                    external_id:
+                      items:
+                        properties:
+                          client_id:
+                            type: number
+                          type:
+                            minLength: 1
+                            type: string
+                          value:
+                            minLength: 1
+                            type: string
+                        required:
+                        - client_id
+                        - type
+                        - value
+                        type: object
+                      minItems: 0
+                      type: array
+                      uniqueItems: true
+                    flags:
+                      items:
+                        properties:
+                          client_id:
+                            type: number
+                          client_name:
+                            minLength: 1
+                            type: string
+                          forced_expiration:
+                            minLength: 0
+                            type: string
+                          is_forced:
+                            minLength: 1
+                            type: string
+                          system_flag:
+                            minLength: 1
+                            type: string
+                          system_flag_details:
+                            items:
+                              properties:
+                                flag:
+                                  minLength: 1
+                                  type: string
+                                forcedExpiration:
+                                  minLength: 0
+                                  type:
+                                  - string
+                                  - 'null'
+                                idForced:
+                                  type: boolean
+                                reasons:
+                                  items:
+                                    type: string
+                                  minItems: 1
+                                  type: array
+                                  uniqueItems: true
+                              required:
+                              - flag
+                              - forcedExpiration
+                              - idForced
+                              type: object
+                            minItems: 0
+                            type: array
+                            uniqueItems: true
+                        required:
+                        - client_id
+                        - client_name
+                        - forced_expiration
+                        - is_forced
+                        - system_flag
+                        type: object
+                      minItems: 1
+                      type: array
+                      uniqueItems: true
+                    id:
+                      type: number
+                    name:
+                      minLength: 1
+                      type: string
+                    primary_contact:
+                      properties:
+                        email:
+                          minLength: 1
+                          type: string
+                        fax:
+                          minLength: 0
+                          type: string
+                        first_name:
+                          minLength: 1
+                          type: string
+                        id:
+                          type: string
+                        last_name:
+                          minLength: 1
+                          type: string
+                        phone:
+                          minLength: 0
+                          type: string
+                      required:
+                      - id
+                      - first_name
+                      - last_name
+                      - email
+                      - phone
+                      - fax
+                      type: object
+                    service_types:
+                      items:
+                        type: string
+                      type: array
+                    supplier_tags:
+                      items:
+                        properties:
+                          client_id:
+                            type: string
+                          tags:
+                            items:
+                              properties:
+                                id:
+                                  type: string
+                                name:
+                                  minLength: 1
+                                  type: string
+                              required:
+                              - id
+                              - name
+                              type: object
+                            minItems: 1
+                            type: array
+                            uniqueItems: true
+                        required:
+                        - client_id
+                        type: object
+                      minItems: 0
+                      type: array
+                      uniqueItems: true
+                    trades:
+                      items:
+                        type: string
+                      minItems: 0
+                      type: array
+                      uniqueItems: true
+                    updated_date:
+                      minLength: 1
+                      type: string
+                  required:
+                  - id
+                  - name
+                  - dba_name
+                  - company_url
+                  - description
+                  - primary_contact
+                  - address
+                  - billing_address
+                  - account_status
+                  - updated_date
+                  - external_id
+                  - supplier_tags
+                  - flags
+                  - trades
+                  - service_types
+                  type: object
+                minItems: 0
+                type: array
+                uniqueItems: true
+          description: OK
+          headers: {}
+        '400':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code: {}
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+          headers: {}
+        '500':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+          headers: {}
+      summary: Get Suppliers v1
+      tags:
+      - Compliance
+      operationId: getApiV1SuppliersBySupplierId
+      x-operation-id-source: derived
+  /api/v2/suppliers/count:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    get:
+      description: Retrieves the number of suppliers returned from the `Get Suppliers` endpoint.
+      parameters:
+      - description: Optional value to return records after the specified date and time [yyyy-MM-dd hh:mm:ss]
+        example: '2016-07-23 05:10:57'
+        in: query
+        name: modifiedAfter
+        required: false
+        schema:
+          type: string
+      - description: Optional filter, returns total count of records with the specified `status`
+        in: query
+        name: status
+        schema:
+          enum:
+          - active
+          - disconnected
+          - inactive
+          - pending
+          - rejected
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                  - total_records: 1845
+              schema:
+                description: ''
+                items:
+                  properties:
+                    total_records:
+                      type: number
+                  required:
+                  - total_records
+                  type: object
+                minItems: 1
+                type: array
+                uniqueItems: true
+                x-examples:
+                  example-1:
+                  - total_records: 1845
+            example-1:
+              examples:
+                response:
+                  value:
+                  - total_records: 0
+          description: OK
+          headers: {}
+        '400':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: 3
+                    message: Bad Request
+              schema:
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+          headers: {}
+        '500':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+          headers: {}
+      summary: Get Suppliers Count v2
+      tags:
+      - Compliance
+      operationId: getApiV2SuppliersCount
+      x-operation-id-source: derived
+  /api/v2/suppliers:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    get:
+      description: 'Retrieves a list of multiple supplier data. By default, only suppliers that have active connections to clients will be returned in this endpoint.
+
+
+        * The `flags` array contains the supplier’s flag for a particular `client_id`.
+
+        * The `client_id` field is the identifier of a specific site within your account hierarchy.
+
+        * The `system_flag` field shows the overall flag color for a particular supplier/contractor for that `client_id`.
+
+        * The `system_flag_details` array contains the detail of your individual flaggable data and its current flag color. This provides specific detailed reasons for the current overall flag color, `system_flag` for in regards to that specific `client_id`.
+
+        * The **updated_date** field(which the `modifiedAfter` applies to) helps you quickly identify the latest updates to your suppliers. It reflects not only changes you or the supplier make but also internal system adjustments, such as updates to evaluations or categories. This means a supplier you haven''t recently interacted with might still appear as "recently updated" due to these behind-the-scenes activities. It''s designed to ensure you always have the most current information at your fingertips, aiding in maintaining compliance within your supply chain.'
+      parameters:
+      - description: The record to start with for pagination (0-based, not 1-based).
+        example: 1
+        in: query
+        name: start
+        required: false
+        schema:
+          default: 0
+          type: number
+      - description: The total number of records to return, maximum of 500.
+        example: 500
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 500
+          type: number
+      - description: 'Optional parameter. The modifiedAfter parameter will filter out any records with updated_date values older than the value of the parameter supplied.
+
+          **Please note**: updated_date does NOT keep track of the last time one of the fields in the payload has changed. In fact, it keeps track of the last change anywhere in the entire supplier model (an internal model, of which only certain fields are exposed in this endpoint). Changes that can result in updating this updated_date value include changes made by the supplier, changes made by the client (e.g. applying or removing tags), and also some changes made by the system. Example: modifiedAfter=2016-07-23 05:10:57'
+        in: query
+        name: modifiedAfter
+        required: false
+        schema:
+          type: string
+      - description: Optional filter to indicate the connection status of the supplier.
+        in: query
+        name: status
+        schema:
+          enum:
+          - active
+          - disconnected
+          - inactive
+          - pending
+          - rejected
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                  - account_status: Active
+                    address:
+                      address_line1: 123 Main St
+                      address_line2: Suite 100
+                      city: Irvine
+                      country: United States
+                      country_subdivision: California
+                      postal_code: '92614'
+                    billing_address:
+                      address_line1: 123 Main St
+                      city: Irvine
+                      country: United States
+                      country_subdivision: California
+                      postal_code: '92614'
+                    company_url: www.bobsplumbing.com
+                    dba_name: Bob's Plumbing Services, LLC
+                    description: Providing plumbing services
+                    external_id:
+                    - client_id: 123
+                      type: Other
+                      value: '234489'
+                    flags:
+                    - client_id: 123
+                      client_name: Oil Rig
+                      forced_expiration: '2018-06-30 00:00:00'
+                      is_forced: 'True'
+                      system_flag: Amber
+                      system_flag_details:
+                      - flag: Amber
+                        forced_expiration: '2018-06-30 00:00:00'
+                        is_forced: 'True'
+                        reasons:
+                        - '85': High TRIR, Missing Documentation
+                        - '42': General Liability is missing
+                      - flag: Green
+                        forced_expiration: ''
+                        is_forced: 'False'
+                        reasons:
+                        - ''
+                    id: 89010
+                    name: Bob's Plumbing Services
+                    primary_contact:
+                      email: bob.smith@fakeemail.com
+                      fax: 555 555 4567
+                      first_name: Bob
+                      id: '123'
+                      last_name: Smith
+                      phone: 555 555 1234
+                    service_types:
+                    - On-site
+                    - Off-site
+                    supplier_tags:
+                    - client_id: '123'
+                      tags:
+                      - id: 223
+                        name: Sample Tag
+                    trades:
+                    - frequency: most
+                      service_offerings:
+                      - '82': Welding
+                      - '193': Manufacturing
+                    updated_date: '2016-07-23 05:10:57'
+              schema:
+                description: ''
+                items:
+                  properties:
+                    account_status:
+                      minLength: 1
+                      type: string
+                    address:
+                      properties:
+                        address_line1:
+                          minLength: 1
+                          type: string
+                        address_line2:
+                          minLength: 1
+                          type: string
+                        city:
+                          minLength: 1
+                          type: string
+                        country:
+                          minLength: 1
+                          type: string
+                        country_subdivision:
+                          minLength: 1
+                          type: string
+                        postal_code:
+                          minLength: 1
+                          type: string
+                      required:
+                      - address_line1
+                      - address_line2
+                      - city
+                      - country
+                      - country_subdivision
+                      - postal_code
+                      type: object
+                    billing_address:
+                      properties:
+                        address_line1:
+                          minLength: 1
+                          type: string
+                        city:
+                          minLength: 1
+                          type: string
+                        country:
+                          minLength: 1
+                          type: string
+                        country_subdivision:
+                          minLength: 1
+                          type: string
+                        postal_code:
+                          minLength: 1
+                          type: string
+                      required:
+                      - address_line1
+                      - city
+                      - country
+                      - country_subdivision
+                      - postal_code
+                      type: object
+                    company_url:
+                      minLength: 0
+                      type: string
+                    dba_name:
+                      minLength: 0
+                      type: string
+                    description:
+                      minLength: 0
+                      type: string
+                    external_id:
+                      items:
+                        properties:
+                          client_id:
+                            type: number
+                          type:
+                            minLength: 1
+                            type: string
+                          value:
+                            minLength: 1
+                            type: string
+                        required:
+                        - client_id
+                        - type
+                        - value
+                        type: object
+                      minItems: 0
+                      type: array
+                      uniqueItems: true
+                    flags:
+                      items:
+                        properties:
+                          client_id:
+                            type: number
+                          client_name:
+                            minLength: 1
+                            type: string
+                          forced_expiration:
+                            minLength: 1
+                            type: string
+                          is_forced:
+                            minLength: 1
+                            type: string
+                          system_flag:
+                            minLength: 1
+                            type: string
+                          system_flag_details:
+                            items:
+                              properties:
+                                flag:
+                                  minLength: 1
+                                  type: string
+                                forced_expiration:
+                                  minLength: 1
+                                  type: string
+                                is_forced:
+                                  minLength: 1
+                                  type: string
+                                reasons:
+                                  items:
+                                    properties:
+                                      '85':
+                                        minLength: 1
+                                        type: string
+                                    required:
+                                    - '85'
+                                    type: object
+                                  minItems: 1
+                                  type: array
+                                  uniqueItems: true
+                              required:
+                              - flag
+                              - forced_expiration
+                              - is_forced
+                              type: object
+                            minItems: 1
+                            type: array
+                            uniqueItems: true
+                        required:
+                        - client_id
+                        - client_name
+                        - forced_expiration
+                        - is_forced
+                        - system_flag
+                        type: object
+                      minItems: 1
+                      type: array
+                      uniqueItems: true
+                    id:
+                      type: number
+                    name:
+                      minLength: 1
+                      type: string
+                    primary_contact:
+                      properties:
+                        email:
+                          minLength: 1
+                          type: string
+                        fax:
+                          minLength: 0
+                          type: string
+                        first_name:
+                          minLength: 1
+                          type: string
+                        id:
+                          type: string
+                        last_name:
+                          minLength: 1
+                          type: string
+                        phone:
+                          minLength: 0
+                          type: string
+                      required:
+                      - id
+                      - first_name
+                      - last_name
+                      - email
+                      - phone
+                      - fax
+                      type: object
+                    service_types:
+                      items:
+                        type: object
+                      type: array
+                    supplier_tags:
+                      items:
+                        properties:
+                          client_id:
+                            type: string
+                          tags:
+                            items:
+                              properties:
+                                id:
+                                  type: number
+                                name:
+                                  minLength: 1
+                                  type: string
+                              required:
+                              - id
+                              - name
+                              type: object
+                            minItems: 1
+                            type: array
+                            uniqueItems: true
+                        required:
+                        - client_id
+                        type: object
+                      minItems: 0
+                      type: array
+                      uniqueItems: true
+                    trades:
+                      items:
+                        properties:
+                          frequency:
+                            minLength: 1
+                            type: string
+                          service_offerings:
+                            items:
+                              properties:
+                                '82':
+                                  minLength: 1
+                                  type: string
+                              required:
+                              - '82'
+                              type: object
+                            minItems: 1
+                            type: array
+                            uniqueItems: true
+                        required:
+                        - frequency
+                        type: object
+                      minItems: 0
+                      type: array
+                      uniqueItems: true
+                    updated_date:
+                      minLength: 1
+                      type: string
+                  required:
+                  - id
+                  - name
+                  - dba_name
+                  - company_url
+                  - description
+                  - primary_contact
+                  - address
+                  - billing_address
+                  - account_status
+                  - updated_date
+                  - external_id
+                  - supplier_tags
+                  - flags
+                  - trades
+                  - service_types
+                  type: object
+                minItems: 1
+                type: array
+                uniqueItems: true
+                x-examples:
+                  example-1:
+                  - account_status: Active
+                    address:
+                      address_line1: 123 Main St
+                      address_line2: Suite 100
+                      city: Irvine
+                      country: United States
+                      country_subdivision: California
+                      postal_code: '92614'
+                    billing_address:
+                      address_line1: 123 Main St
+                      city: Irvine
+                      country: United States
+                      country_subdivision: California
+                      postal_code: '92614'
+                    company_url: www.bobsplumbing.com
+                    dba_name: Bob's Plumbing Services, LLC
+                    description: Providing plumbing services
+                    external_id:
+                    - client_id: 123
+                      type: Other
+                      value: '234489'
+                    flags:
+                    - client_id: 123
+                      client_name: Oil Rig
+                      forced_expiration: '2018-06-30 00:00:00'
+                      is_forced: 'True'
+                      system_flag: Amber
+                      system_flag_details:
+                      - flag: Amber
+                        forced_expiration: '2018-06-30 00:00:00'
+                        is_forced: 'True'
+                        reasons:
+                        - '85': High TRIR, Missing Documentation
+                        - '42': General Liability is missing
+                      - flag: Green
+                        forced_expiration: ''
+                        is_forced: 'False'
+                        reasons:
+                        - ''
+                    id: 89010
+                    name: Bob's Plumbing Services
+                    primary_contact:
+                      email: bob.smith@fakeemail.com
+                      fax: 555 555 4567
+                      first_name: Bob
+                      id: 123
+                      last_name: Smith
+                      phone: 555 555 1234
+                    service_types:
+                    - On-site
+                    - Off-site
+                    supplier_tags:
+                    - client_id: 123
+                      tags:
+                      - id: 223
+                        name: Sample Tag
+                    trades:
+                    - frequency: most
+                      service_offerings:
+                      - '82': Welding
+                      - '193': Manufacturing
+                    updated_date: '2016-07-23 05:10:57'
+          description: OK
+          headers: {}
+        '400':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code: {}
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+          headers: {}
+        '500':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+          headers: {}
+      summary: Get Suppliers v2
+      tags:
+      - Compliance
+      operationId: getApiV2Suppliers
+      x-operation-id-source: derived
+  /api/v2/suppliers/{supplierId}:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    parameters:
+    - description: Unique identifier for a specific Supplier
+      in: path
+      name: supplierId
+      required: true
+      schema:
+        type: string
+    get:
+      description: 'Retrieves the matching supplier''s data. By default, only a supplier with an active connection to clients will be returned in this endpoint.
+
+
+        * The `flags` array contains the supplier’s flag for a particular `client_id`.
+
+        * The `client_id` field is the identifier of a specific site within your account hierarchy.
+
+        * The `system_flag` field shows the overall flag color for a particular supplier/contractor for that `client_id`.
+
+        * The `system_flag_details` array contains the detail of your individual flaggable data and its current flag color. This provides specific detailed reasons for the current overall flag color, `system_flag` for in regards to that specific `client_id`.
+
+        * The **updated_date** field (which the `modifiedAfter` applies to) helps you quickly identify the latest updates to your suppliers. It reflects not only changes you or the supplier make but also internal system adjustments, such as updates to evaluations or categories. This means a supplier you haven''t recently interacted with might still appear as "recently updated" due to these behind-the-scenes activities. It''s designed to ensure you always have the most current information at your fingertips, aiding in maintaining compliance within your supply chain.'
+      parameters:
+      - description: 'Optional parameter. The modifiedAfter parameter will filter out any records with updated_date values older than the value of the parameter supplied.
+
+          **Please note**: updated_date does NOT keep track of the last time one of the fields in the payload has changed. In fact, it keeps track of the last change anywhere in the entire supplier model (an internal model, of which only certain fields are exposed in this endpoint). Changes that can result in updating this updated_date value include changes made by the supplier, changes made by the client (e.g. applying or removing tags), and also some changes made by the system. Example: modifiedAfter=2016-07-23 05:10:57'
+        in: query
+        name: modifiedAfter
+        required: false
+        schema:
+          type: string
+      - description: Optional filter to indicate the connection status of the supplier.
+        in: query
+        name: status
+        schema:
+          enum:
+          - active
+          - disconnected
+          - inactive
+          - pending
+          - rejected
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                  - account_status: Active
+                    address:
+                      address_line1: 123 Main St
+                      address_line2: Suite 100
+                      city: Irvine
+                      country: United States
+                      country_subdivision: California
+                      postal_code: '92614'
+                    billing_address:
+                      address_line1: 123 Main St
+                      city: Irvine
+                      country: United States
+                      country_subdivision: California
+                      postal_code: '92614'
+                    company_url: www.bobsplumbing.com
+                    dba_name: Bob's Plumbing Services, LLC
+                    description: Providing plumbing services
+                    external_id:
+                    - client_id: 123
+                      type: Other
+                      value: '234489'
+                    flags:
+                    - client_id: 123
+                      client_name: Oil Rig
+                      forced_expiration: '2018-06-30 00:00:00'
+                      is_forced: 'True'
+                      system_flag: Amber
+                      system_flag_details:
+                      - flag: Amber
+                        forced_expiration: '2018-06-30 00:00:00'
+                        is_forced: 'True'
+                        reasons:
+                        - '85': High TRIR, Missing Documentation
+                        - '42': General Liability is missing
+                      - flag: Green
+                        forced_expiration: ''
+                        is_forced: 'False'
+                        reasons:
+                        - ''
+                    id: 89010
+                    name: Bob's Plumbing Services
+                    primary_contact:
+                      email: bob.smith@fakeemail.com
+                      fax: 555 555 4567
+                      first_name: Bob
+                      id: '123'
+                      last_name: Smith
+                      phone: 555 555 1234
+                    service_types:
+                    - On-site
+                    - Off-site
+                    supplier_tags:
+                    - client_id: '123'
+                      tags:
+                      - id: 223
+                        name: Sample Tag
+                    trades:
+                    - frequency: most
+                      service_offerings:
+                      - '82': Welding
+                      - '193': Manufacturing
+                    updated_date: '2016-07-23 05:10:57'
+              schema:
+                description: ''
+                items:
+                  properties:
+                    account_status:
+                      minLength: 1
+                      type: string
+                    address:
+                      properties:
+                        address_line1:
+                          minLength: 1
+                          type: string
+                        address_line2:
+                          minLength: 1
+                          type: string
+                        city:
+                          minLength: 1
+                          type: string
+                        country:
+                          minLength: 1
+                          type: string
+                        country_subdivision:
+                          minLength: 1
+                          type: string
+                        postal_code:
+                          minLength: 1
+                          type: string
+                      required:
+                      - address_line1
+                      - address_line2
+                      - city
+                      - country
+                      - country_subdivision
+                      - postal_code
+                      type: object
+                    billing_address:
+                      properties:
+                        address_line1:
+                          minLength: 1
+                          type: string
+                        city:
+                          minLength: 1
+                          type: string
+                        country:
+                          minLength: 1
+                          type: string
+                        country_subdivision:
+                          minLength: 1
+                          type: string
+                        postal_code:
+                          minLength: 1
+                          type: string
+                      required:
+                      - address_line1
+                      - city
+                      - country
+                      - country_subdivision
+                      - postal_code
+                      type: object
+                    company_url:
+                      minLength: 0
+                      type: string
+                    dba_name:
+                      minLength: 0
+                      type: string
+                    description:
+                      minLength: 0
+                      type: string
+                    external_id:
+                      items:
+                        properties:
+                          client_id:
+                            type: number
+                          type:
+                            minLength: 1
+                            type: string
+                          value:
+                            minLength: 1
+                            type: string
+                        required:
+                        - client_id
+                        - type
+                        - value
+                        type: object
+                      minItems: 0
+                      type: array
+                      uniqueItems: true
+                    flags:
+                      items:
+                        properties:
+                          client_id:
+                            type: number
+                          client_name:
+                            minLength: 1
+                            type: string
+                          forced_expiration:
+                            minLength: 1
+                            type: string
+                          is_forced:
+                            minLength: 1
+                            type: string
+                          system_flag:
+                            minLength: 1
+                            type: string
+                          system_flag_details:
+                            items:
+                              properties:
+                                flag:
+                                  minLength: 1
+                                  type: string
+                                forced_expiration:
+                                  minLength: 1
+                                  type: string
+                                is_forced:
+                                  minLength: 1
+                                  type: string
+                                reasons:
+                                  items:
+                                    properties:
+                                      '85':
+                                        minLength: 1
+                                        type: string
+                                    required:
+                                    - '85'
+                                    type: object
+                                  minItems: 1
+                                  type: array
+                                  uniqueItems: true
+                              required:
+                              - flag
+                              - forced_expiration
+                              - is_forced
+                              type: object
+                            minItems: 1
+                            type: array
+                            uniqueItems: true
+                        required:
+                        - client_id
+                        - client_name
+                        - forced_expiration
+                        - is_forced
+                        - system_flag
+                        type: object
+                      minItems: 1
+                      type: array
+                      uniqueItems: true
+                    id:
+                      type: number
+                    name:
+                      minLength: 1
+                      type: string
+                    primary_contact:
+                      properties:
+                        email:
+                          minLength: 1
+                          type: string
+                        fax:
+                          minLength: 0
+                          type: string
+                        first_name:
+                          minLength: 1
+                          type: string
+                        id:
+                          type: string
+                        last_name:
+                          minLength: 1
+                          type: string
+                        phone:
+                          minLength: 0
+                          type: string
+                      required:
+                      - id
+                      - first_name
+                      - last_name
+                      - email
+                      - phone
+                      - fax
+                      type: object
+                    service_types:
+                      items:
+                        type: object
+                      type: array
+                    supplier_tags:
+                      items:
+                        properties:
+                          client_id:
+                            type: string
+                          tags:
+                            items:
+                              properties:
+                                id:
+                                  type: number
+                                name:
+                                  minLength: 1
+                                  type: string
+                              required:
+                              - id
+                              - name
+                              type: object
+                            minItems: 1
+                            type: array
+                            uniqueItems: true
+                        required:
+                        - client_id
+                        type: object
+                      minItems: 0
+                      type: array
+                      uniqueItems: true
+                    trades:
+                      items:
+                        properties:
+                          frequency:
+                            minLength: 1
+                            type: string
+                          service_offerings:
+                            items:
+                              properties:
+                                '82':
+                                  minLength: 1
+                                  type: string
+                              required:
+                              - '82'
+                              type: object
+                            minItems: 1
+                            type: array
+                            uniqueItems: true
+                        required:
+                        - frequency
+                        type: object
+                      minItems: 0
+                      type: array
+                      uniqueItems: true
+                    updated_date:
+                      minLength: 1
+                      type: string
+                  required:
+                  - id
+                  - name
+                  - dba_name
+                  - company_url
+                  - description
+                  - primary_contact
+                  - address
+                  - billing_address
+                  - account_status
+                  - updated_date
+                  - external_id
+                  - supplier_tags
+                  - flags
+                  - trades
+                  - service_types
+                  type: object
+                minItems: 1
+                type: array
+                uniqueItems: true
+                x-examples:
+                  example-1:
+                  - account_status: Active
+                    address:
+                      address_line1: 123 Main St
+                      address_line2: Suite 100
+                      city: Irvine
+                      country: United States
+                      country_subdivision: California
+                      postal_code: '92614'
+                    billing_address:
+                      address_line1: 123 Main St
+                      city: Irvine
+                      country: United States
+                      country_subdivision: California
+                      postal_code: '92614'
+                    company_url: www.bobsplumbing.com
+                    dba_name: Bob's Plumbing Services, LLC
+                    description: Providing plumbing services
+                    external_id:
+                    - client_id: 123
+                      type: Other
+                      value: '234489'
+                    flags:
+                    - client_id: 123
+                      client_name: Oil Rig
+                      forced_expiration: '2018-06-30 00:00:00'
+                      is_forced: 'True'
+                      system_flag: Amber
+                      system_flag_details:
+                      - flag: Amber
+                        forced_expiration: '2018-06-30 00:00:00'
+                        is_forced: 'True'
+                        reasons:
+                        - '85': High TRIR, Missing Documentation
+                        - '42': General Liability is missing
+                      - flag: Green
+                        forced_expiration: ''
+                        is_forced: 'False'
+                        reasons:
+                        - ''
+                    id: 89010
+                    name: Bob's Plumbing Services
+                    primary_contact:
+                      email: bob.smith@fakeemail.com
+                      fax: 555 555 4567
+                      first_name: Bob
+                      id: 123
+                      last_name: Smith
+                      phone: 555 555 1234
+                    service_types:
+                    - On-site
+                    - Off-site
+                    supplier_tags:
+                    - client_id: 123
+                      tags:
+                      - id: 223
+                        name: Sample Tag
+                    trades:
+                    - frequency: most
+                      service_offerings:
+                      - '82': Welding
+                      - '193': Manufacturing
+                    updated_date: '2016-07-23 05:10:57'
+          description: OK
+          headers: {}
+        '400':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code: {}
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+          headers: {}
+        '500':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+          headers: {}
+      summary: Get Supplier v2
+      tags:
+      - Compliance
+      operationId: getApiV2SuppliersBySupplierId
+      x-operation-id-source: derived
+  /api/v1/flags:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    get:
+      description: 'Returns a list of flags based on the provided apikey and query parameters. If a `clientId` or `supplierId` is provided, only the flag data pertaining to that client or supplier will be returned. Only active suppliers that have approved connections to clients will be returned in this endpoint.
+
+
+        This endpoint does not retrieve the overall flag status between a supplier and a client, which will be returned in the "Connections" endpoint.
+
+
+        Note: We only return `criteria` level flags; We do not return criteriaVariance, site, or siteVariance level flags.'
+      parameters:
+      - description: The record to start with for pagination (0-based, not 1-based)
+        in: query
+        name: start
+        schema:
+          default: 0
+          type: number
+      - description: The total number of records to return, maximum of 500
+        in: query
+        name: limit
+        schema:
+          default: 500
+          maximum: 500
+          type: number
+      - description: Optional value to return records after the specified date and time [yyyy-MM-dd hh:mm:ss]. If no date is specified, the endpoint will return only records from the previous month.
+        in: query
+        name: modifiedAfter
+        schema:
+          type: string
+      - description: Optional filter for a supplier
+        in: query
+        name: supplierId
+        schema:
+          type: number
+      - description: Optional filter for a client account
+        in: query
+        name: clientId
+        schema:
+          type: number
+      - description: Optional filter. ID of an interested flag
+        in: query
+        name: flagId
+        schema:
+          type: number
+      - description: 'Optional filter. Color of the interested flags. Example: `Green`, `Amber`, `Gray`, `Red`'
+        in: query
+        name: flagColor
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - supplierId: 89010
+                    supplierName: Bob's Plumbing Services
+                    clientId: 123
+                    clientName: Oil Rig
+                    flagId: 234445
+                    flagType: Form
+                    flagName: General Liability must be approved
+                    flagColor: Green
+                    isForced: 'No'
+                    flagDetails:
+                      forcedBy: ''
+                      formId: 288372
+                      formName: General Liability
+                      questionId: 2223
+                      varianceExpirationDate: ''
+                      varianceReason: ''
+                    flagUpdatedDate: '2020-01-31 22:41:40'
+                    externalId:
+                    - client_id: 123
+                      type: Vendor
+                      value: '132001'
+              schema:
+                items:
+                  properties:
+                    clientId:
+                      type: integer
+                    clientName:
+                      type: string
+                    externalId:
+                      items:
+                        properties:
+                          client_id:
+                            type: integer
+                          type:
+                            type: string
+                          value:
+                            type: string
+                        type: object
+                      type: array
+                    flagColor:
+                      type: string
+                    flagDetails:
+                      properties:
+                        forcedBy:
+                          type: string
+                        formId:
+                          type: integer
+                        formName:
+                          type: string
+                        questionId:
+                          type: integer
+                        varianceExpirationDate:
+                          type: string
+                        varianceReason:
+                          type: string
+                      type: object
+                    flagId:
+                      type: integer
+                    flagName:
+                      type: string
+                    flagType:
+                      type: string
+                      description: 'The type of the underlying calculation the flag is derived from. Known values: `Calculation`, `Form`, `Question`, `Account`, `ScoreCard`, `FormAggregate`, `ProcessChildCounts`, `ProcessChildWorkflows`, `Connection`. Additional values may be returned as new calculation types are introduced, so consumers should treat this as an open set and not fail on unrecognised values.'
+                      example: Form
+                    flagUpdatedDate:
+                      type: string
+                    isForced:
+                      type: string
+                    supplierId:
+                      type: integer
+                    supplierName:
+                      type: string
+                  type: object
+                type: array
+          description: OK
+      summary: Get Flags v1
+      tags:
+      - Compliance
+      operationId: getApiV1Flags
+      x-operation-id-source: derived
+  /api/v1/flags/count:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    get:
+      description: Retrieves the number of flags returned from the Get Flags endpoint.
+      parameters:
+      - description: Optional value to return records after the specified date and time [yyyy-MM-dd hh:mm:ss]. If no date is specified, the endpoint will return only records from the past month.
+        in: query
+        name: modifiedAfter
+        schema:
+          type: string
+      - description: Optional filter for a supplier
+        in: query
+        name: supplierId
+        schema:
+          type: number
+      - description: Optional filter for a client account
+        in: query
+        name: clientId
+        schema:
+          type: number
+      - description: Optional filter. ID of an interested flag
+        in: query
+        name: flagId
+        schema:
+          type: number
+      - description: 'Optional filter. Color of the interested flags. Example: `Green`, `Amber`, `Gray`, `Red`'
+        in: query
+        name: flagColor
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    total_records: 145
+              schema:
+                description: ''
+                properties:
+                  total_records:
+                    type: number
+                type: object
+                x-examples:
+                  example-1:
+                  - total_records: 145
+          description: OK
+      summary: Get Flag Count v1
+      tags:
+      - Compliance
+      operationId: getApiV1FlagsCount
+      x-operation-id-source: derived
+  /api/v1/files/{supplierId}/{fileNameId}:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    parameters:
+    - description: The Avetta Account Id for the interested supplier
+      in: path
+      name: supplierId
+      required: true
+      schema:
+        type: number
+    - description: 'The name of the file. <br>Example: `2022-05-03T01:30:09.461Z~~~Get_Started_With_Smallpdf.pdf`'
+      in: path
+      name: fileNameId
+      required: true
+      schema:
+        type: string
+    get:
+      description: 'Return the binary file.
+
+
+        The response header “Content-Type” informs the file type, for example: the header value “application/vnd.openxmlformats-officedocument.wordprocessingml.document” will indicate the file is a doc/docx file. Or “application/pdf” will indicate the file is a pdf.
+
+
+        When saving the file, add the appropriate file extension based on the “Content-Type” value.
+
+
+        The URL for this endpoint is returned by the `href` field from the `Form Data` endpoint. That `href` field will require the authorization header to be included for a valid file call to be made.'
+      parameters:
+      - description: The Id of the supplier
+        example: 44282
+        in: path
+        name: supplierId
+        required: true
+        schema:
+          type: number
+      - description: The Id of the file
+        example: 2020-04-04T04:40:00.066Z~~~SomeFile.pdf
+        in: path
+        name: fileNameId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+              example: "This is a placeholder for a pdf binary file. \nActual file contents cannot be displayed in API documentation."
+        '400':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+            application/pdf:
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+          headers: {}
+        '401':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+            application/pdf:
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Unauthorized
+          headers: {}
+        '403':
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: object
+            application/pdf:
+              schema:
+                type: object
+          description: Forbidden
+        '500':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+            application/pdf:
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+          headers: {}
+      summary: Get File v1
+      tags:
+      - Compliance
+      operationId: getApiV1FilesBySupplierIdByFileNameId
+      x-operation-id-source: derived
+  /api/v1/connections:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    get:
+      description: 'Retrieves a list of Connections based on the provided apikey and query parameters.
+
+
+        This endpoint retrieves the connections for all site accounts whose status is `active` or `pending`.
+
+        Only when passing `supplierId` and `clientId` do the connections for all site accounts whose status is `active`, `pending` and `deactivated` get returned.
+
+
+        This endpoint retrieves information pertaining to `site` flags.
+
+        If a variance has been applied to a specific connection site, `isForced` would be true, and the flagDetails object in the response would contain the relevant information about the variance. In the case where `isForced` is false, flagDetails would be empty.
+
+
+        `flagModifiedAfter` will account only for `site` flag changes in the last 30 days. If a client passes the `flagModifiedAfter` param, they are restricted to only the `start`, `limit`, and `clientId` parameters.
+
+
+        **Note:** The `flagModifiedAfter` is capped to 30 days. Any date larger than this will default it to 30 days.'
+      parameters:
+      - description: The record to start with for pagination (0-based, not 1-based)
+        in: query
+        name: start
+        schema:
+          default: 0
+          minimum: 0
+          type: number
+      - description: The total number of records to return, maximum of 500
+        in: query
+        name: limit
+        schema:
+          default: 500
+          maximum: 500
+          minimum: 1
+          type: number
+      - description: Optional filter for a supplier
+        in: query
+        name: supplierId
+        schema:
+          type: number
+      - description: Optional filter for a client account
+        in: query
+        name: clientId
+        schema:
+          type: string
+      - description: Optional filter for a supplier given its external reference id
+        in: query
+        name: externalId
+        schema:
+          type: string
+      - description: Optional value to filter the connections which were updated after the specified date and time [yyyy-MM-dd hh:mm:ss]. If no value is specified, it will return records from the past 3 months.
+        in: query
+        name: modifiedAfter
+        schema:
+          type: string
+      - description: Optional value to filter the Connections based on updatedDate of the "site" flags after the specified date and time [yyyy-MM-dd hh:mm:ss].  The available range is up to 30 days. If you send anything beyond this range, it will be ignored and set to 30 days ago.
+        in: query
+        name: flagModifiedAfter
+        schema:
+          type: string
+      - description: Returns records with the specified `status`
+        in: query
+        name: status
+        schema:
+          default: All statuses (active, inactive, disconnected, pending, rejected)
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - supplierId: 89010
+                    supplierName: Bob's Plumbing Services
+                    clientId: 123
+                    clientName: Oil Rig
+                    status: Active
+                    flagColor: Red
+                    isForced: 'No'
+                    flagDetails:
+                      expirationDate: ''
+                      forcedBy: ''
+                      reason: ''
+                      updatedDate: ''
+                    createdDate: '2020-01-31 22:41:40'
+                    updatedDate: '2020-01-31 22:41:40'
+                    externalId:
+                    - client_id: 123
+                      type: Vendor
+                      value: '132001'
+              schema:
+                items:
+                  properties:
+                    clientId:
+                      type: integer
+                    clientName:
+                      type: string
+                    createdDate:
+                      type: string
+                    externalId:
+                      items:
+                        properties:
+                          client_id:
+                            type: integer
+                          type:
+                            type: string
+                          value:
+                            type: string
+                        type: object
+                      type: array
+                    flagColor:
+                      type: string
+                    flagDetails:
+                      properties:
+                        expirationDate:
+                          type: string
+                        forcedBy:
+                          type: string
+                        reason:
+                          type: string
+                        updatedDate:
+                          type: string
+                      type: object
+                    isForced:
+                      type: string
+                    status:
+                      type: string
+                    supplierId:
+                      type: integer
+                    supplierName:
+                      type: string
+                    updatedDate:
+                      type: string
+                  type: object
+                type: array
+          description: OK
+      summary: Get Connections v1
+      tags:
+      - Compliance
+      operationId: getApiV1Connections
+      x-operation-id-source: derived
+  /api/v1/connections/count:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    parameters: []
+    get:
+      description: 'Retrieves the number of connections returned from the `Get Connections` endpoint.
+
+
+        `flagModifiedAfter` will account only for `site` flag changes in the last 30 days. If a client passes the `flagModifiedAfter` param, they are restricted to only the `start`, `limit`, and `clientId` parameters.
+
+
+        **Note:** The `flagModifiedAfter` is capped to 30 days. Any date larger than this will default it to 30 days.'
+      parameters:
+      - description: Optional value to filter the connection by supplier field
+        in: query
+        name: supplierId
+        required: false
+        schema:
+          type: string
+      - description: Optional value to filter the connection by client field
+        in: query
+        name: clientId
+        required: false
+        schema:
+          type: string
+      - description: Optional value to filter the connections which were updated after the specified date and time [yyyy-MM-dd hh:mm:ss]. If no date is specified, then it will count records from the past 3 months.
+        in: query
+        name: modifiedAfter
+        schema:
+          type: string
+      - description: Optional value to filter the Connections based on updatedDate of the "site" flags after the specified date and time [yyyy-MM-dd hh:mm:ss].  The available range is up to 30 days. If you send anything beyond this range, it will be ignored and set to 30 days ago.
+        in: query
+        name: flagModifiedAfter
+        schema:
+          type: string
+      - description: Optional value to indicate the connection status of the supplier
+        in: query
+        name: status
+        schema:
+          default: All statuses (active, inactive, disconnected, pending, rejected)
+          type: string
+      responses:
+        '200':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                  - total_records: 1845
+              schema:
+                description: ''
+                items:
+                  properties:
+                    total_records:
+                      type: number
+                  required:
+                  - total_records
+                  type: object
+                minItems: 1
+                type: array
+                uniqueItems: true
+                x-examples:
+                  example-1:
+                  - total_records: 1845
+            example-1:
+              examples:
+                response:
+                  value:
+                  - total_records: 0
+          description: OK
+          headers: {}
+        '400':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: 3
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: integer
+                  message:
+                    type: string
+                type: object
+          description: Bad Request
+          headers: {}
+        '500':
+          content:
+            application/json; charset=utf-8:
+              examples:
+                response:
+                  value:
+                    code: '3'
+                    message: Broad Error message
+              schema:
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                type: object
+          description: Internal Server Error
+          headers: {}
+      summary: Get Connection Count v1
+      tags:
+      - Compliance
+      operationId: getApiV1ConnectionsCount
+      x-operation-id-source: derived
+  /connect/v1/connections:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    parameters: []
+    get:
+      parameters:
+      - description: The record to start with for pagination (0-based, not 1-based)
+        in: query
+        name: start
+        schema:
+          type: number
+          minimum: 0
+          default: 0
+      - description: The total number of records to return, maximum of 500
+        in: query
+        name: limit
+        schema:
+          type: number
+          minimum: 1
+          maximum: 500
+          default: 500
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                items:
+                  properties:
+                    supplierId:
+                      type: number
+                    siteId:
+                      type: number
+                    connectionStatus:
+                      enum:
+                      - active
+                      - inactive
+                      - rejected
+                      - pending
+                      type: string
+                    connectionStatusUpdatedDate:
+                      example: 2020-08-05T15:31:44.716Z[Etc/UTC]
+                      type: string
+                    compliance:
+                      properties:
+                        complianceStatus:
+                          enum:
+                          - Green
+                          - Gray
+                          - Amber
+                          - Red
+                          type: string
+                        naturalComplianceStatus:
+                          enum:
+                          - Green
+                          - Gray
+                          - Amber
+                          - Red
+                          type: string
+                        varianceIsActive:
+                          type: boolean
+                        varianceGrantedByFirstName:
+                          minLength: 0
+                          type: string
+                        varianceGrantedByLastName:
+                          minLength: 0
+                          type: string
+                        varianceExpiresDate:
+                          minLength: 0
+                          type: string
+                        varianceComment:
+                          minLength: 0
+                          type: string
+                        varianceCreatedDate:
+                          minLength: 0
+                          type: string
+                        varianceUpdatedDate:
+                          minLength: 0
+                          type: string
+                      required:
+                      - varianceIsActive
+                      type: object
+                    createdDate:
+                      example: 2020-08-05T15:31:44.715Z[Etc/UTC]
+                      type: string
+                    updatedDate:
+                      example: 2020-11-06T03:56:13.986Z[Etc/UTC]
+                      type: string
+                  required:
+                  - supplierId
+                  - siteId
+                  type: object
+                minItems: 1
+                type: array
+                uniqueItems: true
+                x-examples:
+                  example-1:
+                  - compliance:
+                      complianceStatus: Green
+                      naturalComplianceStatus: Green
+                      varianceComment: ''
+                      varianceCreatedDate: ''
+                      varianceExpiresDate: ''
+                      varianceGrantedByFirstName: ''
+                      varianceGrantedByLastName: ''
+                      varianceIsActive: false
+                      varianceUpdatedDate: ''
+                    connectionStatus: active
+                    connectionStatusUpdatedDate: 2010-06-05T22:56:32.462Z[Etc/UTC]
+                    createdDate: 2010-06-05T22:56:32.462Z[Etc/UTC]
+                    siteId: 223
+                    supplierId: 123
+                    updatedDate: 2010-11-06T05:31:22.551Z[Etc/UTC]
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                description: ''
+                properties:
+                  code:
+                    minLength: 1
+                    type: string
+                  service:
+                    minLength: 1
+                    type: string
+                  message:
+                    minLength: 1
+                    type: string
+                  displayMessage:
+                    minLength: 1
+                    type: string
+                required:
+                - code
+                - message
+                type: object
+                example:
+                  code: '1'
+                  displayMessage: Missing Auth
+                  message: Missing Auth
+                  service: Gateway
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                description: ''
+                properties:
+                  code:
+                    minLength: 1
+                    type: string
+                  message:
+                    minLength: 1
+                    type: string
+                required:
+                - code
+                - message
+                type: object
+                example:
+                  code: '3'
+                  message: Broad Error message
+      tags:
+      - Compliance
+      description: Retrieves a list of connections based on the provided apikey. This endpoint retrieves the overall compliance status between a supplier and a client.
+      operationId: get-connections-with-compliance
+      summary: Get Connections with Compliance
+      x-internal: false
+  /compliance-management-gateway/v1/clients/{clientId}/suppliers/scorecards:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    get:
+      operationId: getSupplierScorecards
+      summary: Get Supplier TotalScore
+      tags:
+      - Compliance
+      description: 'This API retrieves supplier total scores and site details for a specified client.
+
+
+        `Parameters:`
+
+
+        - `clientId` (path parameter) — required. Can be the billing ID of a corporate, hub, or site.
+
+        - `supplierId` (query parameter) — optional.
+
+        If provided, returns only active total scores for the specified supplier and its associated site details.
+
+        If not provided, returns all total scores for active suppliers and sites connected to the client.
+
+
+        - `start` and `limit` (query parameters) — optional. The maximum number of records returned, cannot exceed 500.
+
+
+        **RESPONSE:**
+
+
+        Returns a list of suppliers and their associated scorecards (site-level total scores) for the given client.'
+      parameters:
+      - schema:
+          type: integer
+          example: '123456'
+        name: clientId
+        in: path
+        required: true
+      - schema:
+          type: integer
+          example: '250488390'
+        name: supplierId
+        in: query
+        required: false
+      - schema:
+          type: string
+          example: '1'
+        name: start
+        in: query
+        required: false
+      - schema:
+          type: string
+          example: '100'
+        name: limit
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Supplier scorecards retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    example: 1
+                  suppliers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        supplierId:
+                          type: string
+                          example: '250488390'
+                        supplierName:
+                          type: string
+                          example: Elite Cleaning Co., Inc., d/b/a Elite Building Services
+                        scorecards:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              siteId:
+                                type: string
+                                example: '250097468'
+                              siteName:
+                                type: string
+                                example: C&W Services (CWS) US - General Supplier Prequalification
+                              totalScore:
+                                type: integer
+                                example: 80
+              examples:
+                WithScorecards:
+                  summary: Supplier with scorecards
+                  value:
+                    totalCount: 1
+                    suppliers:
+                    - supplierId: 250488390
+                      supplierName: Elite Cleaning Co., Inc., d/b/a Elite Building Services
+                      scorecards:
+                      - siteId: '250097468'
+                        siteName: C&W Services (CWS) US - General Supplier Prequalification
+                        totalScore: 80
+                EmptyScorecards:
+                  summary: Supplier with no scorecards
+                  value:
+                    totalCount: 1
+                    suppliers:
+                    - supplierId: 123456789
+                      supplierName: CleanMax Services Ltd.
+                      scorecards: []
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized access
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unexpected error occurred.
+  /compliance-management-gateway/v1/clients/{clientId}/performance-reviews:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    get:
+      operationId: getPerformanceReviews
+      summary: Get Performance Review Scores
+      tags:
+      - Compliance
+      description: 'This endpoint returns Performance Review scores for individual performance reviews. It includes details on Performance Review Scores, Global Scores, Site Scores & review forms details- questions, answers & scores.
+
+
+        `Parameters:`
+
+
+        - `clientId` (path parameter) — required. Can be the billing ID of a corporate, hub, or site.
+
+        - `supplierId` (query parameter) — optional.
+
+        If provided, returns only Performance Review scores for the specified supplier and its associated site details.
+
+        If not provided, returns all Performance Review scores for active suppliers and sites connected to the client.
+
+
+        - `start` and `limit` (query parameters) — optional. The maximum number of records returned, cannot exceed 500.
+
+        - `includeSupplierReviewForms` (query parameter) — optional. Default value is false.
+
+        If provided and value is true, returns global ratings, Performance Review scores, and review forms details- questions, answers & scores.
+
+        If not provided, returns only global ratings.
+
+
+        **RESPONSE:**
+
+        Returns a list of Performance Review scores for the given client.'
+      parameters:
+      - schema:
+          type: integer
+          example: '250061277'
+        name: clientId
+        in: path
+        required: true
+      - schema:
+          type: integer
+        example: '250106349'
+        name: supplierId
+        in: query
+        required: false
+      - schema:
+          type: string
+        example: '1'
+        name: start
+        in: query
+        required: false
+      - schema:
+          type: string
+        example: '50'
+        name: limit
+        in: query
+        required: false
+      - schema:
+          type: boolean
+        example: true
+        name: includeSupplierReviewForms
+        in: query
+        required: false
+      responses:
+        '200':
+          description: Performance review scores retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    example: 1
+                  clientId:
+                    type: string
+                    example: '250061277'
+                  clientName:
+                    type: string
+                    example: Rio Tinto Iron Ore
+                  supplierPerformanceReviews:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        supplierId:
+                          type: string
+                          example: '250106349'
+                        supplierName:
+                          type: string
+                          example: PoP Test Account
+                        globalRating:
+                          type: number
+                          format: double
+                          example: 3.87
+                        siteRatings:
+                          type: array
+                          items:
+                            type: object
+                          properties:
+                            siteName:
+                              type: string
+                              example: RTIO - Iron Ore
+                            siteId:
+                              type: string
+                              example: '250124812'
+                            siteRating:
+                              type: number
+                              format: double
+                              example: 3.87
+                            reviewSupplierForms:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                    example: LF test 2
+                                  status:
+                                    type: string
+                                    example: Completed/Incomplete
+                                  updatedDate:
+                                    type: string
+                                    format: date-time
+                                    example: '2025-02-25T00:00:00.000Z'
+                                  totalScore:
+                                    type: number
+                                    format: double
+                                    example: 3.52
+              examples:
+                WithPerformanceReviewScores:
+                  summary: Client with full performance review scores
+                  value:
+                    totalCount: 1
+                    clientId: '134971'
+                    clientName: Entergy
+                    supplierPerformanceReviews:
+                    - supplierId: 5
+                      siteRatings:
+                      - siteName: Entergy Power Generation (Non-Nuclear Power Plants)
+                        siteId: '250009729'
+                        siteRating: 5
+                        reviewSupplierForms:
+                        - name: Nelson Fall Outage 2025
+                          status: Completed
+                          updatedDate: '2025-11-10T00:00:00.000Z'
+                          totalScore: 5
+                          questionGroups:
+                          - questionGroupMongoId: 59fa072c330000770169dba6
+                            questionGroupName: Review - General Information
+                            questions:
+                            - questionMongoId: 59fa06d33300007d0169dba0
+                              questionDisplayId: '73346'
+                              questionText: Project Name
+                              questionType: longText
+                              answers:
+                              - Nelson Station Fall outage 2025
+                            - questionMongoId: 59fa06f6330000770169dba3
+                              questionDisplayId: '73347'
+                              questionText: Project Completion Date
+                              questionType: date
+                              answers:
+                              - '2025-11-15T00:00:00.000Z'
+                          - questionGroupMongoId: 5ebd92b03600002ed472e9fe
+                            questionGroupName: Review - Safety
+                            questions:
+                            - questionMongoId: 5ebd933834000084631d67a6
+                              questionDisplayId: '96791'
+                              questionText: How well did the contractor/supplier follow all applicable health and safety guidelines throughout the duration of the project?
+                              questionType: rating
+                              answers:
+                              - '5'
+                            - questionMongoId: 5ebd937e34000084631d67bb
+                              questionDisplayId: '96796'
+                              questionText: Comment - Health and Safety Guidelines
+                              questionType: longText
+                              answers:
+                              - Excellent safety oversight by leadership and engagement by all contract employees.
+                            - questionMongoId: 5ebd9392350000f1aa358eec
+                              questionDisplayId: '96797'
+                              questionText: If there was an incident, how well did the contractor/supplier resolve the issue in accordance with all applicable guidelines and regulation?
+                              questionType: rating
+                              answers:
+                              - '0'
+                            - questionMongoId: 5ebd93a734000084631d68a2
+                              questionDisplayId: '96799'
+                              questionText: Comment - Incident Resolution
+                              questionType: longText
+                              answers: []
+                            - questionMongoId: 5ebd93b53300002ed4442671
+                              questionDisplayId: '96801'
+                              questionText: How well did the contractor/supplier properly use personal protection equipment if required?
+                              questionType: rating
+                              answers:
+                              - '5'
+                            - questionMongoId: 5ebd93c234000084631d68b1
+                              questionDisplayId: '96802'
+                              questionText: Comment - Use of Personal Protection Equipment
+                              questionType: longText
+                              answers:
+                              - Appropriate PPE used at all times with zero coaching events.
+                            - questionMongoId: 5ed6aa27330000444c7cd418
+                              questionDisplayId: '97356'
+                              questionText: 'Comments:'
+                              questionType: longText
+                              answers: []
+                          - questionGroupMongoId: 5ebd92d93300002ed4442556
+                            questionGroupName: Review - Quality
+                            questions:
+                            - questionMongoId: 5ebd93e53600002ed472eb2e
+                              questionDisplayId: '96804'
+                              questionText: How well did the contractor/supplier complete the project with regards to quality of materials and workmanship?
+                              questionType: rating
+                              answers:
+                              - '5'
+                            - questionMongoId: 5ebd93fa350000f1aa358f87
+                              questionDisplayId: '96805'
+                              questionText: Comment - Quality of Materials and Workmanship
+                              questionType: longText
+                              answers:
+                              - No reworks, under time.
+                            - questionMongoId: 5ed6ab243500007c6098e583
+                              questionDisplayId: '97358'
+                              questionText: 'Comments:'
+                              questionType: longText
+                              answers: []
+                          - questionGroupMongoId: 5ebd92eb350000f1aa358dc9
+                            questionGroupName: Review - Schedule/Time
+                            questions:
+                            - questionMongoId: 5ebd942c34000084631d68c7
+                              questionDisplayId: '96806'
+                              questionText: How well did the contractor/supplier complete the project within the agreed-upon time frames and schedules?
+                              questionType: rating
+                              answers:
+                              - '5'
+                            - questionMongoId: 5ebd944c3600002ed472eb4c
+                              questionDisplayId: '96807'
+                              questionText: Comment- Project Completion
+                              questionType: longText
+                              answers:
+                              - Under time
+                            - questionMongoId: 5ebd94803600002ed472ebc9
+                              questionDisplayId: '96809'
+                              questionText: If changes in schedule took place, how well did the contractor/supplier effectively communicate the changes?
+                              questionType: rating
+                              answers:
+                              - '0'
+                            - questionMongoId: 5ebd94953600002edd0
+                              questionDisplayId: '96811'
+                              questionText: Comment - Changes in Schedule
+                              questionType: longText
+                              answers: []
+                            - questionMongoId: 5ed6ab373b0000deb5936fba
+                              questionDisplayId: '97359'
+                              questionText: 'Comments:'
+                              questionType: longText
+                              answers: []
+                          - questionGroupMongoId: 5ebd92f93300002ed444255c
+                            questionGroupName: Review - Cost/Financial/Budget
+                            questions:
+                            - questionMongoId: 5ebd94b434000084631d68dc
+                              questionDisplayId: '96812'
+                              questionText: How well did the contractor/supplier adhere to agreed-upon budget and costs?
+                              questionType: rating
+                              answers:
+                              - '0'
+                            - questionMongoId: 5ebd94c83300002ed4442736
+                              questionDisplayId: '96813'
+                              questionText: Comment - Budget and Costs
+                              questionType: longText
+                              answers: []
+                            - questionMongoId: 5ebd94db3300002ed4442741
+                              questionDisplayId: '96817'
+                              questionText: If cost changes were made, how well did the contractor communicate those changes?
+                              questionType: rating
+                              answers:
+                              - '0'
+                            - questionMongoId: 5ebd94f73600002ed472ec14
+                              questionDisplayId: '96820'
+                              questionText: Comment - Cost Changes
+                              questionType: longText
+                              answers: []
+                            - questionMongoId: 5ed6ab483500007c6098e58f
+                              questionDisplayId: '97360'
+                              questionText: 'Comments:'
+                              questionType: longText
+                              answers: []
+                          - questionGroupMongoId: 5ebd931334000084631d679f
+                            questionGroupName: Review - Environmental and Sustainability
+                            questions:
+                            - questionMongoId: 5ebd950b350000f1aa359075
+                              questionDisplayId: '96823'
+                              questionText: How well did the contractor/supplier adhere to all applicable environmental regulations and sustainability practices?
+                              questionType: rating
+                              answers:
+                              - '5'
+                            - questionMongoId: 5ebd952a34000084631d6933
+                              questionDisplayId: '96827'
+                              questionText: Comment - Environment and Sustainability
+                              questionType: longText
+                              answers: []
+        '401':
+          description: Unauthorized - authentication required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized access
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unexpected error occurred.
+  /compliance-management-gateway/v1/clients/{clientId}/suppliers/{supplierId}/esg-metrics:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    parameters:
+    - schema:
+        type: string
+      name: clientId
+      in: path
+      required: true
+    - schema:
+        type: string
+      name: supplierId
+      in: path
+      required: true
+    get:
+      operationId: getEsgScores
+      summary: Get Esg Scores
+      responses:
+        '200':
+          description: Returns the ESG scores of the methodologies, 4 ESG levels definition, ESG tier name, the display form ids and names of supplier forms.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  supplierEsgScore:
+                    type: object
+                    properties:
+                      supplierId:
+                        type: integer
+                        example: 250107043
+                      supplierName:
+                        type: string
+                        example: Motiontech Services Inc
+                      esgScores:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            esgIndex:
+                              type: string
+                              example: Self-Evaluation
+                            score:
+                              type: integer
+                              example: 4
+                            theme:
+                              type: string
+                              example: ESG Index
+                      esgLevels:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            level:
+                              type: string
+                              example: Early
+                            minimumScore:
+                              type: integer
+                              example: 0
+                            maximumScore:
+                              type: integer
+                              example: 25
+                      scoreTier:
+                        type: string
+                        example: Documentation Verified
+                      forms:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: '44043605'
+                            name:
+                              type: string
+                              example: ESG & Sustainability - Assessment
+                      createdDate:
+                        type: string
+                        format: date-time
+                        example: '2024-02-22T09:28:05.281Z'
+                      updatedDate:
+                        type: string
+                        format: date-time
+                        example: '2024-02-22T09:28:05.281Z'
+              examples:
+                Example 1:
+                  value:
+                    supplierEsgScore:
+                      supplierId: 250107043
+                      supplierName: Motiontech Services Inc
+                      esgScores:
+                      - esgIndex: Self-Evaluation
+                        score: 4
+                        theme: ESG Index
+                      - esgIndex: Self-Evaluation
+                        score: 1
+                        theme: Environment
+                      - esgIndex: Self-Evaluation
+                        score: 6
+                        theme: Social
+                      - esgIndex: Self-Evaluation
+                        score: 3
+                        theme: Governance
+                      esgLevels:
+                      - level: Early
+                        minimumScore: 0
+                        maximumScore: 25
+                      - level: Learner
+                        minimumScore: 26
+                        maximumScore: 49
+                      - level: Leader
+                        minimumScore: 50
+                        maximumScore: 84
+                      - level: Innovator
+                        minimumScore: 85
+                        maximumScore: 100
+                      scoreTier: Documentation Verified
+                      forms:
+                      - id: '44043605'
+                        name: ESG & Sustainability - Assessment
+                      createdDate: '2024-02-22T09:28:05.281Z'
+                      updatedDate: '2024-02-22T09:28:05.281Z'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                x-examples:
+                  example-1:
+                    error: Unexpected error occurred.
+              examples:
+                example-1:
+                  value:
+                    error: Unexpected error occurred.
+      description: 'The API retrives ESG scores, ESG levels, ESG tier and ESG relative forms for the specified client and supplier.
+
+
+        The clientId can be the billingId of corporate, hub or site. The supplierId is the supplier billing id.'
+      tags:
+      - Compliance
+  /compliance-management-gateway/v1/clients/{clientId}/esg-metrics:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    parameters:
+    - schema:
+        type: string
+      name: clientId
+      in: path
+      required: true
+    - schema:
+        type: string
+      name: supplierId
+      in: query
+      required: false
+    - schema:
+        type: string
+      name: start
+      in: query
+      required: false
+    - schema:
+        type: string
+      name: limit
+      in: query
+      required: false
+    get:
+      operationId: getSupplierEsgScores
+      summary: Get Suppliers Esg Scores
+      responses:
+        '200':
+          description: Returns the ESG scores of the methodologies, 4 ESG levels definition, ESG tier name, the display form ids and names of supplier forms.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalCount:
+                    type: integer
+                    example: 7076
+                  esgLevels:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        level:
+                          type: string
+                          example: Early
+                        minimumScore:
+                          type: integer
+                          example: 0
+                        maximumScore:
+                          type: integer
+                          example: 25
+                  supplierEsgScores:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        supplierId:
+                          type: integer
+                          example: 250481382
+                        supplierName:
+                          type: string
+                          example: JRC Civils Pty Ltd
+                        esgScores:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              esgIndex:
+                                type: string
+                                example: Self-Evaluation
+                              score:
+                                type: integer
+                                example: 4
+                              theme:
+                                type: string
+                                example: ESG Index
+                        scoreTier:
+                          type: string
+                          example: Documentation Verified
+                        forms:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                example: '41348352'
+                              name:
+                                type: string
+                                example: ESG & Sustainability - Assessment
+                        createdDate:
+                          type: string
+                          format: date-time
+                          example: '2024-10-03T06:07:09.74Z'
+                        updatedDate:
+                          type: string
+                          format: date-time
+                          example: '2025-01-10T08:43:17.246Z'
+              examples:
+                Example 1:
+                  value:
+                    totalCount: 7076
+                    esgLevels:
+                    - level: Early
+                      minimumScore: 0
+                      maximumScore: 25
+                    - level: Learner
+                      minimumScore: 26
+                      maximumScore: 49
+                    - level: Leader
+                      minimumScore: 50
+                      maximumScore: 84
+                    - level: Innovator
+                      minimumScore: 85
+                      maximumScore: 100
+                    supplierEsgScores:
+                    - supplierId: 250481382
+                      supplierName: JRC Civils Pty Ltd
+                    - supplierId: 250446823
+                      supplierName: SCR LTD
+                      esgScores:
+                      - esgIndex: Self-Evaluation
+                        score: 4
+                        theme: ESG Index
+                      - esgIndex: Self-Evaluation
+                        score: 0
+                        theme: Environment
+                      - esgIndex: Self-Evaluation
+                        score: 6
+                        theme: Social
+                      - esgIndex: Self-Evaluation
+                        score: 3
+                        theme: Governance
+                      scoreTier: Documentation Verified
+                      forms:
+                      - id: '41348352'
+                        name: ESG & Sustainability - Assessment
+                      createdDate: '2024-10-03T06:07:09.74Z'
+                      updatedDate: '2025-01-10T08:43:17.246Z'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                x-examples:
+                  example-1:
+                    error: Unexpected error occurred.
+              examples:
+                example-1:
+                  value:
+                    error: Unexpected error occurred.
+      description: 'The API retrives ESG scores, ESG levels, ESG tier and ESG relative forms for the specified client and supplier.
+
+
+        The clientId can be the billingId of corporate, hub or site.
+
+
+        The query parameter supplierId is optional. If it is specified, then return only the ESG scores for this supplier. If it is not specified, then return all the ESG scores for the connected and active suppliers under connected to this client.'
+      tags:
+      - Compliance
+  /compliance-management-gateway/v1/clients/{clientId}/supplierflags:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    get:
+      summary: Get Supplier Flags
+      description: 'This endpoint allows clients to retrieves flags data (clientId path parameter denotes corporate, hub, or site).
+
+        The `modifiedAfter` parameter can extend up to 1 year from the current date if `supplierId` is provided; otherwise, it cannot exceed 7 days from the current date. The `limit` parameter cannot exceed 500 records.
+
+
+        **Fields**: `forcedBy`, `varianceStartDate`, `varianceEndDate` in response body will return data only if the flag is a `siteVariance` or `criteriaVariance` and empty if it is a `criteria` or `site`
+
+
+        **Fields**: `calculationId`, `calculationDescription` in response body will return data if the flag is a `siteVariance`, `criteriaVariance`, or `criteria` and empty if it is a `site` or `siteVariance`
+
+
+        **Flags description**:
+
+        `site` – overall site status
+
+        `siteVariance` – forced overall site status
+
+        `criteria` - the specific line item requirements status (ex: insurance, TRIR, etc)
+
+        `criteriaVariance` - forced line item status'
+      operationId: getSupplierFlags
+      tags:
+      - Compliance
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client.
+        schema:
+          type: integer
+      - name: supplierId
+        in: query
+        description: Optional filter to return flags only applied at a given supplier
+        schema:
+          type: integer
+      - name: flagType
+        in: query
+        description: Optional filter for flagType.
+        schema:
+          type: string
+          default: criteria, criteriaVariance, site, and siteVariance
+      - name: flagColor
+        in: query
+        description: Optional filter for flagColor.
+        schema:
+          type: string
+          default: Green, Gray, Amber, and Red
+      - name: calculationId
+        in: query
+        description: Optional filter for a calculationId.
+        schema:
+          type: integer
+      - name: flagId
+        in: query
+        description: Optional filter for a flagId.
+        schema:
+          type: string
+      - name: modifiedAfter
+        in: query
+        description: Optional filter on the flags updatedDate. When the `supplierId` is provided, the available range is the last 12 months. When the `supplierId` is not provided, the available range is capped at the last 7 days.
+        schema:
+          type: string
+          default: 7 days
+      - name: start
+        in: query
+        description: Optional filter. The record to start with for pagination (0-based)
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Optional filter. Total number of records to be returned.
+        schema:
+          type: integer
+          default: 100
+          maximum: 500
+      responses:
+        '200':
+          description: A list of supplier flags matching the query parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_controllers.v1.messages.GetSupplierFlagsResponse'
+              examples:
+                SampleResponse:
+                  value:
+                    totalCount: 1
+                    flags:
+                    - supplierId: '111111111'
+                      supplierName: Some Comapany, LLC
+                      supplierStatus: active
+                      siteId: '111111'
+                      siteName: Some Supplier
+                      calculationId: '11111'
+                      calculationDescription: Avetta - Risk Assessment
+                      flagId: '1212121212'
+                      flagType: criteria
+                      color: Green
+                      isForced: false
+                      forcedBy: ''
+                      varianceStartDate: ''
+                      varianceEndDate: ''
+                      createdDate: '2023-02-18T04:48:33.604Z'
+                      updatedDate: '2024-03-14T20:54:51.692Z'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  service:
+                    type: string
+                  message:
+                    type: string
+                  displayMessage:
+                    type: string
+              examples:
+                InvalidLimitParameter:
+                  value:
+                    code: '1'
+                    service: Gateway
+                    message:
+                      error: Invalid limit parameter. Limit should not exceed 500
+                      context:
+                        requestId: 1c2c5987-ad72-439d-8bfc-efbd78e6d1f5
+                        t:
+                          internal: true
+                    displayMessage:
+                      error: Invalid limit parameter. Limit should not exceed 500
+                      context:
+                        requestId: 1c2c5987-ad72-439d-8bfc-efbd78e6d1f5
+                        t:
+                          internal: true
+                ApiKeyNotFound:
+                  value:
+                    code: '1'
+                    service: Gateway
+                    message: Api Key Not Found
+                    displayMessage: Api Key Not Found
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                x-examples:
+                  example-1:
+                    error: Unexpected error occurred.
+              examples:
+                example-1:
+                  value:
+                    error: Unexpected error occurred.
+  /compliance-management-gateway/v1/clients/{clientId}/variance:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    post:
+      summary: Create Variance Flag
+      description: 'The API allows users to add “basic variance” through API with the status “Approved” to create a new variance flag.
+
+
+        The client can only create a variance on a Site or Criteria flag, will not allow to create a variance on SiteVariance or CriteriaVariance flag, will NOT update the existing variance if the variance already exists on the Site and Criteria flag.
+
+
+        The client can only create one and only one variance against a RED/GREY/AMBER/GREEN supplier flag, the new flag''s color must be different from the Site or Criteria flag’s, and the `flagColor` must be one of these 3 values: Amber, Green, Red.'
+      operationId: createVariance
+      tags:
+      - Compliance
+      parameters:
+      - name: clientId
+        in: path
+        required: true
+        description: The unique identifier of the client, it can be either corporate, hub or site
+        schema:
+          type: number
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                siteId:
+                  type: number
+                  description: The site billing id.
+                supplierId:
+                  type: number
+                  description: The supplier billing id.
+                flagId:
+                  type: number
+                  description: The original flag display id.
+                flagColor:
+                  type: string
+                  description: The new flag's color, must be either Green, Amber or Red, and must be different from the original flag color.
+                varianceEndDate:
+                  type: string
+                  description: The End date of the new variance, in format yyyy-MM-dd, and must be a future date.
+                comment:
+                  type: string
+                  description: The optional comment for the new variance.
+                files:
+                  type: array
+                  description: The optional file(s) attached to the new variance, the total size of the file(s) must be less than 10 MB.
+                  items:
+                    type: string
+                    format: binary
+              required:
+              - siteId
+              - supplierId
+              - flagId
+              - flagColor
+              - varianceEndDate
+      responses:
+        '201':
+          description: The display id of new variance flag.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_controllers.v1.messages.CreateVarianceResponse'
+              examples:
+                SampleResponse:
+                  value:
+                    flagId: '4376761826'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Error creating variance blue is invalid, Invalid flagColor: blue. Allowed values are: Green, Amber, Red'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                x-examples:
+                  example-1:
+                    error: Unexpected error occurred.
+              examples:
+                example-1:
+                  value:
+                    error: Unexpected error occurred.
+  /compliance-management-gateway/v2/forms:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    get:
+      summary: Get Forms v2
+      description: 'Retrieves a set of Form data based on the provided request/pagination parameters.
+
+
+        The href field in the schema below will only return for Form data where the question requires a file upload as an answer. In the case of a file answer, the answer value will present the decoded name of the file along with its extension, for readability. However for download purposes, the url used in href should be used.
+
+
+        Only active suppliers that have approved connections to clients will be returned in this endpoint.
+
+
+        By default, only Active Forms created within the last 12 months are returned.'
+      operationId: getSupplierFormsAndAnswers
+      tags:
+      - Compliance
+      parameters:
+      - name: clientId
+        in: query
+        description: Optional filter for a client account, such as a site or a hub.
+        schema:
+          type: number
+      - name: supplierId
+        in: query
+        description: Optional filter for a supplier.
+        schema:
+          type: number
+      - name: formId
+        in: query
+        description: Optional filter by a specific form.
+        schema:
+          type: number
+      - name: formTypeId
+        in: query
+        description: Optional filter for a formType
+        schema:
+          type: number
+      - name: categoryId
+        in: query
+        description: Optional filter for a category
+        schema:
+          type: number
+      - name: questionId
+        in: query
+        description: Optional filter for a single question. Use this to filter forms that are associated with one specific question. This parameter should be used when filtering by only one question. This parameter is deprecated and will be removed in the future, please use `questionIds` instead
+        deprecated: true
+        schema:
+          type: number
+      - name: questionIds
+        in: query
+        description: 'Optional filter for multiple questions. To filter forms by more than one question, pass multiple questionIds parameters in the query string, like: ?questionIds=1&questionIds=2&questionIds=3.This parameter accepts repeated keys rather than a comma-separated list.'
+        schema:
+          type: array
+          items:
+            type: number
+      - name: modifiedAfter
+        in: query
+        description: Optional value to return records after the specified date and time [yyyy-MM-dd hh:mm:ss]. When the supplierId is provided, the available range is the last 12 months. When the supplierId is not provided, the available range is capped at 1 month ago. If no date is specified, the endpoint returns only records from the past month.
+        schema:
+          type: string
+      - name: year
+        in: query
+        description: Optional filter for a form year
+        schema:
+          type: integer
+      - name: archivedOnly
+        in: query
+        description: Optional value to return only archived records
+        schema:
+          type: boolean
+      - name: activeOnly
+        in: query
+        description: Optional value to return only active records
+        schema:
+          type: boolean
+          default: true
+      - name: start
+        in: query
+        description: The starting index for pagination. Defaults to 0.
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: The maximum number of results to return. Defaults to 100, with a maximum value of 100.
+        schema:
+          type: integer
+          default: 100
+          maximum: 100
+      responses:
+        '200':
+          description: The supplier forms and their respective answers for the specified filters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/1.0.0_controllers.v2.messages.GetSupplierFormsAndAnswersResponse'
+              examples:
+                SampleResponse:
+                  value:
+                    supplierFormsAndAnswers:
+                    - supplierId: 100000001
+                      supplierName: Generic Supplier Inc.
+                      formTypeId: 30000
+                      formId: 50000001
+                      formName: Annual Compliance Form
+                      formStatus: Pending
+                      formUpdatedDate: '2025-01-15T12:34:56.789Z'
+                      formYear: '2025'
+                      formPeriod: '2024'
+                      clientSites:
+                      - clientId: '200001'
+                        clientName: Global Retail Partner
+                      isActive: true
+                      questions:
+                      - questionId: 4001
+                        question: Does your company comply with the latest safety regulations?
+                        questionTitle: ''
+                        categoryId: 6001
+                        categoryName: Safety Compliance
+                        answerDataType: text
+                        answerDataPointType: question
+                        answer:
+                          values:
+                          - value: 'Yes'
+                            href: https://api.avetta.com/file/v1/files/100000001/2025-01-15T12:00:00.000Z~~*aHR0cDovL2V4YW1wbGUuY29tL2RvY3VtZW50LnBkZg==?questionId=4001
+                          answerUpdatedDate: '2025-01-15T12:30:00.000Z'
+                          answerComment: Supporting document attached for compliance verification.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 5afb16652500005a17786xyz not found.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Could not authenticate request.
+                  code:
+                    type: string
+                    example: AUTH.102
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                x-examples:
+                  example-1:
+                    error: Error message.
+              examples:
+                example-1:
+                  value:
+                    error: Error message.
+  /compliance-management-gateway/v1/suppliers/{supplierMongoId}/supplier-forms:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    get:
+      summary: Get Supplier Forms
+      description: 'Retrieves the authenticated supplier''s forms together with the question group metadata behind them - workflow definitions (including each status''s `crmId`), rejection reasons and labels.
+
+
+        A caller may only retrieve forms belonging to the supplier they are authenticated as. If the `supplierMongoId` in the path is not the authenticated account, the request is rejected with a `403` before any data is retrieved. API keys are issued to clients rather than suppliers, so API-key callers cannot use this endpoint.
+
+
+        Forms hidden by visibility settings are excluded: a form is returned only if it is associated with at least one of the supplier''s connected sites, and - where its question group carries a `visibleAfterDays` schedule - only once `validStartDate + visibleAfterDays` has elapsed. A form with no `validStartDate` is not returned when its question group has that setting.
+
+
+        `showCompleted` defaults to **true**. A form counts as completed only when `percentageComplete` is 100 **and** its workflow status has `crmId: closed`; either alone is not sufficient.'
+      operationId: getSupplierForms
+      tags:
+      - Compliance
+      parameters:
+      - name: supplierMongoId
+        in: path
+        required: true
+        description: The unique identifier of the supplier. Must be the authenticated supplier.
+        schema:
+          type: string
+      - name: siteMongoId
+        in: query
+        description: Optional filter. Mongo id of the client site to filter forms by.
+        schema:
+          type: string
+      - name: formType
+        in: query
+        description: Optional filter on the question group's form type.
+        schema:
+          type: string
+          enum:
+          - auditGuard
+          - docuGuard
+          - insureGuard
+      - name: expiresAfter
+        in: query
+        description: Optional filter. Returns only forms expiring strictly after this date (YYYY-MM-DD).
+        schema:
+          type: string
+      - name: showCompleted
+        in: query
+        description: Whether completed forms are included. Defaults to true.
+        schema:
+          type: boolean
+          default: true
+      responses:
+        '200':
+          description: The supplier's forms and the question groups they reference.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  supplierForms:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        displayId:
+                          type: string
+                        supplierMongoId:
+                          type: string
+                        questionGroupId:
+                          type: string
+                        questionGroupVersionId:
+                          type: string
+                        workflowStatusId:
+                          type: string
+                        validStartDate:
+                          type: string
+                        validEndDate:
+                          type: string
+                        expirationDate:
+                          type: string
+                        siteMongoIds:
+                          type: array
+                          items:
+                            type: string
+                        percentageComplete:
+                          type: integer
+                  questionGroups:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        versionId:
+                          type: string
+                        formType:
+                          type: string
+                        questionGroupText:
+                          type: string
+                        workflow:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            availableStatuses:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                  name:
+                                    type: string
+                                  crmId:
+                                    type: string
+                        rejectionReasons:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              displayId:
+                                type: string
+                              shortText:
+                                type: string
+                              longText:
+                                type: string
+                        labels:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                              displayText:
+                                type: string
+                              description:
+                                type: string
+        '400':
+          description: Bad Request. A malformed Mongo id, an unrecognised formType, or an unparseable expiresAfter.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid supplierMongoId: ''abc'' is not a 24-character hexadecimal ObjectId.'
+                  code:
+                    type: string
+                    example: CMG.1059
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Could not authenticate request.
+                  code:
+                    type: string
+                    example: AUTH.102
+        '403':
+          description: Forbidden. The requested supplier is not the authenticated supplier.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Requested data does not belong to the authenticated supplier.
+                  code:
+                    type: string
+                    example: CMG.3001
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /compliance-management-gateway/v1/suppliers/{supplierMongoId}/supplier-flags:
+    servers:
+    - description: PROD
+      url: https://api.avetta.com
+    - description: MOCK
+      url: https://virtserver.swaggerhub.com/Avet7/ComplianceManagement/1.0.0
+    post:
+      summary: Search Supplier Flags
+      description: 'Retrieves the authenticated supplier''s compliance flags, optionally filtered by site, flag type, flag colour and supplier form.
+
+
+        A caller may only retrieve flags belonging to the supplier they are authenticated as. If the `supplierMongoId` in the path is not the authenticated account, the request is rejected with a `403` before any data is retrieved. API keys are issued to clients rather than suppliers, so API-key callers cannot use this endpoint.
+
+
+        All request body filters are optional. An omitted field and an explicit empty array are equivalent: no filter is applied on that dimension. Supplying several filters narrows the result by all of them at once.
+
+
+        The request body itself is optional. Sending no body at all is equivalent to sending `{}`, and applies no filters, returning the authenticated supplier''s flags subject to the `start` and `limit` pagination defaults.
+
+
+        **Flags description**:
+
+        `site` – overall site status
+
+        `criteria` - the specific line item requirements status (ex: insurance, TRIR, etc)'
+      operationId: searchSupplierFlags
+      tags:
+      - Compliance
+      parameters:
+      - name: supplierMongoId
+        in: path
+        required: true
+        description: The unique identifier of the supplier. Must be the authenticated supplier.
+        schema:
+          type: string
+      - name: start
+        in: query
+        description: Optional filter. The record to start with for pagination (0-based)
+        schema:
+          type: integer
+          default: 0
+      - name: limit
+        in: query
+        description: Optional filter. Total number of records to be returned.
+        schema:
+          type: integer
+          default: 10
+          maximum: 50
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                siteMongoIds:
+                  type: array
+                  description: Optional filter. Mongo ids of the client sites to filter flags by.
+                  items:
+                    type: string
+                flagTypes:
+                  type: array
+                  description: Optional filter. Accepted case-insensitively.
+                  items:
+                    type: string
+                    enum:
+                    - criteria
+                    - site
+                    - criteriaVariance
+                    - siteVariance
+                flagColors:
+                  type: array
+                  description: Optional filter. Accepted case-insensitively.
+                  items:
+                    type: string
+                    enum:
+                    - GREEN
+                    - GRAY
+                    - AMBER
+                    - RED
+                supplierFormIds:
+                  type: array
+                  description: Optional filter. Mongo ids of specific supplier forms to filter flags by.
+                  items:
+                    type: string
+            examples:
+              example-1:
+                value:
+                  siteMongoIds:
+                  - 69fa77c6d677987468bf114f
+                  flagTypes:
+                  - site
+                  - criteria
+                  flagColors:
+                  - RED
+                  - AMBER
+                  supplierFormIds:
+                  - 6a553dde3b00003b05a36b0d
+      responses:
+        '200':
+          description: The supplier's compliance flags. `flags` is an empty array when nothing matches the filters.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  flags:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        siteMongoId:
+                          type: string
+                        supplierMongoId:
+                          type: string
+                        flagType:
+                          type: string
+                          enum:
+                          - criteria
+                          - site
+                          - criteriaVariance
+                          - siteVariance
+                        flagResult:
+                          type: integer
+                          description: GREEN=0, GRAY=10, AMBER=20, RED=30.
+                        supplierMessage:
+                          type: string
+                        createdDate:
+                          type: string
+                        updatedDate:
+                          type: string
+                        files:
+                          type: array
+                          items: {}
+                        supplierFormIds:
+                          type: array
+                          items:
+                            type: string
+                        reasonForSiteFlagColor:
+                          type: array
+                          items: {}
+                        isSiteForced:
+                          type: boolean
+              examples:
+                example-1:
+                  value:
+                    flags:
+                    - id: 6a553dde3b00007705a36b18
+                      siteMongoId: 69fa77c6d677987468bf114f
+                      supplierMongoId: 6a452a8317c94c6737e3c30b
+                      flagType: criteria
+                      flagResult: 30
+                      supplierMessage: New Brunswick Letter of Good Standing must be submitted by the supplier and approved according to client requirements for compliance
+                      supplierFormIds:
+                      - 6a553dde3b00003b05a36b0d
+        '400':
+          description: Bad Request. A malformed Mongo id, an unrecognised flagType or flagColor, or a malformed body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: 'Invalid siteMongoIds: ''not-an-object-id'' is not a 24-character hexadecimal ObjectId.'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Could not authenticate request.
+                  code:
+                    type: string
+                    example: AUTH.102
+        '403':
+          description: Forbidden. The requested supplier is not the authenticated supplier.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Requested data does not belong to the authenticated supplier.
+                  code:
+                    type: string
+                    example: CMG.3001
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                x-examples:
+                  example-1:
+                    error: Error message.
+              examples:
+                example-1:
+                  value:
+                    error: Error message.
+components:
+  schemas:
+    1.0.0_controllers.v2.messages.SupplierFormsAndAnswers:
+      type: object
+      properties:
+        supplierId:
+          type: integer
+          example: 250001111
+        supplierName:
+          type: string
+          example: Peter's Supplies
+        formTypeId:
+          type: integer
+          example: 20000
+        formId:
+          type: integer
+          example: 43207500
+        formName:
+          type: string
+          example: United States Annual Update
+        formStatus:
+          type: string
+          example: Rejected
+        formUpdatedDate:
+          type: string
+          format: date-time
+          example: '2025-02-01T05:28:09.235Z'
+        formYear:
+          type: string
+          example: '2025'
+        formPeriod:
+          type: string
+          example: '2024'
+        clientSites:
+          type: array
+          items:
+            $ref: '#/components/schemas/1.0.0_controllers.v2.messages.ClientSiteInfo'
+        isActive:
+          type: boolean
+          example: true
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/1.0.0_controllers.v2.messages.SupplierFormQuestion'
+    1.0.0_controllers.v2.messages.FormAnswerValue:
+      type: object
+      properties:
+        value:
+          type: string
+          example: 'Yes'
+        href:
+          type: string
+          example: https://api.avetta.com/api/v1/files/250550011/2025-01-20T10:55:39.429Z~~*NoBiMH9jbHD2XYj1FHJoX3dvcmtlcnNfY29tcGVuc2U0aK9uLnBkZg==?questionId=2072
+    1.0.0_controllers.v2.messages.SupplierFormAnswer:
+      type: object
+      properties:
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/1.0.0_controllers.v2.messages.FormAnswerValue'
+        answerUpdatedDate:
+          type: string
+          format: date-time
+          example: '2025-02-01T05:26:56.085Z'
+        answerComment:
+          type: string
+          example: Supporting document attached for compliance verification.
+    1.0.0_controllers.v1.messages.CreateVarianceResponse:
+      type: object
+      properties:
+        flagId:
+          type: string
+    1.0.0_controllers.v1.messages.GetSupplierFlagsResponse:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        flags:
+          type: array
+          items:
+            $ref: '#/components/schemas/1.0.0_controllers.v1.messages.SupplierFlag'
+    1.0.0_controllers.v2.messages.GetSupplierFormsAndAnswersResponse:
+      type: object
+      properties:
+        supplierFormsAndAnswers:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/1.0.0_controllers.v2.messages.SupplierFormsAndAnswers'
+    1.0.0_controllers.v2.messages.ClientSiteInfo:
+      type: object
+      properties:
+        clientId:
+          type: string
+          example: '123456'
+        clientName:
+          type: string
+          example: ABC Manufacturing Site
+    1.0.0_controllers.v1.messages.SupplierFlag:
+      type: object
+      properties:
+        supplierId:
+          type: string
+        supplierName:
+          type: string
+        supplierStatus:
+          type: string
+        siteId:
+          type: string
+        siteName:
+          type: string
+        calculationId:
+          type: string
+        calculationDescription:
+          type: string
+        flagId:
+          type: string
+        flagType:
+          type: string
+        color:
+          type: string
+        isForced:
+          type: boolean
+        forcedBy:
+          type: string
+        varianceStartDate:
+          type: string
+        varianceEndDate:
+          type: string
+        createdDate:
+          type: string
+        updatedDate:
+          type: string
+    1.0.0_controllers.v2.messages.SupplierFormQuestion:
+      type: object
+      properties:
+        questionId:
+          type: integer
+          example: 2033
+        question:
+          type: string
+          example: Did your company Does your company comply with the latest safety regulations?
+        questionTitle:
+          type: string
+          example: ''
+        categoryId:
+          type: integer
+          example: 1153
+        categoryName:
+          type: string
+          example: Safety Compliance
+        answerDataType:
+          type: string
+          example: text
+        answerDataPointType:
+          type: string
+          example: question
+        answer:
+          $ref: '#/components/schemas/1.0.0_controllers.v2.messages.SupplierFormAnswer'
+x-refined-from:
+- avetta-connect-dist.json
+- avetta-connect-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling

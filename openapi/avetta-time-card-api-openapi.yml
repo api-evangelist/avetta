@@ -1,0 +1,504 @@
+openapi: 3.2.0
+info:
+  title: Avetta Time Card API
+  version: '2026-05-08'
+  license:
+    name: Trade secret
+    url: https://avetta.com
+  description: 'Operations tagged TimeCard across 2 of this provider''s published API definitions: avetta-worker-v1.json, avetta-worker-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://{environment}.avetta.com/api/v1
+  variables:
+    environment:
+      default: worker
+      enum:
+      - worker
+      - au-worker
+security:
+- ApiKeyAuth: []
+tags:
+- name: Time Card
+  description: The TimeCard API allows you to retrieve a list of workers on site.
+paths:
+  /timecard:
+    get:
+      operationId: listTimeCard
+      tags:
+      - Time Card
+      summary: List of usersworkers currently checked in but not checked out
+      description: 'The API will only return workers that are currently checked in but not checked out.
+
+        Using the parameter site_id, workers checked in a specific site will be returned;
+
+        if not provided, check-ins for all sites that the user has permissions for will be displayed.
+
+        It''s possible for a worker to be logged into more than one site at the same time;
+
+        in this case, the same worker may appear more than one time in the timecard array.'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/startParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/sortParam'
+      - $ref: '#/components/parameters/components-parameters-siteIDParam'
+      - $ref: '#/components/parameters/connectionIDParam'
+      - $ref: '#/components/parameters/parameters-accountIDParam'
+      - $ref: '#/components/parameters/parameters-roleIDParam'
+      - $ref: '#/components/parameters/timeCard_components-parameters-searchParam'
+      - $ref: '#/components/parameters/components-parameters-flagParam'
+      - $ref: '#/components/parameters/components-parameters-extraParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulTimeCard'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+  /timecard/count:
+    get:
+      operationId: listTimeCardCount
+      tags:
+      - Time Card
+      summary: Count of users currently checked in but not checked out
+      description: Returns the count of workers currently checked in but not checked out. The count can be filtered by site.
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - $ref: '#/components/parameters/compIDParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/successfulTimeCardCount'
+        '400':
+          $ref: '#/components/responses/parameterNotRecognized'
+        '401':
+          $ref: '#/components/responses/errorSecurity'
+    servers:
+    - url: https://{environment}.avetta.com/api/v1
+      variables:
+        environment:
+          default: worker
+          enum:
+          - worker
+          - au-worker
+components:
+  parameters:
+    compIDParam:
+      name: company_id
+      in: query
+      description: Filter workers that belong to the company id provided (This can be used to show only workers from a specific supplier)
+      required: false
+      schema:
+        type: integer
+        format: int64
+    sortParam:
+      name: sort
+      in: query
+      description: Name of field to sort by
+      required: false
+      schema:
+        type: string
+        enum:
+        - id
+        - code
+        - title
+        - group
+    components-parameters-siteIDParam:
+      name: site_id
+      in: query
+      description: Filters information to a specific site and drilled down any site below it.
+      required: false
+      schema:
+        type: integer
+    components-parameters-extraParam:
+      name: extra
+      in: query
+      description: Extra data to return for users (photo is the extra data that can included in the list of user)
+      required: false
+      schema:
+        type: string
+        enum:
+        - photo
+    parameters-roleIDParam:
+      name: role_id
+      in: query
+      description: Filter down to a role id provided
+      required: false
+      schema:
+        type: integer
+    parameters-accountIDParam:
+      name: account_id
+      in: query
+      description: Filter workers that belong to the company id provided (This can be used to show only workers from a specific supplier)
+      required: false
+      schema:
+        type: integer
+    components-parameters-flagParam:
+      name: flag
+      in: query
+      description: filter by the worker's compliance flag to the site they are checked in. (G or Green, Y or Yellow, R or Red)
+      required: false
+      schema:
+        type: string
+        enum:
+        - G
+        - Green
+        - Y
+        - Yellow
+        - R
+        - Red
+    limitParam:
+      name: limit
+      in: query
+      description: Maximum number of records to return
+      required: false
+      schema:
+        type: integer
+        default: 3000
+    connectionIDParam:
+      name: connection_id
+      in: query
+      description: If specified, only information about a specific site would be displayed
+      required: false
+      schema:
+        type: integer
+    timeCard_components-parameters-searchParam:
+      name: search
+      in: query
+      description: Search term in users list - It checks the term in login id, email, first name, last name, mobile phone, company name and company site name.
+      required: false
+      schema:
+        type: string
+    startParam:
+      name: start
+      in: query
+      description: Offset of the first record to return
+      required: false
+      schema:
+        type: integer
+        default: 1
+  examples:
+    errorSecurity:
+      summary: Error security
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          msg: unauthorized
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          success: false
+          code: 401
+    parameterNotRecognized:
+      summary: Parameter not recognized
+      value:
+        stats:
+          command: Auth
+          version: v1
+          type: token
+          start: 1
+          time: 0.71513
+          limit: 3000
+          owner: 1234567890
+          count: 0
+          records: 0
+        data:
+          message: Malformed request syntax
+          status: Bad Request
+          success: false
+          code: 400
+  schemas:
+    messageSchema:
+      type: object
+      format: object
+      properties:
+        message:
+          type: string
+          description: Message of the response
+        status:
+          type: string
+          description: Status of the response
+        success:
+          type: boolean
+          description: Flag to show if the transaccion was successful
+          enum:
+          - true
+          - false
+        code:
+          type: integer
+          description: Code of the response
+        detail:
+          type: string
+          description: Detail of the response
+    timeCardSchema:
+      type: object
+      format: object
+      properties:
+        id:
+          type: integer
+          description: Id the time card entry, it can be used to check out the user.
+          example: 915482
+        site_id:
+          type: integer
+          description: Id of the site
+          example: 21345
+        site_name:
+          type: string
+          description: Name of the site
+          example: ERD SITE A
+        flag:
+          type: string
+          description: Indicates if the worker is red or green for the site
+          example: Red
+          enum:
+          - Green
+          - Amber
+          - Red
+        flag_forced:
+          type: boolean
+          description: Indicates if there is a variance involved with the current worker flag
+          example: false
+          enum:
+          - true
+          - false
+        checked_in:
+          type: string
+          description: Time the user was last checked in into the site
+          example: '2021-10-14 12:20:00'
+        duration:
+          type: integer
+          description: Time the user has been on site (in minutes)
+          example: 270
+        account:
+          type: object
+          description: Details of the company the worker belongs to
+          properties:
+            con_flag:
+              type: string
+              description: Company status flag
+              example: Green
+              enum:
+              - Green
+              - Amber
+              - Red
+            name:
+              type: string
+              description: Company name
+              example: Testing Supplier A::Testing Supplier A
+            con_id:
+              type: integer
+              description: Connect id
+              example: null
+            type:
+              type: string
+              description: Type of company
+              example: Supplier
+              enum:
+              - Supplier
+              - Client
+              - Subcontractor
+            id:
+              type: integer
+              description: Id of the company
+              example: 7650
+            parent_id:
+              type: integer
+              description: Id of the parent company, if any
+              example: 0
+        user:
+          type: object
+          description: Basic information about the worker
+          properties:
+            last_name:
+              type: string
+              description: Worker last name
+              example: Adams
+            first_name:
+              type: string
+              description: Worker first name
+              example: Gabriel
+            id:
+              type: integer
+              description: Worker id
+              example: 27346
+            email:
+              type: string
+              description: Worker email address
+              example: null
+            phone:
+              type: string
+              description: Worker phone number
+              example: 321-215-215
+            created_date:
+              type: string
+              description: Date time the worker was registered into WM
+              example: '2021-02-08 13:24:00'
+            login_id:
+              type: string
+              description: Worker login id
+              example: SUPPLIERA.WORKER1
+            title:
+              type: string
+              description: Worker title
+              example: N/A
+            photo:
+              type: object
+              description: Only included if the parameter "extra" has the value "photo"
+              properties:
+                data:
+                  type: string
+                  description: Photo in base64
+                  example: data:image/jpg;base64, .......
+                size:
+                  type: integer
+                  description: Size of the photo
+                  example: 13250
+                name:
+                  type: string
+                  description: Name of the photo
+                  example: ProfilePicture.jpg
+    statsSchema:
+      type: object
+      properties:
+        command:
+          type: string
+          description: Command
+          example: Auth
+        version:
+          type: string
+          description: Version
+          example: v1
+        type:
+          type: string
+          description: Type
+          example: token
+        msg:
+          type: string
+          description: Message
+          example: Good
+        start:
+          type: integer
+          description: Start
+          example: 1
+        time:
+          type: number
+          description: Time in seconds to execute the command
+          example: 0.71513
+        limit:
+          type: integer
+          description: Limit of records to return
+          example: 3000
+        owner:
+          type: integer
+          description: Owner
+          example: 1234567890
+        count:
+          type: integer
+          description: Count of records returned
+          example: 12
+        records:
+          type: integer
+          description: Total records
+          example: 12
+      additionalProperties: true
+  responses:
+    successfulTimeCardCount:
+      description: Successful - Returns the count of users checked in but not checked out
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              timecard:
+                type: object
+                properties:
+                  count:
+                    type: integer
+    errorSecurity:
+      description: Error while checking security
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            errorSecurity:
+              $ref: '#/components/examples/errorSecurity'
+    successfulTimeCard:
+      description: Successful - Returns the list of users checked in but not checked out
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              timecard:
+                allOf:
+                - type: array
+                  items:
+                    $ref: '#/components/schemas/timeCardSchema'
+    parameterNotRecognized:
+      description: Parameter not recognized
+      content:
+        application/json:
+          schema:
+            type: object
+            format: object
+            properties:
+              stats:
+                $ref: '#/components/schemas/statsSchema'
+              data:
+                $ref: '#/components/schemas/messageSchema'
+          examples:
+            parameterNotRecognized:
+              $ref: '#/components/examples/parameterNotRecognized'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key authentication. Provide your API key in the `Authorization` request header using the format `apikey <key>`, e.g. `Authorization: apikey <key>`. Requests missing this header will fail.
+
+        '
+x-refined-from:
+- avetta-worker-v1.json
+- avetta-worker-v1-openapi.yml
+x-tagGroups:
+- name: Compliance
+  tags:
+  - Authentication
+  - Compliance
+- name: Account
+  tags:
+  - Account
+- name: Worksite Safety
+  tags:
+  - Worksite-Safety
+- name: Deprecated Endpoints
+  tags:
+  - Deprecated Endpoints
+  - Error Handling
