@@ -1,0 +1,124 @@
+slug: avetta
+provider: Avetta
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 10
+edges:
+- tag: Roles
+  spec_file: avetta-roles-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.8
+  evidence: POST /roles/{rolID}/users/{usrID}  insertRole  Insert new role to user; bulkAssignmentSchema  Bulk
+    role assignment or unassignment to users
+  reason: Role definition and assignment/unassignment to users is role-based access administration, squarely
+    Identity & Access Management.
+- tag: Account
+  spec_file: avetta-account-api-openapi.yml
+  capability_id: BC-510.10
+  capability_id_l1: BC-510
+  capability_name: Supplier Onboarding Management
+  confidence: 0.78
+  evidence: POST /connect/v1/registrations 'Register Supplier'; GET .../suppliers/{supplierId}/profile
+    'Supplier Profile'; GET .../primeandsubcontractors 'Contractors (Sub/Prime)'
+  reason: Despite the generic 'Account' tag, the operations register suppliers, maintain supplier profiles
+    and client-supplier hierarchy — supplier registration and onboarding records. Maps to Supplier Management,
+    specifically onboarding/registration; slight ambiguity because some operations are pure profile retrieval.
+- tag: Compliance
+  spec_file: avetta-compliance-api-openapi.yml
+  capability_id: BC-510
+  capability_id_l1: BC-510
+  capability_name: Supplier Management
+  confidence: 0.78
+  evidence: GET /compliance-management-gateway/v1/clients/{clientId}/suppliers/scorecards 'Get Supplier
+    TotalScore'; GET /api/v1/flags 'Get Flags v1'; schema GetSupplierFlagsResponse, SupplierFlag
+  reason: Operations retrieve supplier compliance status, compliance flags and supplier scorecards for
+    client-supplier connections — continuous monitoring of contractor compliance. Clearly Supplier Management;
+    evidence straddles performance scorecards and compliance/risk flags, so no single L2 is named unambiguously.
+- tag: pegasusScope_scope-user-controller
+  spec_file: avetta-pegasusscope-scope-user-controller-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.78
+  evidence: POST /api/v1/scope/{scopeId}/user createUser 'Create new user for scope'; schemas 3.29.14_CreateUserWithPrivilegesResource,
+    3.29.14_UserScopePermissionsCommand, 3.29.14_UserSitePermissionResource, 3.29.14_UserPermissionResource
+  reason: Provisioning of platform user accounts with explicit scope and site permissions — account creation
+    and access rights administration, i.e. identity and access management. Limited to creation operations,
+    so not maximal confidence.
+- tag: pegasusScope_scope-company-controller
+  spec_file: avetta-pegasusscope-scope-company-controller-api-openapi.yml
+  capability_id: BC-510.10
+  capability_id_l1: BC-510
+  capability_name: Supplier Onboarding Management
+  confidence: 0.75
+  evidence: POST /api/v1/scope/{scopeId}/company/register  registerCompany; POST /api/v1/scope/{scopeId}/company/compliance  getCompanyCompliance;
+    3.29.14_PendingCompanyResource
+  reason: CRUD plus registration, pending-company handling and compliance retrieval for contractor companies
+    within a client scope — this is contractor/supplier registration, qualification and compliance status,
+    i.e. supplier onboarding. Some chance it is better read as generic company master data (BC-610.20),
+    hence not higher.
+- tag: pegasusScope2_scope-person-controller-v-2
+  spec_file: avetta-pegasusscope2-scope-person-controller-v-2-api-openapi.yml
+  capability_id: BC-300.70
+  capability_id_l1: BC-300
+  capability_name: HR Operations Management
+  confidence: 0.7
+  evidence: POST /api/v2/scope/{scopeId}/person/company/{companyId}  addWorkerv2  Add worker; PUT .../person/{personId}  editWorkerv2  Edit
+    worker data by person id; schemas WorkerResource, AddWorkerResourceV2, DriversLicenseResource
+  reason: Full CRUD and integration of worker/person master records including licences and next-of-kin,
+    plus change feeds — worker record administration, i.e. HR operations for the contractor workforce.
+- tag: pegasusScope_scope-company-relationship-controller
+  spec_file: avetta-pegasusscope-scope-company-relationship-controller-api-openapi.yml
+  capability_id: BC-510
+  capability_id_l1: BC-510
+  capability_name: Supplier Management
+  confidence: 0.7
+  evidence: getCompanySubContractorRelationships; searchPotentialPrimaryContractors; 3.29.14_PortalCompanyInvitationResource
+  reason: Manages primary-contractor / sub-contractor relationships, invitations and registration of related
+    companies — multi-tier supplier/contractor network management. L1 only because it straddles onboarding
+    (invitation/registration) and relationship/tier visibility rather than naming one sub-capability.
+- tag: pegasusScope_scope-person-company-controller
+  spec_file: avetta-pegasusscope-scope-person-company-controller-api-openapi.yml
+  capability_id: BC-300.70
+  capability_id_l1: BC-300
+  capability_name: HR Operations Management
+  confidence: 0.7
+  evidence: getEmployee  Get employee / editEmployee  Edit employee / addEmployee  Add employee / updateDefaultCompany  Update
+    default company; schemas 3.29.14_UpdateEmployeeResource, 3.29.14_WorkerEmployeeResource
+  reason: Full CRUD over the employment relationship between a worker and an employer company, including
+    default employer. This is maintenance of employee/worker records, the core of HR Operations Management,
+    applied to a contractor workforce.
+- tag: pegasusScope_scope-person-controller
+  spec_file: avetta-pegasusscope-scope-person-controller-api-openapi.yml
+  capability_id: BC-300.70
+  capability_id_l1: BC-300
+  capability_name: HR Operations Management
+  confidence: 0.7
+  evidence: editWorker  Edit worker data by person id; addWorker  Add worker; findPeopleByCompany  Find
+    people by company; schemas 3.29.14_WorkerResource, 3.29.14_UpdateWorkerResource
+  reason: Core CRUD and search over worker/person master records (names, emails, licences, next of kin,
+    employer) in a contractor workforce system — i.e. employee/worker record administration. Mapped to
+    HR Operations Management rather than supplier management because the subject is the individual worker,
+    not the supplier firm.
+- tag: pegasusScope_user-scope-controller
+  spec_file: avetta-pegasusscope-user-scope-controller-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: GET /api/v1/user/scope/{scopeId}  getUserPermissions  Get user permissions; GET /api/v1/user/scope/{scopeId}/can-access  userCanViewScope  User
+    can view scope; schemas UserSitePermissionResource, ScopePermissionResource
+  reason: Operations resolve which scopes a user may view and what permissions they hold — authorisation/entitlement
+    resolution, i.e. identity and access management plumbing exposed as an API. Mapped with moderate confidence
+    since it is an access-control surface rather than a contractor-compliance business function.
