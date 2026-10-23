@@ -71,6 +71,9 @@ maintainers:
   email: info@apis.io
 
 common:
+- type: CapabilityMap
+  url: capabilities/avetta-capability-edges.yml
+  name: Avetta Business Capability Map
 - type: AgentSkill
   url: skills/_index.yml
 - type: Overlay
